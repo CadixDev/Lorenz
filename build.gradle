@@ -15,7 +15,7 @@ targetCompatibility = 1.8
 
 group = 'xyz.lexteam'
 version = '1.0.0-SNAPSHOT'
-description = "Lorenz - Represent Java obfuscation mappings."
+description = "Lorenz - Represent Java deobfuscation mappings."
 ext.url = 'http://www.lexteam.xyz/'
 
 repositories {
