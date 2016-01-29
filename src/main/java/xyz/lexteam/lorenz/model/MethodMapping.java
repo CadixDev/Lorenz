@@ -21,22 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz;
+package xyz.lexteam.lorenz.model;
 
-import xyz.lexteam.lorenz.model.ClassMapping;
+/**
+ * Represents a method mapping.
+ */
+public class MethodMapping extends BaseMapping {
 
-import java.util.HashMap;
-import java.util.Map;
+    private final String obfuscatedSignature;
 
-public class Mappings {
-
-    private final Map<String, ClassMapping> classMappings = new HashMap<>();
-
-    public void addMapping(ClassMapping mapping) {
-        this.classMappings.put(mapping.getObfuscatedName(), mapping);
+    public MethodMapping(String obfuscated, String obfuscatedSignature, String deobfuscated) {
+        super(obfuscated, deobfuscated);
+        this.obfuscatedSignature = obfuscatedSignature;
     }
 
-    public void removeClassMapping(String name) {
-        this.classMappings.remove(name);
+    public String getObfuscatedSignature() {
+        return this.obfuscatedSignature;
+    }
+
+    public String getDeobfuscatedSignature() {
+        return this.obfuscatedSignature; // TODO:
     }
 }
