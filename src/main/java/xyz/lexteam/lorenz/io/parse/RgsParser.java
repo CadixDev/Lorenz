@@ -21,45 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.model;
+package xyz.lexteam.lorenz.io.parse;
+
+import xyz.lexteam.lorenz.Mappings;
+
+import java.io.BufferedReader;
 
 /**
- * Represents a deobfuscation mapping.
+ * Mappings parser for RGS mappings.
  */
-public abstract class BaseMapping {
+public class RgsParser extends MappingsParser {
 
-    private final String obfuscated;
-    private String deobfuscated;
-
-    public BaseMapping(String obfuscated, String deobfuscated) {
-        this.obfuscated = obfuscated;
-        this.deobfuscated = deobfuscated;
+    public RgsParser(BufferedReader reader) {
+        super(reader);
     }
 
-    /**
-     * Gets the obfuscated name of this mapping.
-     *
-     * @return The obfuscated name.
-     */
-    public String getObfuscatedName() {
-        return this.obfuscated;
-    }
-
-    /**
-     * Gets the deobfuscated name of this mapping.
-     *
-     * @return The deobfuscated name.
-     */
-    public String getDeobfuscatedName() {
-        return this.deobfuscated;
-    }
-
-    /**
-     * Sets the deobfuscated name of this mapping.
-     *
-     * @param deobfuscated The deobfuscated name.
-     */
-    public void setDeobfuscatedName(String deobfuscated) {
-        this.deobfuscated = deobfuscated;
+    public Mappings parseMappings() {
+        return null;
     }
 }
