@@ -28,7 +28,14 @@ package xyz.lexteam.lorenz.model;
  */
 public class FieldMapping extends BaseMapping {
 
-    public FieldMapping(String obfuscated, String deobfuscated) {
+    private final ClassMapping parent;
+
+    public FieldMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
         super(obfuscated, deobfuscated);
+        this.parent = parent;
+    }
+
+    public ClassMapping getParent() {
+        return this.parent;
     }
 }

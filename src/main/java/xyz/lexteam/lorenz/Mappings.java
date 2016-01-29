@@ -32,6 +32,10 @@ public class Mappings {
 
     private final Map<String, ClassMapping> classMappings = new HashMap<>();
 
+    public Map<String, ClassMapping> getClassMappings() {
+        return this.classMappings;
+    }
+
     public void addMapping(ClassMapping mapping) {
         this.classMappings.put(mapping.getObfuscatedName(), mapping);
     }

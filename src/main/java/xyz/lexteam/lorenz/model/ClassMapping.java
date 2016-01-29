@@ -23,6 +23,8 @@
  */
 package xyz.lexteam.lorenz.model;
 
+import xyz.lexteam.lorenz.Mappings;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +35,19 @@ public class ClassMapping extends BaseMapping {
 
     private final Map<String, FieldMapping> fieldMappings = new HashMap<>();
     private final Map<String, MethodMapping> methodMappings = new HashMap<>();
+    private final Mappings parent;
 
-    public ClassMapping(String obfuscated, String deobfuscated) {
+    public ClassMapping(Mappings parent, String obfuscated, String deobfuscated) {
         super(obfuscated, deobfuscated);
+        this.parent = parent;
+    }
+
+    public Map<String, FieldMapping> getFieldMappings() {
+        return this.fieldMappings;
+    }
+
+    public Map<String, MethodMapping> getMethodMappings() {
+        return this.methodMappings;
     }
 
     public void addFieldMapping(FieldMapping mapping) {
@@ -52,5 +64,9 @@ public class ClassMapping extends BaseMapping {
 
     public void removeMethodMapping(String name) {
         this.methodMappings.remove(name);
+    }
+
+    public Mappings getParent() {
+        return this.parent;
     }
 }

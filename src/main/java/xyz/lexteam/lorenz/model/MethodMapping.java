@@ -28,11 +28,17 @@ package xyz.lexteam.lorenz.model;
  */
 public class MethodMapping extends BaseMapping {
 
+    private final ClassMapping parent;
     private final String obfuscatedSignature;
 
-    public MethodMapping(String obfuscated, String obfuscatedSignature, String deobfuscated) {
+    public MethodMapping(ClassMapping parent, String obfuscated, String obfuscatedSignature, String deobfuscated) {
         super(obfuscated, deobfuscated);
+        this.parent = parent;
         this.obfuscatedSignature = obfuscatedSignature;
+    }
+
+    public ClassMapping getParent() {
+        return this.parent;
     }
 
     public String getObfuscatedSignature() {
@@ -40,6 +46,30 @@ public class MethodMapping extends BaseMapping {
     }
 
     public String getDeobfuscatedSignature() {
-        return this.obfuscatedSignature; // TODO:
+        String innerContent = this.obfuscatedSignature.substring(this.obfuscatedSignature.indexOf("(") + 1,
+                this.obfuscatedSignature.indexOf(")"));
+        String outerContent = this.obfuscatedSignature.substring(this.obfuscatedSignature.indexOf(")") + 1);
+
+        String modifiedType = this.obfuscatedSignature;
+
+        for (String type : innerContent.split(";")) {
+            if (type.startsWith("L")) {
+                String newType = type.substring(1);
+                if (this.getParent().getParent().getClassMappings().containsKey(newType)) {
+                    modifiedType = modifiedType.replace(newType,
+                            this.getParent().getParent().getClassMappings().get(newType).getDeobfuscatedName());
+                }
+            }
+        }
+
+        if (outerContent.startsWith("L")) {
+            String outerType = outerContent.substring(1, outerContent.length() - 1);
+            if (this.getParent().getParent().getClassMappings().containsKey(outerType)) {
+                modifiedType = modifiedType.replace(outerType,
+                        this.getParent().getParent().getClassMappings().get(outerType).getDeobfuscatedName());
+            }
+        }
+
+        return modifiedType;
     }
 }
