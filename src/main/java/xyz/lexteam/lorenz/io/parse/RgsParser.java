@@ -26,6 +26,7 @@ package xyz.lexteam.lorenz.io.parse;
 import xyz.lexteam.lorenz.Mappings;
 import xyz.lexteam.lorenz.model.ClassMapping;
 import xyz.lexteam.lorenz.model.FieldMapping;
+import xyz.lexteam.lorenz.model.MethodMapping;
 import xyz.lexteam.lorenz.model.TopLevelClassMapping;
 import xyz.lexteam.lorenz.util.Constants;
 
@@ -86,12 +87,30 @@ public class RgsParser extends MappingsParser {
             classMapping.addFieldMapping(new FieldMapping(classMapping, obfuscated, deobfuscated));
         }
 
+        for (String methodMapping : methodMappings) {
+            methodMapping = methodMapping.replace(".method_map ", "");
+            String[] split = methodMapping.split(" ");
+
+            String obfuscated = split[0].substring(split[0].lastIndexOf("/"));
+            String obfuscatedType = split[1];
+            String deobfuscated = split[2];
+
+            ClassMapping classMapping = this.getClassMapping(mappings, split[0].substring(obfuscated.length()));
+            classMapping.addMethodMapping(new MethodMapping(classMapping, obfuscated, obfuscatedType, deobfuscated));
+        }
+
         return mappings;
     }
 
     private ClassMapping getClassMapping(Mappings mappings, String fullName) {
         if (fullName.contains(Constants.INNER_CLASS_SEPARATOR)) {
-            return null; // TODO:
+            String[] split = fullName.split(" ");
+
+            String innerName = split[split.length - 1];
+            String parentClass = fullName.substring(0, fullName.length() - innerName.length());
+
+            ClassMapping classMapping = this.getClassMapping(mappings, parentClass);
+            return classMapping.getInnerClassMappings().get(innerName);
         } else {
             return mappings.getClassMappings().get(fullName);
         }
