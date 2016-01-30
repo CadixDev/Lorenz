@@ -23,23 +23,20 @@
  */
 package xyz.lexteam.lorenz.model;
 
-import xyz.lexteam.lorenz.Mappings;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Represents a class mapping.
  */
-public class ClassMapping extends BaseMapping {
+public abstract class ClassMapping extends BaseMapping {
 
     private final Map<String, FieldMapping> fieldMappings = new HashMap<>();
     private final Map<String, MethodMapping> methodMappings = new HashMap<>();
-    private final Mappings parent;
+    private final Map<String, InnerClassMapping> innerClassMappings = new HashMap<>();
 
-    public ClassMapping(Mappings parent, String obfuscated, String deobfuscated) {
+    public ClassMapping(String obfuscated, String deobfuscated) {
         super(obfuscated, deobfuscated);
-        this.parent = parent;
     }
 
     public Map<String, FieldMapping> getFieldMappings() {
@@ -48,6 +45,10 @@ public class ClassMapping extends BaseMapping {
 
     public Map<String, MethodMapping> getMethodMappings() {
         return this.methodMappings;
+    }
+
+    public Map<String, InnerClassMapping> getInnerClassMappings() {
+        return this.innerClassMappings;
     }
 
     public void addFieldMapping(FieldMapping mapping) {
@@ -66,7 +67,11 @@ public class ClassMapping extends BaseMapping {
         this.methodMappings.remove(name);
     }
 
-    public Mappings getParent() {
-        return this.parent;
+    public void addInnerClassMapping(InnerClassMapping mapping) {
+        this.innerClassMappings.put(mapping.getObfuscatedName(), mapping);
+    }
+
+    public void removeInnerClassMapping(String name) {
+        this.innerClassMappings.remove(name);
     }
 }

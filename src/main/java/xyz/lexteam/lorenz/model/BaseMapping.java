@@ -23,6 +23,8 @@
  */
 package xyz.lexteam.lorenz.model;
 
+import xyz.lexteam.lorenz.Mappings;
+
 /**
  * Represents a deobfuscation mapping.
  */
@@ -62,4 +64,6 @@ public abstract class BaseMapping {
     public void setDeobfuscatedName(String deobfuscated) {
         this.deobfuscated = deobfuscated;
     }
+
+    public abstract Mappings getMappings();
 }

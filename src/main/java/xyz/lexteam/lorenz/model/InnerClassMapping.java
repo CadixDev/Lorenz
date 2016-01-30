@@ -25,14 +25,11 @@ package xyz.lexteam.lorenz.model;
 
 import xyz.lexteam.lorenz.Mappings;
 
-/**
- * Represents a field mapping.
- */
-public class FieldMapping extends BaseMapping {
+public class InnerClassMapping extends ClassMapping {
 
     private final ClassMapping parent;
 
-    public FieldMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
+    public InnerClassMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
         super(obfuscated, deobfuscated);
         this.parent = parent;
     }

@@ -25,20 +25,17 @@ package xyz.lexteam.lorenz.model;
 
 import xyz.lexteam.lorenz.Mappings;
 
-/**
- * Represents a field mapping.
- */
-public class FieldMapping extends BaseMapping {
+public class TopLevelClassMapping extends ClassMapping {
 
-    private final ClassMapping parent;
+    private final Mappings parent;
 
-    public FieldMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
+    public TopLevelClassMapping(Mappings parent, String obfuscated, String deobfuscated) {
         super(obfuscated, deobfuscated);
         this.parent = parent;
     }
 
     @Override
     public Mappings getMappings() {
-        return this.parent.getMappings();
+        return this.parent;
     }
 }
