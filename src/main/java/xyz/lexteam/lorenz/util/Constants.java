@@ -21,23 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.io.parse;
+package xyz.lexteam.lorenz.util;
 
-import xyz.lexteam.lorenz.Mappings;
+public final class Constants {
 
-import java.io.BufferedReader;
-
-public abstract class MappingsParser {
-
-    private final BufferedReader reader;
-
-    public MappingsParser(BufferedReader reader) {
-        this.reader = reader;
-    }
-
-    protected BufferedReader getReader() {
-        return this.reader;
-    }
-
-    public abstract Mappings parseMappings();
+    public static final String INNER_CLASS_SEPARATOR = "$";
 }

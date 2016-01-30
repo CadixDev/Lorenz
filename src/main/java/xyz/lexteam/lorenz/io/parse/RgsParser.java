@@ -24,8 +24,15 @@
 package xyz.lexteam.lorenz.io.parse;
 
 import xyz.lexteam.lorenz.Mappings;
+import xyz.lexteam.lorenz.model.ClassMapping;
+import xyz.lexteam.lorenz.model.FieldMapping;
+import xyz.lexteam.lorenz.model.TopLevelClassMapping;
+import xyz.lexteam.lorenz.util.Constants;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Mappings parser for RGS mappings.
@@ -37,6 +44,56 @@ public class RgsParser extends MappingsParser {
     }
 
     public Mappings parseMappings() {
-        return null;
+        Mappings mappings = new Mappings();
+
+        List<String> topLevelClassMappings = new ArrayList<>();
+        List<String> innerClassMappings = new ArrayList<>();
+        List<String> fieldMappings = new ArrayList<>();
+        List<String> methodMappings = new ArrayList<>();
+
+        for (String line : this.getReader().lines().collect(Collectors.toList())) {
+            if (line.startsWith(".class_map ")) {
+                if (line.contains(Constants.INNER_CLASS_SEPARATOR)) {
+                    innerClassMappings.add(line);
+                } else {
+                    topLevelClassMappings.add(line);
+                }
+            } else if (line.startsWith(".field_map ")) {
+                fieldMappings.add(line);
+            } else if (line.startsWith(".method_map ")) {
+                methodMappings.add(line);
+            }
+        }
+
+        for (String topLevelClassMapping : topLevelClassMappings) {
+            topLevelClassMapping = topLevelClassMapping.replace(".class_map ", "");
+            String[] split = topLevelClassMapping.split(" ");
+
+            mappings.addMapping(new TopLevelClassMapping(mappings,
+                    split[0].replace(".", "/"), split[1].replace(".", "/")));
+        }
+
+        // TODO: inner classes
+
+        for (String fieldMapping : fieldMappings) {
+            fieldMapping = fieldMapping.replace(".field_map ", "");
+            String[] split = fieldMapping.split(" ");
+
+            String obfuscated = split[0].substring(split[0].lastIndexOf("/"));
+            String deobfuscated = split[1];
+
+            ClassMapping classMapping = this.getClassMapping(mappings, split[0].substring(obfuscated.length()));
+            classMapping.addFieldMapping(new FieldMapping(classMapping, obfuscated, deobfuscated));
+        }
+
+        return mappings;
+    }
+
+    private ClassMapping getClassMapping(Mappings mappings, String fullName) {
+        if (fullName.contains(Constants.INNER_CLASS_SEPARATOR)) {
+            return null; // TODO:
+        } else {
+            return mappings.getClassMappings().get(fullName);
+        }
     }
 }
