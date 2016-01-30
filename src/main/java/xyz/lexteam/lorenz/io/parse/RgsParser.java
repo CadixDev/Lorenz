@@ -32,6 +32,7 @@ import xyz.lexteam.lorenz.util.Constants;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,8 @@ public class RgsParser extends MappingsParser {
                 methodMappings.add(line);
             }
         }
+
+        innerClassMappings.sort((o1, o2) -> getClassNestingLevel(o1) - getClassNestingLevel(o2));
 
         for (String topLevelClassMapping : topLevelClassMappings) {
             topLevelClassMapping = topLevelClassMapping.replace(".class_map ", "");

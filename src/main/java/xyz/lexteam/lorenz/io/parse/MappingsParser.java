@@ -24,6 +24,7 @@
 package xyz.lexteam.lorenz.io.parse;
 
 import xyz.lexteam.lorenz.Mappings;
+import xyz.lexteam.lorenz.util.Constants;
 
 import java.io.BufferedReader;
 
@@ -37,6 +38,11 @@ public abstract class MappingsParser {
 
     protected BufferedReader getReader() {
         return this.reader;
+    }
+
+    protected int getClassNestingLevel(String name) {
+        return name.split(" ")[1].length()
+                - name.split(" ")[1].replace(Constants.INNER_CLASS_SEPARATOR, "").length();
     }
 
     public abstract Mappings parseMappings();
