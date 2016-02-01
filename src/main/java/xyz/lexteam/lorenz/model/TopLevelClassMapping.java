@@ -38,4 +38,14 @@ public class TopLevelClassMapping extends ClassMapping {
     public Mappings getMappings() {
         return this.parent;
     }
+
+    @Override
+    public String getFullObfuscatedName() {
+        return this.getObfuscatedName();
+    }
+
+    @Override
+    public String getFullDeobfuscatedName() {
+        return this.getDeobfuscatedName();
+    }
 }

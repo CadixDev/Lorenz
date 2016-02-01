@@ -49,7 +49,7 @@ public class SrgWriter extends MappingsWriter {
 
         for (TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
             classLines.add(String.format("CL: %s %s",
-                    classMapping.getObfuscatedName(), classMapping.getDeobfuscatedName()));
+                    classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
             classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
         }
     }
@@ -59,7 +59,7 @@ public class SrgWriter extends MappingsWriter {
 
         for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             classLines.add(String.format("CL: %s %s",
-                    innerClassMapping.getObfuscatedName(), innerClassMapping.getDeobfuscatedName()));
+                    innerClassMapping.getFullObfuscatedName(), innerClassMapping.getFullDeobfuscatedName()));
             classLines.addAll(this.getClassLinesFromInnerClasses(innerClassMapping));
         }
 

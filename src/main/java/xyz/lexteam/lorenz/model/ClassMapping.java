@@ -74,4 +74,8 @@ public abstract class ClassMapping extends BaseMapping {
     public void removeInnerClassMapping(String name) {
         this.innerClassMappings.remove(name);
     }
+
+    public abstract String getFullObfuscatedName();
+
+    public abstract String getFullDeobfuscatedName();
 }

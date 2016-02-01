@@ -38,4 +38,14 @@ public class InnerClassMapping extends ClassMapping {
     public Mappings getMappings() {
         return this.parent.getMappings();
     }
+
+    @Override
+    public String getFullObfuscatedName() {
+        return String.format("%s$%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
+    }
+
+    @Override
+    public String getFullDeobfuscatedName() {
+        return String.format("%s$%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+    }
 }
