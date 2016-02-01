@@ -33,7 +33,6 @@ import xyz.lexteam.lorenz.util.Constants;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,35 +70,28 @@ public class RgsParser extends MappingsParser {
         innerClassMappings.sort((o1, o2) -> getClassNestingLevel(o1) - getClassNestingLevel(o2));
 
         for (String topLevelClassMapping : topLevelClassMappings) {
-            topLevelClassMapping = topLevelClassMapping.replace(".class_map ", "");
-            String[] split = topLevelClassMapping.split(" ");
-
-            mappings.addMapping(new TopLevelClassMapping(mappings,
-                    split[0].replace(".", "/"), split[1].replace(".", "/")));
+            this.genClassMapping(mappings, topLevelClassMapping);
         }
 
         for (String innerClassMapping : innerClassMappings) {
-            innerClassMapping = innerClassMapping.replace(".class_map ", "");
-            String[] split = innerClassMapping.split(" ");
-            String[] obfSplit = split[0].split("/");
-            String[] deobfSplit = split[1].split("/");
-
-            String obfInnerClassName = obfSplit[obfSplit.length];
-            String obfParentClassName = split[0].substring(0, split[0].length() - obfInnerClassName.length());
-            String deobfInnerClassName = obfSplit[deobfSplit.length];
-
-            ClassMapping parentClass = this.getClassMapping(mappings, obfParentClassName);
-            parentClass.addInnerClassMapping(new InnerClassMapping(parentClass, obfInnerClassName, deobfInnerClassName));
+            this.genClassMapping(mappings, innerClassMapping);
         }
 
         for (String fieldMapping : fieldMappings) {
             fieldMapping = fieldMapping.replace(".field_map ", "");
             String[] split = fieldMapping.split(" ");
 
-            String obfuscated = split[0].substring(split[0].lastIndexOf("/"));
+            String obfuscated = split[0].substring(split[0].lastIndexOf("/") + 1);
             String deobfuscated = split[1];
 
-            ClassMapping classMapping = this.getClassMapping(mappings, split[0].substring(obfuscated.length()));
+            String parentClassName = split[0].substring(0, (split[0].length() -
+                    obfuscated.length()) - 1);
+
+            ClassMapping classMapping = this.getClassMapping(mappings, parentClassName);
+            if (classMapping == null) {
+                classMapping = this.genClassMapping(mappings,
+                        String.format(".class_map %s %s", parentClassName, parentClassName));
+            }
             classMapping.addFieldMapping(new FieldMapping(classMapping, obfuscated, deobfuscated));
         }
 
@@ -107,25 +99,73 @@ public class RgsParser extends MappingsParser {
             methodMapping = methodMapping.replace(".method_map ", "");
             String[] split = methodMapping.split(" ");
 
-            String obfuscated = split[0].substring(split[0].lastIndexOf("/"));
+            String obfuscated = split[0].substring(split[0].lastIndexOf("/") + 1);
             String obfuscatedType = split[1];
             String deobfuscated = split[2];
 
-            ClassMapping classMapping = this.getClassMapping(mappings, split[0].substring(obfuscated.length()));
+            String parentClassName = split[0].substring(0, (split[0].length() -
+                    obfuscated.length()) - 1);
+
+            ClassMapping classMapping = this.getClassMapping(mappings, parentClassName);
+            if (classMapping == null) {
+                classMapping = this.genClassMapping(mappings,
+                        String.format(".class_map %s %s", parentClassName, parentClassName));
+            }
             classMapping.addMethodMapping(new MethodMapping(classMapping, obfuscated, obfuscatedType, deobfuscated));
         }
 
         return mappings;
     }
 
+    private ClassMapping genClassMapping(Mappings mappings, String line) {
+        if (line.contains(Constants.INNER_CLASS_SEPARATOR)) {
+            line = line.replace(".class_map ", "");
+            String[] split = line.split(" ");
+            String[] obfSplit = split[0].split("\\$");
+            String[] deobfSplit = split[1].split("\\$");
+
+            String obfInnerClassName = obfSplit[obfSplit.length - 1];
+            String obfParentClassName = split[0].substring(0, (split[0].length() - obfInnerClassName.length()) - 1);
+            String deobfInnerClassName = deobfSplit[deobfSplit.length - 1];
+
+            String deobfParentClassName;
+            if (deobfSplit.length == 1) {
+                deobfParentClassName = deobfSplit[0];
+            } else {
+                deobfParentClassName = split[1].substring(0, (split[1].length() - deobfInnerClassName.length()) - 1);
+            }
+
+            ClassMapping parentClass = this.getClassMapping(mappings, obfParentClassName);
+            if (parentClass == null) {
+                parentClass = genClassMapping(mappings, String.format(".class_map %s %s", obfParentClassName,
+                        deobfParentClassName));
+            }
+            InnerClassMapping gen = new InnerClassMapping(parentClass, obfInnerClassName, deobfInnerClassName);
+            parentClass.addInnerClassMapping(gen);
+            return gen;
+        } else {
+            line = line.replace(".class_map ", "");
+            String[] split = line.split(" ");
+
+            TopLevelClassMapping classMapping = new TopLevelClassMapping(mappings,
+                    split[0].replace(".", "/"), split[1].replace(".", "/"));
+            mappings.addMapping(classMapping);
+            return classMapping;
+        }
+    }
+
     private ClassMapping getClassMapping(Mappings mappings, String fullName) {
         if (fullName.contains(Constants.INNER_CLASS_SEPARATOR)) {
-            String[] split = fullName.split(" ");
+            String[] split = fullName.split("\\$");
 
             String innerName = split[split.length - 1];
             String parentClass = fullName.substring(0, fullName.length() - innerName.length());
 
             ClassMapping classMapping = this.getClassMapping(mappings, parentClass);
+            if (classMapping == null) {
+                classMapping = this.genClassMapping(mappings,
+                        String.format(".class_map %s %s", parentClass, parentClass));
+            }
             return classMapping.getInnerClassMappings().get(innerName);
         } else {
             return mappings.getClassMappings().get(fullName);
