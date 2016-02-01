@@ -26,6 +26,7 @@ package xyz.lexteam.lorenz.io.parse;
 import xyz.lexteam.lorenz.Mappings;
 import xyz.lexteam.lorenz.model.ClassMapping;
 import xyz.lexteam.lorenz.model.FieldMapping;
+import xyz.lexteam.lorenz.model.InnerClassMapping;
 import xyz.lexteam.lorenz.model.MethodMapping;
 import xyz.lexteam.lorenz.model.TopLevelClassMapping;
 import xyz.lexteam.lorenz.util.Constants;
@@ -77,7 +78,19 @@ public class RgsParser extends MappingsParser {
                     split[0].replace(".", "/"), split[1].replace(".", "/")));
         }
 
-        // TODO: inner classes
+        for (String innerClassMapping : innerClassMappings) {
+            innerClassMapping = innerClassMapping.replace(".class_map ", "");
+            String[] split = innerClassMapping.split(" ");
+            String[] obfSplit = split[0].split("/");
+            String[] deobfSplit = split[1].split("/");
+
+            String obfInnerClassName = obfSplit[obfSplit.length];
+            String obfParentClassName = split[0].substring(0, split[0].length() - obfInnerClassName.length());
+            String deobfInnerClassName = obfSplit[deobfSplit.length];
+
+            ClassMapping parentClass = this.getClassMapping(mappings, obfParentClassName);
+            parentClass.addInnerClassMapping(new InnerClassMapping(parentClass, obfInnerClassName, deobfInnerClassName));
+        }
 
         for (String fieldMapping : fieldMappings) {
             fieldMapping = fieldMapping.replace(".field_map ", "");
