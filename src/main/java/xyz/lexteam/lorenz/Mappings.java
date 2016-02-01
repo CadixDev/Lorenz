@@ -23,20 +23,20 @@
  */
 package xyz.lexteam.lorenz;
 
-import xyz.lexteam.lorenz.model.ClassMapping;
+import xyz.lexteam.lorenz.model.TopLevelClassMapping;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Mappings {
 
-    private final Map<String, ClassMapping> classMappings = new HashMap<>();
+    private final Map<String, TopLevelClassMapping> classMappings = new HashMap<>();
 
-    public Map<String, ClassMapping> getClassMappings() {
+    public Map<String, TopLevelClassMapping> getClassMappings() {
         return this.classMappings;
     }
 
-    public void addMapping(ClassMapping mapping) {
+    public void addMapping(TopLevelClassMapping mapping) {
         this.classMappings.put(mapping.getObfuscatedName(), mapping);
     }
 

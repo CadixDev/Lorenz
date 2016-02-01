@@ -36,6 +36,7 @@ public class SrgParser extends MappingsParser {
         super(reader);
     }
 
+    @Override
     public Mappings parseMappings() {
         return null;
     }

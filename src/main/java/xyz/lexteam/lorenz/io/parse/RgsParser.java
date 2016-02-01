@@ -45,6 +45,7 @@ public class RgsParser extends MappingsParser {
         super(reader);
     }
 
+    @Override
     public Mappings parseMappings() {
         Mappings mappings = new Mappings();
 

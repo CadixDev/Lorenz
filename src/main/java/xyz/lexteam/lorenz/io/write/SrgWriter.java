@@ -24,8 +24,13 @@
 package xyz.lexteam.lorenz.io.write;
 
 import xyz.lexteam.lorenz.Mappings;
+import xyz.lexteam.lorenz.model.ClassMapping;
+import xyz.lexteam.lorenz.model.InnerClassMapping;
+import xyz.lexteam.lorenz.model.TopLevelClassMapping;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The mappings writer for SRG mappings.
@@ -36,7 +41,28 @@ public class SrgWriter extends MappingsWriter {
         super(writer);
     }
 
+    @Override
     public void writeMappings(Mappings mappings) {
+        List<String> classLines = new ArrayList<>();
+        List<String> fieldLines = new ArrayList<>();
+        List<String> methodLines = new ArrayList<>();
 
+        for (TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
+            classLines.add(String.format("CL: %s %s",
+                    classMapping.getObfuscatedName(), classMapping.getDeobfuscatedName()));
+            classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
+        }
+    }
+
+    private List<String> getClassLinesFromInnerClasses(ClassMapping classMapping) {
+        List<String> classLines = new ArrayList<>();
+
+        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+            classLines.add(String.format("CL: %s %s",
+                    innerClassMapping.getObfuscatedName(), innerClassMapping.getDeobfuscatedName()));
+            classLines.addAll(this.getClassLinesFromInnerClasses(innerClassMapping));
+        }
+
+        return classLines;
     }
 }
