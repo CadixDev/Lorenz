@@ -35,5 +35,9 @@ public abstract class MappingsWriter {
         this.writer = writer;
     }
 
+    protected PrintWriter getWriter() {
+        return this.writer;
+    }
+
     public abstract void writeMappings(Mappings mappings);
 }

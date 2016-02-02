@@ -38,6 +38,16 @@ public class FieldMapping extends BaseMapping {
     }
 
     @Override
+    public String getFullObfuscatedName() {
+        return String.format("%s/%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
+    }
+
+    @Override
+    public String getFullDeobfuscatedName() {
+        return String.format("%s/%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+    }
+
+    @Override
     public Mappings getMappings() {
         return this.parent.getMappings();
     }

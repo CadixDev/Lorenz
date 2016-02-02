@@ -65,5 +65,9 @@ public abstract class BaseMapping {
         this.deobfuscated = deobfuscated;
     }
 
+    public abstract String getFullObfuscatedName();
+
+    public abstract String getFullDeobfuscatedName();
+
     public abstract Mappings getMappings();
 }

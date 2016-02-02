@@ -31,6 +31,7 @@ import xyz.lexteam.lorenz.model.TopLevelClassMapping;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The mappings writer for SRG mappings.
@@ -51,7 +52,57 @@ public class SrgWriter extends MappingsWriter {
             classLines.add(String.format("CL: %s %s",
                     classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
             classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
+
+            fieldLines.addAll(classMapping.getFieldMappings().values().stream()
+                    .map(fieldMapping -> String.format("FD: %s %s",
+                            fieldMapping.getFullObfuscatedName(), fieldMapping.getFullDeobfuscatedName()))
+                    .collect(Collectors.toList()));
+            fieldLines.addAll(this.getFieldLinesFromInnerClasses(classMapping));
+
+            methodLines.addAll(classMapping.getMethodMappings().values().stream()
+                    .map(methodMapping -> String.format("MD: %s %s",
+                            methodMapping.getFullObfuscatedName(), methodMapping.getFullDeobfuscatedName()))
+                    .collect(Collectors.toList()));
+            methodLines.addAll(this.getMethodLinesFromInnerClasses(classMapping));
         }
+
+        for (String line : classLines) {
+            this.getWriter().println(line);
+        }
+        for (String line : fieldLines) {
+            this.getWriter().println(line);
+        }
+        for (String line : methodLines) {
+            this.getWriter().println(line);
+        }
+    }
+
+    private List<String> getFieldLinesFromInnerClasses(ClassMapping classMapping) {
+        List<String> fieldLines = new ArrayList<>();
+
+        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+            fieldLines.addAll(innerClassMapping.getFieldMappings().values().stream()
+                    .map(fieldMapping -> String.format("FD: %s %s",
+                            fieldMapping.getFullObfuscatedName(), fieldMapping.getFullDeobfuscatedName()))
+                    .collect(Collectors.toList()));
+            fieldLines.addAll(this.getFieldLinesFromInnerClasses(innerClassMapping));
+        }
+
+        return fieldLines;
+    }
+
+    private List<String> getMethodLinesFromInnerClasses(ClassMapping classMapping) {
+        List<String> methodLines = new ArrayList<>();
+
+        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+            methodLines.addAll(innerClassMapping.getMethodMappings().values().stream()
+                    .map(methodMapping -> String.format("MD: %s %s",
+                            methodMapping.getFullObfuscatedName(), methodMapping.getFullDeobfuscatedName()))
+                    .collect(Collectors.toList()));
+            methodLines.addAll(this.getMethodLinesFromInnerClasses(innerClassMapping));
+        }
+
+        return methodLines;
     }
 
     private List<String> getClassLinesFromInnerClasses(ClassMapping classMapping) {
