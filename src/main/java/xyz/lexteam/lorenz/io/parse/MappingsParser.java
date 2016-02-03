@@ -27,8 +27,10 @@ import xyz.lexteam.lorenz.Mappings;
 import xyz.lexteam.lorenz.util.Constants;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
 
-public abstract class MappingsParser {
+public abstract class MappingsParser implements Closeable {
 
     private final BufferedReader reader;
 
@@ -46,4 +48,9 @@ public abstract class MappingsParser {
     }
 
     public abstract Mappings parseMappings();
+
+    @Override
+    public void close() throws IOException {
+        this.reader.close();
+    }
 }

@@ -25,9 +25,11 @@ package xyz.lexteam.lorenz.io.write;
 
 import xyz.lexteam.lorenz.Mappings;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.PrintWriter;
 
-public abstract class MappingsWriter {
+public abstract class MappingsWriter implements Closeable {
 
     private final PrintWriter writer;
 
@@ -40,4 +42,9 @@ public abstract class MappingsWriter {
     }
 
     public abstract void writeMappings(Mappings mappings);
+
+    @Override
+    public void close() throws IOException {
+        this.writer.close();
+    }
 }
