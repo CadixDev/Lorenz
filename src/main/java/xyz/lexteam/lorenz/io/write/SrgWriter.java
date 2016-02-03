@@ -60,21 +60,16 @@ public class SrgWriter extends MappingsWriter {
             fieldLines.addAll(this.getFieldLinesFromInnerClasses(classMapping));
 
             methodLines.addAll(classMapping.getMethodMappings().values().stream()
-                    .map(methodMapping -> String.format("MD: %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getFullDeobfuscatedName()))
+                    .map(methodMapping -> String.format("MD: %s %s %s %s",
+                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedSignature(),
+                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedSignature()))
                     .collect(Collectors.toList()));
             methodLines.addAll(this.getMethodLinesFromInnerClasses(classMapping));
         }
 
-        for (String line : classLines) {
-            this.getWriter().println(line);
-        }
-        for (String line : fieldLines) {
-            this.getWriter().println(line);
-        }
-        for (String line : methodLines) {
-            this.getWriter().println(line);
-        }
+        classLines.stream().forEach(this.getWriter()::println);
+        fieldLines.stream().forEach(this.getWriter()::println);
+        methodLines.stream().forEach(this.getWriter()::println);
     }
 
     private List<String> getFieldLinesFromInnerClasses(ClassMapping classMapping) {
@@ -96,8 +91,9 @@ public class SrgWriter extends MappingsWriter {
 
         for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             methodLines.addAll(innerClassMapping.getMethodMappings().values().stream()
-                    .map(methodMapping -> String.format("MD: %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getFullDeobfuscatedName()))
+                    .map(methodMapping -> String.format("MD: %s %s %s %s",
+                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedSignature(),
+                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedSignature()))
                     .collect(Collectors.toList()));
             methodLines.addAll(this.getMethodLinesFromInnerClasses(innerClassMapping));
         }
