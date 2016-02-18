@@ -54,9 +54,15 @@ artifacts {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: 'http://lex1.lexteam.xyz:8888/repository/'
-                    + (version.endsWith('-SNAPSHOT') ? 'snapshots' : 'internal') + '/') {
-                authentication(userName: project.lexRepoUser, password: project.lexRepoPass)
+            if (project.hasProperty('lexRepoUser') && project.hasProperty('lexRepoPass')) {
+                // Lexteam Maven Repository
+                repository(url: 'http://lex1.lexteam.xyz:8888/repository/internal/') {
+                    authentication(userName: lexRepoUser, password: lexRepoPass)
+                }
+
+                snapshotRepository(url: 'http://lex1.lexteam.xyz:8888/repository/snapshots/') {
+                    authentication(userName: lexRepoUser, password: lexRepoPass)
+                }
             }
 
             pom {
@@ -93,5 +99,5 @@ uploadArchives {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '2.11'
 }

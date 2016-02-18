@@ -129,9 +129,15 @@ public class RgsParser extends MappingsParser {
             String obfParentClassName = split[0].substring(0, (split[0].length() - obfInnerClassName.length()) - 1);
             String deobfInnerClassName = deobfSplit[deobfSplit.length - 1];
 
-            String deobfParentClassName;
+            String deobfParentClassName = "";
             if (deobfSplit.length == 1) {
-                deobfParentClassName = deobfSplit[0];
+                try  {
+                    deobfParentClassName = deobfSplit[1];
+                } catch (Exception e) {
+                    for (String s : deobfSplit) {
+                        System.out.println(s);
+                    }
+                }
             } else {
                 deobfParentClassName = split[1].substring(0, (split[1].length() - deobfInnerClassName.length()) - 1);
             }

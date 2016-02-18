@@ -105,8 +105,10 @@ public class SrgWriter extends MappingsWriter {
         List<String> classLines = new ArrayList<>();
 
         for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
-            classLines.add(String.format("CL: %s %s",
-                    innerClassMapping.getFullObfuscatedName(), innerClassMapping.getFullDeobfuscatedName()));
+            if (!innerClassMapping.getFullObfuscatedName().equals(innerClassMapping.getFullDeobfuscatedName())) {
+                classLines.add(String.format("CL: %s %s",
+                        innerClassMapping.getFullObfuscatedName(), innerClassMapping.getFullDeobfuscatedName()));
+            }
             classLines.addAll(this.getClassLinesFromInnerClasses(innerClassMapping));
         }
 
