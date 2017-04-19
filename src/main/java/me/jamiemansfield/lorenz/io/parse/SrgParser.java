@@ -182,7 +182,7 @@ public class SrgParser extends MappingsParser {
             // Remove 'FD: ' from the line, and split it at every space
             // split[0] = obfuscated name
             // split[1] = deobfuscated name
-            final String[] split = Constants.INNER_CLASS_SEPARATOR_PATTERN.split(line.substring(4));
+            final String[] split = Constants.SPACE_PATTERN.split(line.substring(4));
             final String obfuscatedFullName = split[0];
             final String deobfuscatedFullName = split[1];
 
@@ -215,7 +215,7 @@ public class SrgParser extends MappingsParser {
             // split[1] = obfuscated signature
             // split[2] = deobfuscated name
             // split[3] = deobfuscated signature
-            final String[] split = Constants.INNER_CLASS_SEPARATOR_PATTERN.split(line.substring(4));
+            final String[] split = Constants.SPACE_PATTERN.split(line.substring(4));
             final String obfuscatedFullName = split[0];
             final String obfuscatedSignature = split[1];
             final String deobfuscatedFullName = split[2];
