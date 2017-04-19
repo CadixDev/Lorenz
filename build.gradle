@@ -5,7 +5,7 @@ plugins {
     id 'idea'
     id 'eclipse'
 
-    id 'com.github.hierynomus.license' version '0.11.0'
+    id 'net.minecrell.licenser' version '0.3'
 }
 
 defaultTasks 'clean', 'licenseFormat'
@@ -13,10 +13,9 @@ defaultTasks 'clean', 'licenseFormat'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = 'xyz.lexteam'
+group = 'me.jamiemansfield'
+archivesBaseName = project.name.toLowerCase()
 version = '1.0.0-SNAPSHOT'
-description = "Lorenz - Represent Java deobfuscation mappings."
-ext.url = 'http://www.lexteam.xyz/'
 
 repositories {
     mavenCentral()
@@ -26,14 +25,7 @@ dependencies {
 }
 
 license {
-    header file('HEADER.txt')
-    include '**/*.java'
-    include '**/*.groovy'
-
-    strictCheck true
-    mapping {
-        java = 'SLASHSTAR_STYLE'
-    }
+    header = project.file('HEADER.txt')
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -54,35 +46,29 @@ artifacts {
 uploadArchives {
     repositories {
         mavenDeployer {
-            if (project.hasProperty('lexRepoUser') && project.hasProperty('lexRepoPass')) {
-                // Lexteam Maven Repository
-                repository(url: 'http://lex1.lexteam.xyz:8888/repository/internal/') {
-                    authentication(userName: lexRepoUser, password: lexRepoPass)
-                }
-
-                snapshotRepository(url: 'http://lex1.lexteam.xyz:8888/repository/snapshots/') {
-                    authentication(userName: lexRepoUser, password: lexRepoPass)
-                }
+            if (System.getenv('MAVEN_RELEASES') != null) {
+                repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
+                snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
             }
 
             pom {
-                artifactId = project.archivesBaseName.toLowerCase()
+                artifactId = project.archivesBaseName
 
                 project {
-                    name = project.archivesBaseName
+                    name = project.name
                     description = project.description
                     packaging = 'jar'
                     url = project.url
 
                     scm {
-                        url = "https://github.com/Lexteam/Lorenz"
-                        connection = "scm:git:https://github.com/Lexteam/Lorenz.git"
-                        developerConnection = "scm:git:git@github.com:Lexteam/Lorenz.git"
+                        url = 'https://github.com/jamiemansfield/Lorenz'
+                        connection = 'scm:git:https://github.com/jamiemansfield/Lorenz.git'
+                        developerConnection = 'scm:git:git@github.com:jamiemansfield/Lorenz.git'
                     }
 
                     issueManagement {
                         system = 'GitHub'
-                        url = 'https://github.com/Lexteam/Lorenz/issues'
+                        url = 'https://github.com/jamiemansfield/Lorenz/issues'
                     }
 
                     licenses {

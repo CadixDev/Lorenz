@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +22,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.io.parse;
 
-import xyz.lexteam.lorenz.Mappings;
-import xyz.lexteam.lorenz.model.ClassMapping;
-import xyz.lexteam.lorenz.model.FieldMapping;
-import xyz.lexteam.lorenz.model.InnerClassMapping;
-import xyz.lexteam.lorenz.model.MethodMapping;
-import xyz.lexteam.lorenz.model.TopLevelClassMapping;
-import xyz.lexteam.lorenz.util.Constants;
+package me.jamiemansfield.lorenz.io.parse;
+
+import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.model.InnerClassMapping;
+import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.FieldMapping;
+import me.jamiemansfield.lorenz.util.Constants;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
@@ -178,4 +180,5 @@ public class RgsParser extends MappingsParser {
             return mappings.getClassMappings().get(fullName);
         }
     }
+
 }

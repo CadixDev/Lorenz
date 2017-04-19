@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +22,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz;
 
-import xyz.lexteam.lorenz.model.TopLevelClassMapping;
+package me.jamiemansfield.lorenz.io.parse;
 
-import java.util.HashMap;
-import java.util.Map;
+import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.util.Constants;
 
-public class Mappings {
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
 
-    private final Map<String, TopLevelClassMapping> classMappings = new HashMap<>();
+public abstract class MappingsParser implements Closeable {
 
-    public Map<String, TopLevelClassMapping> getClassMappings() {
-        return this.classMappings;
+    private final BufferedReader reader;
+
+    public MappingsParser(BufferedReader reader) {
+        this.reader = reader;
     }
 
-    public void addMapping(TopLevelClassMapping mapping) {
-        this.classMappings.put(mapping.getObfuscatedName(), mapping);
+    protected BufferedReader getReader() {
+        return this.reader;
     }
 
-    public void removeClassMapping(String name) {
-        this.classMappings.remove(name);
+    protected int getClassNestingLevel(String name) {
+        return name.split(" ")[1].length()
+                - name.split(" ")[1].replace(Constants.INNER_CLASS_SEPARATOR, "").length();
     }
+
+    public abstract Mappings parseMappings();
+
+    @Override
+    public void close() throws IOException {
+        this.reader.close();
+    }
+
 }

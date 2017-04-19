@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.model;
 
-import xyz.lexteam.lorenz.Mappings;
+package me.jamiemansfield.lorenz.util;
 
-/**
- * Represents a field mapping.
- */
-public class FieldMapping extends BaseMapping {
+public final class Constants {
 
-    private final ClassMapping parent;
+    public static final String INNER_CLASS_SEPARATOR = "$";
 
-    public FieldMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
-        super(obfuscated, deobfuscated);
-        this.parent = parent;
+    private Constants() {
     }
 
-    @Override
-    public String getFullObfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
-    }
-
-    @Override
-    public String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
-    }
-
-    @Override
-    public Mappings getMappings() {
-        return this.parent.getMappings();
-    }
 }

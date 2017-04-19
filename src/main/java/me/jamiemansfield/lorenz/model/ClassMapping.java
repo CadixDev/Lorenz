@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.model;
+
+package me.jamiemansfield.lorenz.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,4 +76,5 @@ public abstract class ClassMapping extends BaseMapping {
     public void removeInnerClassMapping(String name) {
         this.innerClassMappings.remove(name);
     }
+
 }

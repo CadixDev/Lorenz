@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.io.parse;
 
-import xyz.lexteam.lorenz.Mappings;
-import xyz.lexteam.lorenz.util.Constants;
+package me.jamiemansfield.lorenz.io.parse;
+
+import me.jamiemansfield.lorenz.Mappings;
 
 import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
 
-public abstract class MappingsParser implements Closeable {
+/**
+ * Mappings parser for SRG mappings.
+ */
+public class SrgParser extends MappingsParser {
 
-    private final BufferedReader reader;
-
-    public MappingsParser(BufferedReader reader) {
-        this.reader = reader;
+    public SrgParser(BufferedReader reader) {
+        super(reader);
     }
-
-    protected BufferedReader getReader() {
-        return this.reader;
-    }
-
-    protected int getClassNestingLevel(String name) {
-        return name.split(" ")[1].length()
-                - name.split(" ")[1].replace(Constants.INNER_CLASS_SEPARATOR, "").length();
-    }
-
-    public abstract Mappings parseMappings();
 
     @Override
-    public void close() throws IOException {
-        this.reader.close();
+    public Mappings parseMappings() {
+        return null;
     }
+
 }

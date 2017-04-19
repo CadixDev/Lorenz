@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.io.parse;
 
-import xyz.lexteam.lorenz.Mappings;
+package me.jamiemansfield.lorenz;
 
-import java.io.BufferedReader;
+import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 
-/**
- * Mappings parser for SRG mappings.
- */
-public class SrgParser extends MappingsParser {
+import java.util.HashMap;
+import java.util.Map;
 
-    public SrgParser(BufferedReader reader) {
-        super(reader);
+public class Mappings {
+
+    private final Map<String, TopLevelClassMapping> classMappings = new HashMap<>();
+
+    public Map<String, TopLevelClassMapping> getClassMappings() {
+        return this.classMappings;
     }
 
-    @Override
-    public Mappings parseMappings() {
-        return null;
+    public void addMapping(TopLevelClassMapping mapping) {
+        this.classMappings.put(mapping.getObfuscatedName(), mapping);
     }
+
+    public void removeClassMapping(String name) {
+        this.classMappings.remove(name);
+    }
+
 }

@@ -1,7 +1,8 @@
 /*
  * This file is part of Lorenz, licensed under the MIT License (MIT).
  *
- * Copyright (c) 2016, Lexteam <http://www.lexteam.xyz/>
+ * Copyright (c) Jamie Mansfield <https://www.jamierocks.uk/>
+ * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package xyz.lexteam.lorenz.model;
 
-import xyz.lexteam.lorenz.Mappings;
+package me.jamiemansfield.lorenz.model;
+
+import me.jamiemansfield.lorenz.Mappings;
 
 public class TopLevelClassMapping extends ClassMapping {
 
@@ -48,4 +50,5 @@ public class TopLevelClassMapping extends ClassMapping {
     public String getFullDeobfuscatedName() {
         return this.getDeobfuscatedName();
     }
+
 }
