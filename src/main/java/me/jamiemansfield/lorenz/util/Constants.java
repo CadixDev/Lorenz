@@ -25,9 +25,14 @@
 
 package me.jamiemansfield.lorenz.util;
 
+import java.util.regex.Pattern;
+
 public final class Constants {
 
     public static final String INNER_CLASS_SEPARATOR = "$";
+    public static final Pattern INNER_CLASS_SEPARATOR_PATTERN = Pattern.compile("\\$", Pattern.LITERAL);
+
+    public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
 
     private Constants() {
     }
