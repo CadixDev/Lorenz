@@ -25,21 +25,21 @@
 
 package me.jamiemansfield.lorenz.io.parse;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 
 import java.io.BufferedReader;
 
 /**
- * Mappings parser for SRG mappings.
+ * The mappings parser, for the SRG format.
  */
 public class SrgParser extends MappingsParser {
 
-    public SrgParser(BufferedReader reader) {
+    public SrgParser(final BufferedReader reader) {
         super(reader);
     }
 
     @Override
-    public Mappings parseMappings() {
+    public MappingsContainer parseMappings() {
         return null;
     }
 

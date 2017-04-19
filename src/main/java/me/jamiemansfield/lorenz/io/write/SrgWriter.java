@@ -25,7 +25,7 @@
 
 package me.jamiemansfield.lorenz.io.write;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.ClassMapping;
@@ -36,21 +36,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The mappings writer for SRG mappings.
+ * The mappings writer, for the SRG format.
  */
 public class SrgWriter extends MappingsWriter {
 
-    public SrgWriter(PrintWriter writer) {
+    /**
+     * Constructs a new {@link SrgWriter} which outputs to the given
+     * {@link PrintWriter}.
+     *
+     * @param writer The {@link PrintWriter} to output to
+     */
+    public SrgWriter(final PrintWriter writer) {
         super(writer);
     }
 
     @Override
-    public void writeMappings(Mappings mappings) {
-        List<String> classLines = new ArrayList<>();
-        List<String> fieldLines = new ArrayList<>();
-        List<String> methodLines = new ArrayList<>();
+    public void writeMappings(final MappingsContainer mappings) {
+        final List<String> classLines = new ArrayList<>();
+        final List<String> fieldLines = new ArrayList<>();
+        final List<String> methodLines = new ArrayList<>();
 
-        for (TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
+        for (final TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
             classLines.add(String.format("CL: %s %s",
                     classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
             classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
@@ -69,15 +75,15 @@ public class SrgWriter extends MappingsWriter {
             methodLines.addAll(this.getMethodLinesFromInnerClasses(classMapping));
         }
 
-        classLines.stream().forEach(this.getWriter()::println);
-        fieldLines.stream().forEach(this.getWriter()::println);
-        methodLines.stream().forEach(this.getWriter()::println);
+        classLines.forEach(this.writer::println);
+        fieldLines.forEach(this.writer::println);
+        methodLines.forEach(this.writer::println);
     }
 
-    private List<String> getFieldLinesFromInnerClasses(ClassMapping classMapping) {
-        List<String> fieldLines = new ArrayList<>();
+    private List<String> getFieldLinesFromInnerClasses(final ClassMapping classMapping) {
+        final List<String> fieldLines = new ArrayList<>();
 
-        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             fieldLines.addAll(innerClassMapping.getFieldMappings().values().stream()
                     .map(fieldMapping -> String.format("FD: %s %s",
                             fieldMapping.getFullObfuscatedName(), fieldMapping.getFullDeobfuscatedName()))
@@ -88,10 +94,10 @@ public class SrgWriter extends MappingsWriter {
         return fieldLines;
     }
 
-    private List<String> getMethodLinesFromInnerClasses(ClassMapping classMapping) {
-        List<String> methodLines = new ArrayList<>();
+    private List<String> getMethodLinesFromInnerClasses(final ClassMapping classMapping) {
+        final List<String> methodLines = new ArrayList<>();
 
-        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             methodLines.addAll(innerClassMapping.getMethodMappings().values().stream()
                     .map(methodMapping -> String.format("MD: %s %s %s %s",
                             methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedSignature(),
@@ -103,10 +109,10 @@ public class SrgWriter extends MappingsWriter {
         return methodLines;
     }
 
-    private List<String> getClassLinesFromInnerClasses(ClassMapping classMapping) {
-        List<String> classLines = new ArrayList<>();
+    private List<String> getClassLinesFromInnerClasses(final ClassMapping classMapping) {
+        final List<String> classLines = new ArrayList<>();
 
-        for (InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
+        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             if (!innerClassMapping.getFullObfuscatedName().equals(innerClassMapping.getFullDeobfuscatedName())) {
                 classLines.add(String.format("CL: %s %s",
                         innerClassMapping.getFullObfuscatedName(), innerClassMapping.getFullDeobfuscatedName()));

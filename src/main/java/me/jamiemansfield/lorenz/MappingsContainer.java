@@ -30,7 +30,7 @@ import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mappings {
+public class MappingsContainer {
 
     private final Map<String, TopLevelClassMapping> classMappings = new HashMap<>();
 
@@ -38,11 +38,11 @@ public class Mappings {
         return this.classMappings;
     }
 
-    public void addMapping(TopLevelClassMapping mapping) {
+    public void addMapping(final TopLevelClassMapping mapping) {
         this.classMappings.put(mapping.getObfuscatedName(), mapping);
     }
 
-    public void removeClassMapping(String name) {
+    public void removeMapping(final String name) {
         this.classMappings.remove(name);
     }
 

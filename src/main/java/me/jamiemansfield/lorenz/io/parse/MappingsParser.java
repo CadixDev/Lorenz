@@ -25,31 +25,35 @@
 
 package me.jamiemansfield.lorenz.io.parse;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 import me.jamiemansfield.lorenz.util.Constants;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 
+/**
+ * Superclass for all parser classes.
+ */
 public abstract class MappingsParser implements Closeable {
 
-    private final BufferedReader reader;
+    protected final BufferedReader reader;
 
-    public MappingsParser(BufferedReader reader) {
+    protected MappingsParser(final BufferedReader reader) {
         this.reader = reader;
     }
 
-    protected BufferedReader getReader() {
-        return this.reader;
-    }
+    /**
+     * Reads from the previously given {@link BufferedReader}.
+     *
+     * @return A {@link MappingsContainer} from the {@link BufferedReader}.
+     */
+    public abstract MappingsContainer parseMappings();
 
-    protected int getClassNestingLevel(String name) {
+    protected int getClassNestingLevel(final String name) {
         return name.split(" ")[1].length()
                 - name.split(" ")[1].replace(Constants.INNER_CLASS_SEPARATOR, "").length();
     }
-
-    public abstract Mappings parseMappings();
 
     @Override
     public void close() throws IOException {

@@ -25,16 +25,23 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 
 /**
- * Represents a field mapping.
+ * Represents a {@link BaseMapping} for a field.
  */
 public class FieldMapping extends BaseMapping {
 
     private final ClassMapping parent;
 
-    public FieldMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
+    /**
+     * Constructs a new {@link FieldMapping} with the given parameters.
+     *
+     * @param parent The parent {@link ClassMapping}
+     * @param obfuscated The obfuscated name of the field
+     * @param deobfuscated The deobfuscated name of the field
+     */
+    public FieldMapping(final ClassMapping parent, final String obfuscated, final String deobfuscated) {
         super(obfuscated, deobfuscated);
         this.parent = parent;
     }
@@ -50,7 +57,7 @@ public class FieldMapping extends BaseMapping {
     }
 
     @Override
-    public Mappings getMappings() {
+    public MappingsContainer getMappings() {
         return this.parent.getMappings();
     }
 

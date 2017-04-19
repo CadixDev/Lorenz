@@ -25,7 +25,7 @@
 
 package me.jamiemansfield.lorenz.io.write;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -33,17 +33,25 @@ import java.io.PrintWriter;
 
 public abstract class MappingsWriter implements Closeable {
 
-    private final PrintWriter writer;
+    protected final PrintWriter writer;
 
-    public MappingsWriter(PrintWriter writer) {
+    /**
+     * Constructs a new {@link MappingsWriter} which outputs to the given
+     * {@link PrintWriter}.
+     *
+     * @param writer The {@link PrintWriter} to output to
+     */
+    protected MappingsWriter(final PrintWriter writer) {
         this.writer = writer;
     }
 
-    protected PrintWriter getWriter() {
-        return this.writer;
-    }
-
-    public abstract void writeMappings(Mappings mappings);
+    /**
+     * Writes the given {@link MappingsContainer} to this {@link MappingsWriter}'s
+     * {@link PrintWriter}.
+     *
+     * @param mappings The {@link MappingsContainer} to write
+     */
+    public abstract void writeMappings(final MappingsContainer mappings);
 
     @Override
     public void close() throws IOException {

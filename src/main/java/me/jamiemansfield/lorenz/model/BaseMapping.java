@@ -25,52 +25,73 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 
 /**
- * Represents a deobfuscation mapping.
+ * Represents a single obfuscation mapping for a particular member.
  */
 public abstract class BaseMapping {
 
     private final String obfuscated;
     private String deobfuscated;
 
-    public BaseMapping(String obfuscated, String deobfuscated) {
+    /**
+     * Constructs a new mapping with the given parameters.
+     *
+     * @param obfuscated The obfuscated name of the mapped member
+     * @param deobfuscated The deobfuscated name of the mapped member
+     */
+    protected BaseMapping(final String obfuscated, final String deobfuscated) {
         this.obfuscated = obfuscated;
         this.deobfuscated = deobfuscated;
     }
 
     /**
-     * Gets the obfuscated name of this mapping.
+     * Returns the obfuscated name of this {@link BaseMapping}.
      *
-     * @return The obfuscated name.
+     * @return The obfuscated name of this {@link BaseMapping}
      */
     public String getObfuscatedName() {
         return this.obfuscated;
     }
 
     /**
-     * Gets the deobfuscated name of this mapping.
+     * Returns the deobfuscated name of this {@link BaseMapping}.
      *
-     * @return The deobfuscated name.
+     * @return The deobfuscated name of this {@link BaseMapping}
      */
     public String getDeobfuscatedName() {
         return this.deobfuscated;
     }
 
     /**
-     * Sets the deobfuscated name of this mapping.
+     * Sets the deobfuscated name of this {@link BaseMapping}.
      *
-     * @param deobfuscated The deobfuscated name.
+     * @param name The new deobfuscated name of this {@link BaseMapping}
      */
-    public void setDeobfuscatedName(String deobfuscated) {
-        this.deobfuscated = deobfuscated;
+    public void setDeobfuscatedName(final String name) {
+        this.deobfuscated = name;
     }
 
+    /**
+     * Returns the full obfuscated name of this {@link BaseMapping}.
+     *
+     * @return The full obfuscated name of this {@link BaseMapping}
+     */
     public abstract String getFullObfuscatedName();
 
+    /**
+     * Returns the full deobfuscated name of this {@link BaseMapping}.
+     *
+     * @return The full deobfuscated name of this {@link BaseMapping}
+     */
     public abstract String getFullDeobfuscatedName();
 
-    public abstract Mappings getMappings();
+    /**
+     * Gets the {@link MappingsContainer} which owns this {@link BaseMapping}.
+     *
+     * @return The {@link MappingsContainer} which owns this {@link BaseMapping}
+     */
+    public abstract MappingsContainer getMappings();
 
 }

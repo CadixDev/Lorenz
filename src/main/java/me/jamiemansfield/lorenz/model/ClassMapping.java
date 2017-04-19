@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a class mapping.
+ * Represents a {@link BaseMapping} for a class.
  */
 public abstract class ClassMapping extends BaseMapping {
 
@@ -37,43 +37,97 @@ public abstract class ClassMapping extends BaseMapping {
     private final Map<String, MethodMapping> methodMappings = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClassMappings = new HashMap<>();
 
-    public ClassMapping(String obfuscated, String deobfuscated) {
+    /**
+     * Constructs a new {@link ClassMapping} with the given parameters.
+     *
+     * @param obfuscated The obfuscated name of the class
+     * @param deobfuscated The deobfuscated name of the class
+     */
+    public ClassMapping(final String obfuscated, final String deobfuscated) {
         super(obfuscated, deobfuscated);
     }
 
+    /**
+     * Gets a clone of the {@link FieldMapping}s.
+     *
+     * @return A clone of the {@link FieldMapping}s
+     */
     public Map<String, FieldMapping> getFieldMappings() {
-        return this.fieldMappings;
+        return new HashMap<>(this.fieldMappings);
     }
 
+    /**
+     * Gets a clone of the {@link MethodMapping}s.
+     *
+     * @return A clone of the {@link MethodMapping}s
+     */
     public Map<String, MethodMapping> getMethodMappings() {
-        return this.methodMappings;
+        return new HashMap<>(this.methodMappings);
     }
 
+    /**
+     * Gets a clone of the {@link InnerClassMapping}s.
+     *
+     * @return A clone of the {@link InnerClassMapping}s
+     */
     public Map<String, InnerClassMapping> getInnerClassMappings() {
-        return this.innerClassMappings;
+        return new HashMap<>(this.innerClassMappings);
     }
 
-    public void addFieldMapping(FieldMapping mapping) {
+    /**
+     * Adds the given {@link FieldMapping} to this {@link ClassMapping}.
+     *
+     * @param mapping The {@link FieldMapping} to add
+     */
+    public void addFieldMapping(final FieldMapping mapping) {
         this.fieldMappings.put(mapping.getObfuscatedName(), mapping);
     }
 
-    public void removeFieldMapping(String name) {
+    /**
+     * Removes the {@link FieldMapping} with the given signature from this
+     * {@link ClassMapping}.
+     *
+     * @param name The signature of the field to remove the mapping of
+     */
+    public void removeFieldMapping(final String name) {
         this.fieldMappings.remove(name);
     }
 
-    public void addMethodMapping(MethodMapping mapping) {
+    /**
+     * Adds the given {@link MethodMapping} to this {@link ClassMapping}.
+     *
+     * @param mapping The {@link MethodMapping} to add
+     */
+    public void addMethodMapping(final MethodMapping mapping) {
         this.methodMappings.put(mapping.getObfuscatedName(), mapping);
     }
 
-    public void removeMethodMapping(String name) {
+    /**
+     * Removes the {@link MethodMapping} with the given signature from this
+     * {@link ClassMapping}.
+     *
+     * @param name The signature of the method to remove the mapping of
+     */
+    public void removeMethodMapping(final String name) {
         this.methodMappings.remove(name);
     }
 
-    public void addInnerClassMapping(InnerClassMapping mapping) {
+    /**
+     * Adds the given {@link InnerClassMapping} to this {@link ClassMapping}.
+     *
+     * @param mapping The {@link InnerClassMapping} to add
+     */
+    public void addInnerClassMapping(final InnerClassMapping mapping) {
         this.innerClassMappings.put(mapping.getObfuscatedName(), mapping);
     }
 
-    public void removeInnerClassMapping(String name) {
+    /**
+     * Removes the {@link InnerClassMapping} with the given signature from this
+     * {@link ClassMapping}.
+     *
+     * @param name The name of the inner class to remove the mapping of
+     */
+    public void removeInnerClassMapping(final String name) {
         this.innerClassMappings.remove(name);
     }
 

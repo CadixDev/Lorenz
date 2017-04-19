@@ -25,19 +25,33 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.Mappings;
+import me.jamiemansfield.lorenz.MappingsContainer;
 
+/**
+ * Represents a {@link BaseMapping} for an inner class, i.e. a class parented by
+ * another class.
+ */
 public class InnerClassMapping extends ClassMapping {
 
     private final ClassMapping parent;
 
-    public InnerClassMapping(ClassMapping parent, String obfuscated, String deobfuscated) {
+    /**
+     * Constructs a new {@link InnerClassMapping} with the given parameters.
+     *
+     * <p>The name should not include the parent class(es), just the name of the
+     * inner class itself.</p>
+     *
+     * @param parent The parent {@link ClassMapping}
+     * @param obfuscated The obfuscated name of the inner class
+     * @param deobfuscated The deobfuscated name of the inner class
+     */
+    public InnerClassMapping(final ClassMapping parent, final String obfuscated, final String deobfuscated) {
         super(obfuscated, deobfuscated);
         this.parent = parent;
     }
 
     @Override
-    public Mappings getMappings() {
+    public MappingsContainer getMappings() {
         return this.parent.getMappings();
     }
 
