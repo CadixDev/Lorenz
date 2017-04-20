@@ -69,8 +69,8 @@ public class SrgWriter extends MappingsWriter {
 
             methodLines.addAll(classMapping.getMethodMappings().values().stream()
                     .map(methodMapping -> String.format("MD: %s %s %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedSignature(),
-                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedSignature()))
+                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedDescriptor(),
+                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedDescriptor()))
                     .collect(Collectors.toList()));
             methodLines.addAll(this.getMethodLinesFromInnerClasses(classMapping));
         }
@@ -100,8 +100,8 @@ public class SrgWriter extends MappingsWriter {
         for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
             methodLines.addAll(innerClassMapping.getMethodMappings().values().stream()
                     .map(methodMapping -> String.format("MD: %s %s %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedSignature(),
-                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedSignature()))
+                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedDescriptor(),
+                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedDescriptor()))
                     .collect(Collectors.toList()));
             methodLines.addAll(this.getMethodLinesFromInnerClasses(innerClassMapping));
         }

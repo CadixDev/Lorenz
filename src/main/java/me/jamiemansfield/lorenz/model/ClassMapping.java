@@ -34,7 +34,7 @@ import java.util.Map;
 public abstract class ClassMapping extends BaseMapping {
 
     private final Map<String, FieldMapping> fieldMappings = new HashMap<>();
-    private final Map<String, MethodMapping> methodMappings = new HashMap<>();
+    private final Map<MethodSignature, MethodMapping> methodMappings = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClassMappings = new HashMap<>();
 
     /**
@@ -61,7 +61,7 @@ public abstract class ClassMapping extends BaseMapping {
      *
      * @return A clone of the {@link MethodMapping}s
      */
-    public Map<String, MethodMapping> getMethodMappings() {
+    public Map<MethodSignature, MethodMapping> getMethodMappings() {
         return new HashMap<>(this.methodMappings);
     }
 
@@ -99,7 +99,7 @@ public abstract class ClassMapping extends BaseMapping {
      * @param mapping The {@link MethodMapping} to add
      */
     public void addMethodMapping(final MethodMapping mapping) {
-        this.methodMappings.put(mapping.getObfuscatedName(), mapping);
+        this.methodMappings.put(mapping.getSignature(), mapping);
     }
 
     /**

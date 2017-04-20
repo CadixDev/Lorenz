@@ -33,43 +33,45 @@ import me.jamiemansfield.lorenz.MappingsContainer;
 public class MethodMapping extends BaseMapping {
 
     private final ClassMapping parent;
-    private final String obfuscatedSignature;
+    private final String obfuscatedDescriptor;
+    private final MethodSignature signature;
 
     /**
      * Constructs a new {@link MethodMapping} with the given parameters.
      *
      * @param parent The parent {@link ClassMapping}
      * @param obfuscated The obfuscated name of the method
-     * @param obfuscatedSignature The obfuscated signature of the method
+     * @param obfuscatedDescriptor The obfuscated descriptor of the method
      * @param deobfuscated The deobfuscated name of the method
      */
     public MethodMapping(final ClassMapping parent, final String obfuscated,
-            final String obfuscatedSignature, final String deobfuscated) {
+            final String obfuscatedDescriptor, final String deobfuscated) {
         super(obfuscated, deobfuscated);
         this.parent = parent;
-        this.obfuscatedSignature = obfuscatedSignature;
+        this.obfuscatedDescriptor = obfuscatedDescriptor;
+        this.signature = new MethodSignature(this.getObfuscatedName(), this.obfuscatedDescriptor);
     }
 
     /**
-     * Gets the obfuscated signature of the method.
+     * Gets the obfuscated descriptor of the method.
      *
-     * @return The obfuscated signature
+     * @return The obfuscated descriptor
      */
-    public String getObfuscatedSignature() {
-        return this.obfuscatedSignature;
+    public String getObfuscatedDescriptor() {
+        return this.obfuscatedDescriptor;
     }
 
     /**
-     * Gets the deobfuscated signature of the method.
+     * Gets the deobfuscated descriptor of the method.
      *
-     * @return The deobfuscated signature
+     * @return The deobfuscated descriptor
      */
-    public String getDeobfuscatedSignature() {
-        final String innerContent = this.obfuscatedSignature.substring(this.obfuscatedSignature.indexOf("(") + 1,
-                this.obfuscatedSignature.indexOf(")"));
-        final String outerContent = this.obfuscatedSignature.substring(this.obfuscatedSignature.indexOf(")") + 1);
+    public String getDeobfuscatedDescriptor() {
+        final String innerContent = this.obfuscatedDescriptor.substring(this.obfuscatedDescriptor.indexOf("(") + 1,
+                this.obfuscatedDescriptor.indexOf(")"));
+        final String outerContent = this.obfuscatedDescriptor.substring(this.obfuscatedDescriptor.indexOf(")") + 1);
 
-        String modifiedType = this.obfuscatedSignature;
+        String modifiedType = this.obfuscatedDescriptor;
 
         for (final String type : innerContent.split(";")) {
             if (type.startsWith("L")) {
@@ -90,6 +92,15 @@ public class MethodMapping extends BaseMapping {
         }
 
         return modifiedType;
+    }
+
+    /**
+     * Gets the signature of the method, that is being mapped.
+     *
+     * @return The method's signature
+     */
+    public MethodSignature getSignature() {
+        return this.signature;
     }
 
     @Override

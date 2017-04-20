@@ -166,7 +166,7 @@ public class SrgParser extends MappingsParser {
             ClassMapping parentClassMapping = this.getClassMapping(mappings, parentClass);
             if (parentClassMapping == null) {
                 parentClassMapping = this.genClassMapping(mappings,
-                        String.format(".class_map %s %s", parentClass, parentClass));
+                        String.format("CL: %s %s", parentClass, parentClass));
             }
 
             return parentClassMapping.getInnerClassMappings().get(innerName);
