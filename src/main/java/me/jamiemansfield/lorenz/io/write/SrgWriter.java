@@ -57,8 +57,10 @@ public class SrgWriter extends MappingsWriter {
         final List<String> methodLines = new ArrayList<>();
 
         for (final TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
-            classLines.add(String.format("CL: %s %s",
-                    classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
+            if (!classMapping.getFullObfuscatedName().equals(classMapping.getFullDeobfuscatedName())) {
+                classLines.add(String.format("CL: %s %s",
+                        classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
+            }
             classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
 
             fieldLines.addAll(classMapping.getFieldMappings().values().stream()
