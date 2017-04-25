@@ -26,103 +26,94 @@
 package me.jamiemansfield.lorenz.io.write;
 
 import me.jamiemansfield.lorenz.MappingsContainer;
-import me.jamiemansfield.lorenz.model.InnerClassMapping;
-import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.BaseMapping;
 import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.FieldMapping;
+import me.jamiemansfield.lorenz.model.MethodMapping;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * The mappings writer, for the SRG format.
  */
 public class SrgWriter extends MappingsWriter {
 
+    private static final Predicate<BaseMapping> NOT_USELESS
+            = mapping -> !mapping.getObfuscatedName().equals(mapping.getDeobfuscatedName());
+    private static final Comparator<BaseMapping> ALPHABET_SORTER =
+            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
+
+    private final ByteArrayOutputStream clOut = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream fdOut = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream mdOut = new ByteArrayOutputStream();
+
+    private final PrintWriter clWriter = new PrintWriter(clOut);
+    private final PrintWriter fdWriter = new PrintWriter(fdOut);
+    private final PrintWriter mdWriter = new PrintWriter(mdOut);
+
     /**
      * Constructs a new {@link SrgWriter} which outputs to the given
      * {@link PrintWriter}.
      *
-     * @param writer The {@link PrintWriter} to output to
+     * @param out The {@link PrintWriter} to output to
      */
-    public SrgWriter(final PrintWriter writer) {
-        super(writer);
+    public SrgWriter(PrintWriter out) {
+        super(out);
     }
 
     @Override
     public void writeMappings(final MappingsContainer mappings) {
-        final List<String> classLines = new ArrayList<>();
-        final List<String> fieldLines = new ArrayList<>();
-        final List<String> methodLines = new ArrayList<>();
-
-        for (final TopLevelClassMapping classMapping : mappings.getClassMappings().values()) {
-            if (!classMapping.getFullObfuscatedName().equals(classMapping.getFullDeobfuscatedName())) {
-                classLines.add(String.format("CL: %s %s",
-                        classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName()));
-            }
-            classLines.addAll(this.getClassLinesFromInnerClasses(classMapping));
-
-            fieldLines.addAll(classMapping.getFieldMappings().values().stream()
-                    .map(fieldMapping -> String.format("FD: %s %s",
-                            fieldMapping.getFullObfuscatedName(), fieldMapping.getFullDeobfuscatedName()))
-                    .collect(Collectors.toList()));
-            fieldLines.addAll(this.getFieldLinesFromInnerClasses(classMapping));
-
-            methodLines.addAll(classMapping.getMethodMappings().values().stream()
-                    .map(methodMapping -> String.format("MD: %s %s %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedDescriptor(),
-                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedDescriptor()))
-                    .collect(Collectors.toList()));
-            methodLines.addAll(this.getMethodLinesFromInnerClasses(classMapping));
+        mappings.getClassMappings().values().stream()
+                .sorted(ALPHABET_SORTER)
+                .forEach(this::writeClassMapping);
+        this.clWriter.close();
+        this.fdWriter.close();
+        this.mdWriter.close();
+        this.writer.write(clOut.toString());
+        this.writer.write(fdOut.toString());
+        this.writer.write(mdOut.toString());
+        this.writer.close();
+        try {
+            this.clOut.close();
+            this.fdOut.close();
+            this.mdOut.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-
-        classLines.forEach(this.writer::println);
-        fieldLines.forEach(this.writer::println);
-        methodLines.forEach(this.writer::println);
     }
 
-    private List<String> getFieldLinesFromInnerClasses(final ClassMapping classMapping) {
-        final List<String> fieldLines = new ArrayList<>();
-
-        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
-            fieldLines.addAll(innerClassMapping.getFieldMappings().values().stream()
-                    .map(fieldMapping -> String.format("FD: %s %s",
-                            fieldMapping.getFullObfuscatedName(), fieldMapping.getFullDeobfuscatedName()))
-                    .collect(Collectors.toList()));
-            fieldLines.addAll(this.getFieldLinesFromInnerClasses(innerClassMapping));
+    private void writeClassMapping(final ClassMapping classMapping) {
+        if (!classMapping.getObfuscatedName().equals(classMapping.getDeobfuscatedName())) {
+            this.clWriter.format("CL: %s %s\n",
+                    classMapping.getFullObfuscatedName(), classMapping.getFullDeobfuscatedName());
         }
 
-        return fieldLines;
+        classMapping.getInnerClassMappings().values().stream()
+                .sorted(ALPHABET_SORTER)
+                .forEach(this::writeClassMapping);
+        classMapping.getFieldMappings().values().stream().filter(NOT_USELESS)
+                .sorted(ALPHABET_SORTER)
+                .forEach(this::writeFieldMapping);
+        classMapping.getMethodMappings().values().stream().filter(NOT_USELESS)
+                .sorted(ALPHABET_SORTER)
+                .forEach(this::writeMethodMapping);
     }
 
-    private List<String> getMethodLinesFromInnerClasses(final ClassMapping classMapping) {
-        final List<String> methodLines = new ArrayList<>();
-
-        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
-            methodLines.addAll(innerClassMapping.getMethodMappings().values().stream()
-                    .map(methodMapping -> String.format("MD: %s %s %s %s",
-                            methodMapping.getFullObfuscatedName(), methodMapping.getObfuscatedDescriptor(),
-                            methodMapping.getFullDeobfuscatedName(), methodMapping.getDeobfuscatedDescriptor()))
-                    .collect(Collectors.toList()));
-            methodLines.addAll(this.getMethodLinesFromInnerClasses(innerClassMapping));
-        }
-
-        return methodLines;
+    private void writeFieldMapping(final FieldMapping fieldMapping) {
+        this.fdWriter.format("FD: %s %s\n",
+                fieldMapping.getFullObfuscatedName(),
+                fieldMapping.getFullDeobfuscatedName());
     }
 
-    private List<String> getClassLinesFromInnerClasses(final ClassMapping classMapping) {
-        final List<String> classLines = new ArrayList<>();
-
-        for (final InnerClassMapping innerClassMapping : classMapping.getInnerClassMappings().values()) {
-            if (!innerClassMapping.getFullObfuscatedName().equals(innerClassMapping.getFullDeobfuscatedName())) {
-                classLines.add(String.format("CL: %s %s",
-                        innerClassMapping.getFullObfuscatedName(), innerClassMapping.getFullDeobfuscatedName()));
-            }
-            classLines.addAll(this.getClassLinesFromInnerClasses(innerClassMapping));
-        }
-
-        return classLines;
+    private void writeMethodMapping(final MethodMapping mapping) {
+        this.mdWriter.format("MD: %s %s %s %s\n",
+                mapping.getFullObfuscatedName(),
+                mapping.getObfuscatedDescriptor(),
+                mapping.getFullDeobfuscatedName(),
+                mapping.getDeobfuscatedDescriptor());
     }
-
 }
