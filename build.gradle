@@ -22,7 +22,11 @@ repositories {
 }
 
 dependencies {
+    // Common
     compile 'com.google.guava:guava:21.0'
+
+    // Testing
+    compile 'junit:junit:4.12'
 }
 
 license {
