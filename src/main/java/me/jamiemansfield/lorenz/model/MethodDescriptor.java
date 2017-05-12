@@ -25,33 +25,67 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.Objects;
 
 /**
- * Represents the unique signature of a particular method.
+ * Represents a method within a class.
  */
-public final class MethodSignature {
+public class MethodDescriptor {
 
     private final String name;
-    private final String descriptor;
+    private final String signature;
 
-    public MethodSignature(String name, String descriptor) {
+    /**
+     * Creates a method descriptor, with the given name and signature.
+     *
+     * @param name The method name
+     * @param signature The method signature
+     */
+    public MethodDescriptor(final String name, final String signature) {
         this.name = name;
-        this.descriptor = descriptor;
+        this.signature = signature;
+    }
+
+    /**
+     * Gets the name of the method.
+     *
+     * @return The name
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Gets the signature of the method.
+     *
+     * @return The signature
+     */
+    public String getSignature() {
+        return this.signature;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", this.name)
+                .add("signature", this.signature)
+                .toString();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof MethodSignature)) return false;
-        final MethodSignature that = (MethodSignature) obj;
+        if (!(obj instanceof MethodDescriptor)) return false;
+        final MethodDescriptor that = (MethodDescriptor) obj;
         return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.descriptor, that.descriptor);
+                Objects.equals(this.signature, that.signature);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, descriptor);
+        return Objects.hash(this.name, this.signature);
     }
 
 }

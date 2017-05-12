@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.guava:guava:21.0'
 }
 
 license {

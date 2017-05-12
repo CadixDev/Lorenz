@@ -23,39 +23,20 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.write;
+package me.jamiemansfield.lorenz.util;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
+import java.util.regex.Pattern;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.PrintWriter;
+/**
+ * A psuedo-enum of {@link Pattern}s used throughout Lorenz.
+ */
+public final class Patterns {
 
-public abstract class MappingsWriter implements Closeable {
+    public static final Pattern SPACE = Pattern.compile(" ", Pattern.LITERAL);
 
-    protected final PrintWriter writer;
+    public static final Pattern HASH_COMMENT = Pattern.compile("#.+");
 
-    /**
-     * Constructs a new {@link MappingsWriter} which outputs to the given
-     * {@link PrintWriter}.
-     *
-     * @param writer The {@link PrintWriter} to output to
-     */
-    protected MappingsWriter(final PrintWriter writer) {
-        this.writer = writer;
-    }
-
-    /**
-     * Writes the given {@link MappingsContainer} to this {@link MappingsWriter}'s
-     * {@link PrintWriter}.
-     *
-     * @param mappings The {@link MappingsContainer} to write
-     */
-    public abstract void writeMappings(final MappingsContainer mappings);
-
-    @Override
-    public void close() throws IOException {
-        this.writer.close();
+    private Patterns() {
     }
 
 }

@@ -25,44 +25,33 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
-
 /**
- * Represents a {@link BaseMapping} for an inner class, i.e. a class parented by
- * another class.
+ * Represents a de-obfuscation mapping for an inner class.
  */
 public class InnerClassMapping extends ClassMapping {
 
-    private final ClassMapping parent;
+    private final ClassMapping parentClass;
 
     /**
-     * Constructs a new {@link InnerClassMapping} with the given parameters.
+     * Creates a new inner class mapping, from the given parameters.
      *
-     * <p>The name should not include the parent class(es), just the name of the
-     * inner class itself.</p>
-     *
-     * @param parent The parent {@link ClassMapping}
-     * @param obfuscated The obfuscated name of the inner class
-     * @param deobfuscated The deobfuscated name of the inner class
+     * @param parentClass The class mapping, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    public InnerClassMapping(final ClassMapping parent, final String obfuscated, final String deobfuscated) {
-        super(obfuscated, deobfuscated);
-        this.parent = parent;
-    }
-
-    @Override
-    public MappingsContainer getMappings() {
-        return this.parent.getMappings();
+    protected InnerClassMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
+        this.parentClass = parentClass;
     }
 
     @Override
     public String getFullObfuscatedName() {
-        return String.format("%s$%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s$%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     public String getFullDeobfuscatedName() {
-        return String.format("%s$%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s$%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }

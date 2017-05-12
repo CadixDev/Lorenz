@@ -23,18 +23,52 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.util;
+package me.jamiemansfield.lorenz.io.parser;
 
-import java.util.regex.Pattern;
+import me.jamiemansfield.lorenz.MappingSet;
 
-public final class Constants {
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.IOException;
 
-    public static final String INNER_CLASS_SEPARATOR = "$";
-    public static final Pattern INNER_CLASS_SEPARATOR_PATTERN = Pattern.compile("$", Pattern.LITERAL);
+/**
+ * Represents a parser, that parses mappings.
+ */
+public abstract class MappingsParser implements Closeable {
 
-    public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
+    protected final BufferedReader reader;
 
-    private Constants() {
+    /**
+     * Creates a new mappings parser, from the given {@link BufferedReader}.
+     *
+     * @param reader The buffered reader
+     */
+    protected MappingsParser(final BufferedReader reader) {
+        this.reader = reader;
+    }
+
+    /**
+     * Parses mappings from the previously given {@link BufferedReader}, to
+     * a new {@link MappingSet}
+     *
+     * @return The mapping set
+     */
+    public MappingSet parse() {
+        return this.parse(new MappingSet());
+    }
+
+    /**
+     * Parses mappings from the previously given {@link BufferedReader}, to
+     * the given {@link MappingSet}.
+     *
+     * @param mappings The mapping set
+     * @return The mapping set, to allow for chaining
+     */
+    public abstract MappingSet parse(final MappingSet mappings);
+
+    @Override
+    public void close() throws IOException {
+        this.reader.close();
     }
 
 }

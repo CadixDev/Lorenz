@@ -25,40 +25,48 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
+import java.util.Objects;
 
 /**
- * Represents a {@link BaseMapping} for a field.
+ * Represents a de-obfuscation mapping for fields.
  */
-public class FieldMapping extends BaseMapping {
+public class FieldMapping extends Mapping {
 
-    private final ClassMapping parent;
+    private final ClassMapping parentClass;
 
     /**
-     * Constructs a new {@link FieldMapping} with the given parameters.
+     * Creates a new field mapping, from the given parameters.
      *
-     * @param parent The parent {@link ClassMapping}
-     * @param obfuscated The obfuscated name of the field
-     * @param deobfuscated The deobfuscated name of the field
+     * @param parentClass The class mapping, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    public FieldMapping(final ClassMapping parent, final String obfuscated, final String deobfuscated) {
-        super(obfuscated, deobfuscated);
-        this.parent = parent;
+    public FieldMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
+        this.parentClass = parentClass;
     }
 
     @Override
     public String getFullObfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     public String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
     @Override
-    public MappingsContainer getMappings() {
-        return this.parent.getMappings();
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof FieldMapping)) return false;
+        final FieldMapping that = (FieldMapping) obj;
+        return Objects.equals(this.parentClass, that.parentClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.parentClass);
     }
 
 }

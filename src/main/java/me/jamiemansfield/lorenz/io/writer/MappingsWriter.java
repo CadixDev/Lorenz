@@ -23,41 +23,45 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.parse;
+package me.jamiemansfield.lorenz.io.writer;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
-import me.jamiemansfield.lorenz.util.Constants;
+import me.jamiemansfield.lorenz.MappingSet;
 
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
- * Superclass for all parser classes.
+ * Represents a writer, that writes mappings.
+ *
+ * This class will likely not be of too great use, and most will find
+ * the child classes for SRG, etc mappings more useful.
+ *
+ * @see SrgWriter
  */
-public abstract class MappingsParser implements Closeable {
+public abstract class MappingsWriter implements Closeable {
 
-    protected final BufferedReader reader;
+    protected final PrintWriter writer;
 
-    protected MappingsParser(final BufferedReader reader) {
-        this.reader = reader;
+    /**
+     * Creates a new mappings writer, from the given {@link PrintWriter}.
+     *
+     * @param writer The print writer, to write to
+     */
+    protected MappingsWriter(final PrintWriter writer) {
+        this.writer = writer;
     }
 
     /**
-     * Reads from the previously given {@link BufferedReader}.
+     * Writes the given mappings to the previously given {@link PrintWriter}.
      *
-     * @return A {@link MappingsContainer} from the {@link BufferedReader}.
+     * @param mappings The mapping set
      */
-    public abstract MappingsContainer parseMappings();
-
-    protected int getClassNestingLevel(final String name) {
-        return name.split(" ")[1].length()
-                - name.split(" ")[1].replace(Constants.INNER_CLASS_SEPARATOR, "").length();
-    }
+    public abstract void write(final MappingSet mappings);
 
     @Override
     public void close() throws IOException {
-        this.reader.close();
+        this.writer.close();
     }
 
 }

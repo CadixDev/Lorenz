@@ -25,97 +25,97 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
+import com.google.common.base.MoreObjects;
+
+import java.util.Objects;
 
 /**
- * Represents a {@link BaseMapping} for a method.
+ * Represents a de-obfuscation mapping for methods.
  */
-public class MethodMapping extends BaseMapping {
+public class MethodMapping extends Mapping {
 
-    private final ClassMapping parent;
-    private final String obfuscatedDescriptor;
-    private final MethodSignature signature;
+    private final ClassMapping parentClass;
+    private final MethodDescriptor obfuscatedDescriptor;
 
     /**
-     * Constructs a new {@link MethodMapping} with the given parameters.
+     * Creates a new method mapping, from the given parameters.
      *
-     * @param parent The parent {@link ClassMapping}
-     * @param obfuscated The obfuscated name of the method
+     * @param parentClass The class mapping, this mapping belongs to
      * @param obfuscatedDescriptor The obfuscated descriptor of the method
-     * @param deobfuscated The deobfuscated name of the method
+     * @param deobfuscatedName The de-obfuscated name
      */
-    public MethodMapping(final ClassMapping parent, final String obfuscated,
-            final String obfuscatedDescriptor, final String deobfuscated) {
-        super(obfuscated, deobfuscated);
-        this.parent = parent;
+    public MethodMapping(final ClassMapping parentClass, final MethodDescriptor obfuscatedDescriptor,
+            final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedDescriptor.getName(), deobfuscatedName);
+        this.parentClass = parentClass;
         this.obfuscatedDescriptor = obfuscatedDescriptor;
-        this.signature = new MethodSignature(this.getObfuscatedName(), this.obfuscatedDescriptor);
     }
 
     /**
-     * Gets the obfuscated descriptor of the method.
+     * Gets the obfuscated signature of the method.
      *
-     * @return The obfuscated descriptor
+     * @return The obfuscated signature
      */
-    public String getObfuscatedDescriptor() {
+    public String getObfuscatedSignature() {
+        return this.obfuscatedDescriptor.getSignature();
+    }
+
+    /**
+     * Gets the obfuscated {@link MethodDescriptor} of the method.
+     *
+     * @return The obfuscated method descriptor
+     */
+    public MethodDescriptor getObfuscatedDescriptor() {
         return this.obfuscatedDescriptor;
     }
 
     /**
-     * Gets the deobfuscated descriptor of the method.
+     * Gets the de-obfuscated signature of the method.
      *
-     * @return The deobfuscated descriptor
+     * @return The de-obfuscated signature
      */
-    public String getDeobfuscatedDescriptor() {
-        final String innerContent = this.obfuscatedDescriptor.substring(this.obfuscatedDescriptor.indexOf("(") + 1,
-                this.obfuscatedDescriptor.indexOf(")"));
-        final String outerContent = this.obfuscatedDescriptor.substring(this.obfuscatedDescriptor.indexOf(")") + 1);
-
-        String modifiedType = this.obfuscatedDescriptor;
-
-        for (final String type : innerContent.split(";")) {
-            if (type.startsWith("L")) {
-                final String newType = type.substring(1);
-                if (this.getMappings().getClassMappings().containsKey(newType)) {
-                    modifiedType = modifiedType.replace(newType,
-                            this.getMappings().getClassMappings().get(newType).getDeobfuscatedName());
-                }
-            }
-        }
-
-        if (outerContent.startsWith("L")) {
-            final String outerType = outerContent.substring(1, outerContent.length() - 1);
-            if (this.getMappings().getClassMappings().containsKey(outerType)) {
-                modifiedType = modifiedType.replace(outerType,
-                        this.getMappings().getClassMappings().get(outerType).getDeobfuscatedName());
-            }
-        }
-
-        return modifiedType;
+    public String getDeobfuscatedSignature() {
+        return this.getMappings().deobfuscateMethodSignature(this.getObfuscatedSignature());
     }
 
     /**
-     * Gets the signature of the method, that is being mapped.
+     * Gets the de-obfuscated {@link MethodDescriptor} of the method.
      *
-     * @return The method's signature
+     * @return The de-obfuscated method descriptor
      */
-    public MethodSignature getSignature() {
-        return this.signature;
+    public MethodDescriptor getDeobfuscatedDescriptor() {
+        return new MethodDescriptor(this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
     }
 
     @Override
     public String getFullObfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     public String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.parent.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
     @Override
-    public MappingsContainer getMappings() {
-        return this.parent.getMappings();
+    protected MoreObjects.ToStringHelper buildToString() {
+        return super.buildToString()
+                .add("obfuscatedDescriptor", this.obfuscatedDescriptor)
+                .add("deobfuscatedDescriptor", this.getDeobfuscatedDescriptor());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof MethodMapping)) return false;
+        final MethodMapping that = (MethodMapping) obj;
+        return Objects.equals(this.parentClass, that.parentClass) &&
+                Objects.equals(this.obfuscatedDescriptor, that.obfuscatedDescriptor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.parentClass, this.obfuscatedDescriptor);
     }
 
 }

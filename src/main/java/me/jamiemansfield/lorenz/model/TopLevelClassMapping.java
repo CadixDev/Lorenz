@@ -25,31 +25,22 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.MappingsContainer;
+import me.jamiemansfield.lorenz.MappingSet;
 
 /**
- * Represents a top-level {@link ClassMapping} (i.e. not an inner class).
+ * Represents a de-obfuscation mapping for a top-level class.
  */
 public class TopLevelClassMapping extends ClassMapping {
 
-    private final MappingsContainer parent;
-
     /**
-     * Constructs a new {@link TopLevelClassMapping} with the given parameters.
+     * Creates a new top-level class mapping, from the given parameters.
      *
-     * @param parent The parent {@link MappingsContainer} of this
-     *     {@link TopLevelClassMapping}
-     * @param obfuscated The obfuscated name of the class
-     * @param deobfuscated The deobfuscated name of the class
+     * @param mappings The mappings set, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    public TopLevelClassMapping(final MappingsContainer parent, final String obfuscated, final String deobfuscated) {
-        super(obfuscated, deobfuscated);
-        this.parent = parent;
-    }
-
-    @Override
-    public MappingsContainer getMappings() {
-        return this.parent;
+    public TopLevelClassMapping(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
+        super(mappings, obfuscatedName, deobfuscatedName);
     }
 
     @Override
