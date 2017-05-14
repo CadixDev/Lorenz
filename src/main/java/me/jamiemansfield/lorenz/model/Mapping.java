@@ -98,7 +98,7 @@ public abstract class Mapping {
     /**
      * Establishes whether the mapping has had a de-obfuscated name set.
      *
-     * @return {@code True} if the mapping is mapped, {@link false} otherwise
+     * @return {@code True} if the mapping is mapped, {@code false} otherwise
      */
     public boolean hasDeobfuscatedName() {
         return !Objects.equals(this.obfuscatedName, this.deobfuscatedName);

@@ -248,6 +248,27 @@ public abstract class ClassMapping extends Mapping {
                 .orElseGet(() -> this.addInnerClassMapping(new InnerClassMapping(this, obfuscatedName, obfuscatedName)));
     }
 
+    /**
+     * Establishes whether the class mapping has a de-obfuscation mapping, or
+     * has some mappings within it.
+     *
+     * @return {@code True} if the class mappings has mappings,
+     *         {@code false} otherwise
+     */
+    public boolean hasMappings() {
+        return this.hasDeobfuscatedName() || (
+                this.getFieldMappings().stream()
+                        .filter(Mapping::hasDeobfuscatedName)
+                        .count() != 0
+                && this.getMethodMappings().stream()
+                        .filter(Mapping::hasDeobfuscatedName)
+                        .count() != 0
+                && this.getInnerClassMappings().stream()
+                        .filter(ClassMapping::hasMappings)
+                        .count() != 0
+                );
+    }
+
     @Override
     protected MoreObjects.ToStringHelper buildToString() {
         return super.buildToString()

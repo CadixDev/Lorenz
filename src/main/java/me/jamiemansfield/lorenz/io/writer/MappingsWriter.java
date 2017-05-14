@@ -26,10 +26,13 @@
 package me.jamiemansfield.lorenz.io.writer;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.Mapping;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Represents a writer, that writes mappings.
@@ -40,6 +43,30 @@ import java.io.PrintWriter;
  * @see SrgWriter
  */
 public abstract class MappingsWriter implements Closeable {
+
+    /**
+     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
+     */
+    protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
+            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
+
+    /**
+     * Indents the given String at each newline, with 4 spaces.
+     *
+     * @param str The String to indent
+     * @return The indented String
+     */
+    protected static String indent(final String str) {
+        final StringBuilder builder = new StringBuilder();
+
+        Arrays.stream(str.split("\n")).forEach(line -> builder
+                .append("    ")
+                .append(line)
+                .append("\n")
+        );
+
+        return builder.toString();
+    }
 
     protected final PrintWriter writer;
 

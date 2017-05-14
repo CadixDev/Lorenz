@@ -84,10 +84,10 @@ public class SrgParser extends MappingsParser {
                     } else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
                         final String fullObfuscatedName = split[1];
                         final String fullDeobfuscatedName = split[2];
-                        final int lastIndex = fullObfuscatedName.lastIndexOf("/");
+                        final int lastIndex = fullObfuscatedName.lastIndexOf('/');
                         final String owningClass = fullObfuscatedName.substring(0, lastIndex);
                         final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
-                        final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf("/") + 1);
+                        final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
 
                         // Get mapping, and set de-obfuscated name
                         mappings.getOrCreateClassMapping(owningClass)
@@ -98,10 +98,10 @@ public class SrgParser extends MappingsParser {
                         final String obfuscatedSignature = split[2];
                         final String fullDeobfuscatedName = split[3];
                         final String deobfuscatedSignature = split[4];
-                        final int lastIndex = fullObfuscatedName.lastIndexOf("/");
+                        final int lastIndex = fullObfuscatedName.lastIndexOf('/');
                         final String owningClass = fullObfuscatedName.substring(0, lastIndex);
                         final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
-                        final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf("/") + 1);
+                        final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
 
                         // Get mapping, and set de-obfuscated name
                         mappings.getOrCreateClassMapping(owningClass)

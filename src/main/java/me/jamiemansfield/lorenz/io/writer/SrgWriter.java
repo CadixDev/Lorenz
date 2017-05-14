@@ -33,19 +33,12 @@ import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
 import java.io.PrintWriter;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * An implementation of {@link MappingsWriter} for the SRG format.
  */
 public class SrgWriter extends MappingsWriter {
-
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
-     */
-    private static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
-            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
 
     private List<String> classes = Lists.newArrayList();
     private List<String> fields = Lists.newArrayList();
@@ -64,6 +57,7 @@ public class SrgWriter extends MappingsWriter {
     public void write(final MappingSet mappings) {
         // Write class mappings
         mappings.getTopLevelClassMappings().stream()
+                .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
 
@@ -86,6 +80,7 @@ public class SrgWriter extends MappingsWriter {
 
         // Write inner class mappings
         mapping.getInnerClassMappings().stream()
+                .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
 

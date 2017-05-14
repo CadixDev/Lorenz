@@ -161,8 +161,8 @@ public final class MappingSet {
      * @return A de-obfuscated method signature
      */
     public String deobfuscateMethodSignature(final String obfuscatedSignature) {
-        final String innerContent = obfuscatedSignature.substring(obfuscatedSignature.indexOf("(") + 1, obfuscatedSignature.indexOf(")"));
-        final String outerContent = obfuscatedSignature.substring(obfuscatedSignature.indexOf(")") + 1);
+        final String innerContent = obfuscatedSignature.substring(obfuscatedSignature.indexOf('(') + 1, obfuscatedSignature.indexOf(')'));
+        final String outerContent = obfuscatedSignature.substring(obfuscatedSignature.indexOf(')') + 1);
 
         final StringBuilder typeBuilder = new StringBuilder();
         typeBuilder.append("(");
