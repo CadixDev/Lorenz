@@ -39,7 +39,7 @@ public class InnerClassMapping extends ClassMapping {
      * @param obfuscatedName The obfuscated name
      * @param deobfuscatedName The de-obfuscated name
      */
-    protected InnerClassMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
+    public InnerClassMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
         super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
         this.parentClass = parentClass;
     }

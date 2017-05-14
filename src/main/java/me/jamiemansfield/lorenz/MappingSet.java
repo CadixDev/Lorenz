@@ -116,9 +116,9 @@ public final class MappingSet {
         if (!obfuscatedName.contains("$")) return Optional.ofNullable(this.getTopLevelClassMapping(obfuscatedName).orElse(null));
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final String[] nameSplit = obfuscatedName.split("$");
-        final String innerClassName = nameSplit[nameSplit.length - 1];
-        final String parentClassName = obfuscatedName.substring(0, obfuscatedName.length() - innerClassName.length());
+        final int lastIndex = obfuscatedName.lastIndexOf('$');
+        final String parentClassName = obfuscatedName.substring(0, lastIndex - 1);
+        final String innerClassName = obfuscatedName.substring(lastIndex);
 
         // Get the parent class
         final Optional<ClassMapping> parentClassMapping = this.getClassMapping(parentClassName);
@@ -143,9 +143,9 @@ public final class MappingSet {
         if (!obfuscatedName.contains("$")) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final String[] nameSplit = obfuscatedName.split("$");
-        final String innerClassName = nameSplit[nameSplit.length - 1];
-        final String parentClassName = obfuscatedName.substring(0, obfuscatedName.length() - innerClassName.length());
+        final int lastIndex = obfuscatedName.lastIndexOf('$');
+        final String parentClassName = obfuscatedName.substring(0, lastIndex - 1);
+        final String innerClassName = obfuscatedName.substring(lastIndex);
 
         // Get the parent class
         final ClassMapping parentClass = this.getOrCreateClassMapping(parentClassName);

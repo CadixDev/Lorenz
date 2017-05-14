@@ -25,16 +25,16 @@
 
 package me.jamiemansfield.lorenz.io.writer;
 
-import me.jamiemansfield.poppy.mapping.MappingSet;
-import me.jamiemansfield.poppy.mapping.model.ClassMapping;
-import me.jamiemansfield.poppy.mapping.model.FieldMapping;
-import me.jamiemansfield.poppy.mapping.model.Mapping;
-import me.jamiemansfield.poppy.mapping.model.MethodMapping;
+import com.google.common.collect.Lists;
+import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.FieldMapping;
+import me.jamiemansfield.lorenz.model.Mapping;
+import me.jamiemansfield.lorenz.model.MethodMapping;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * An implementation of {@link MappingsWriter} for the SRG format.
@@ -47,13 +47,9 @@ public class SrgWriter extends MappingsWriter {
     private static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
             (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
 
-    private final ByteArrayOutputStream clOut = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream fdOut = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream mdOut = new ByteArrayOutputStream();
-
-    private final PrintWriter clWriter = new PrintWriter(clOut);
-    private final PrintWriter fdWriter = new PrintWriter(fdOut);
-    private final PrintWriter mdWriter = new PrintWriter(mdOut);
+    private List<String> classes = Lists.newArrayList();
+    private List<String> fields = Lists.newArrayList();
+    private List<String> methods = Lists.newArrayList();
 
     /**
      * Creates a new SRG mappings writer, from the given {@link PrintWriter}.
@@ -72,9 +68,9 @@ public class SrgWriter extends MappingsWriter {
                 .forEach(this::writeClassMapping);
 
         // Write everything to the print writer
-        this.writer.write(this.clOut.toString());
-        this.writer.write(this.fdOut.toString());
-        this.writer.write(this.mdOut.toString());
+        this.classes.forEach(this.writer::write);
+        this.fields.forEach(this.writer::write);
+        this.methods.forEach(this.writer::write);
     }
 
     /**
@@ -85,7 +81,7 @@ public class SrgWriter extends MappingsWriter {
     protected void writeClassMapping(final ClassMapping mapping) {
         // Check if the mapping should be written, and if so: write it
         if (mapping.hasDeobfuscatedName()) {
-            this.clWriter.format("CL: %s %s\n", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName());
+            this.classes.add(String.format("CL: %s %s\n", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
 
         // Write inner class mappings
@@ -113,7 +109,7 @@ public class SrgWriter extends MappingsWriter {
      */
     protected void writeFieldMapping(final FieldMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.fdWriter.format("FD: %s %s\n", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName());
+        this.fields.add(String.format("FD: %s %s\n", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
     }
 
     /**
@@ -123,20 +119,9 @@ public class SrgWriter extends MappingsWriter {
      */
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.mdWriter.format("MD: %s %s %s %s\n",
+        this.methods.add(String.format("MD: %s %s %s %s\n",
                 mapping.getFullObfuscatedName(), mapping.getObfuscatedSignature(),
-                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedSignature());
-    }
-
-    @Override
-    public void close() throws IOException {
-        this.clWriter.close();
-        this.fdWriter.close();
-        this.mdWriter.close();
-        this.clOut.close();
-        this.fdOut.close();
-        this.mdOut.close();
-        super.close();
+                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedSignature()));
     }
 
 }
