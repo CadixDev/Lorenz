@@ -40,9 +40,9 @@ import java.util.List;
  */
 public class SrgWriter extends MappingsWriter {
 
-    private List<String> classes = Lists.newArrayList();
-    private List<String> fields = Lists.newArrayList();
-    private List<String> methods = Lists.newArrayList();
+    private final List<String> classes = Lists.newArrayList();
+    private final List<String> fields = Lists.newArrayList();
+    private final List<String> methods = Lists.newArrayList();
 
     /**
      * Creates a new SRG mappings writer, from the given {@link PrintWriter}.
@@ -65,6 +65,11 @@ public class SrgWriter extends MappingsWriter {
         this.classes.forEach(this.writer::write);
         this.fields.forEach(this.writer::write);
         this.methods.forEach(this.writer::write);
+
+        // Clear out the lists, to ensure that mappings aren't written twice (or more)
+        this.classes.clear();
+        this.fields.clear();
+        this.methods.clear();
     }
 
     /**
@@ -73,7 +78,7 @@ public class SrgWriter extends MappingsWriter {
      * @param mapping The class mapping
      */
     protected void writeClassMapping(final ClassMapping mapping) {
-        // Check if the mapping should be written, and if so: write it
+        // Check if the mapping should be written, and if so write it
         if (mapping.hasDeobfuscatedName()) {
             this.classes.add(String.format("CL: %s %s\n", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }

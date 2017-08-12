@@ -1,20 +1,22 @@
-plugins {
-    id 'java'
-    id 'maven'
-
-    id 'idea'
-    id 'eclipse'
-
-    id 'net.minecrell.licenser' version '0.3'
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'gradle.plugin.net.minecrell:licenser:0.3'
+    }
 }
 
-defaultTasks 'clean', 'licenseFormat'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'net.minecrell.licenser'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 group = 'me.jamiemansfield'
-archivesBaseName = project.name.toLowerCase()
 version = '0.0.1-SNAPSHOT'
 
 repositories {
@@ -23,7 +25,7 @@ repositories {
 
 dependencies {
     // Common
-    compile 'com.google.guava:guava:21.0'
+    compile 'com.google.guava:guava:22.0'
 
     // Testing
     compile 'junit:junit:4.12'
@@ -31,6 +33,10 @@ dependencies {
 
 license {
     header = project.file('HEADER.txt')
+}
+
+processResources {
+    from 'LICENSE.txt'
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -90,5 +96,5 @@ uploadArchives {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.1'
 }

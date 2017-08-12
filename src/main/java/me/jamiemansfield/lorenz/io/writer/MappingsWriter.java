@@ -33,12 +33,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
- * Represents a writer, that writes mappings.
+ * Represents a writer, that is capable of writing de-obfuscation
+ * mappings to a {@link PrintWriter}.
  *
- * This class will likely not be of too great use, and most will find
- * the child classes for SRG, etc mappings more useful.
+ * Each mappings writer will be designed for a specific mapping
+ * format, and intended to be used with try-for-resources.
  *
  * @see SrgWriter
  */
@@ -57,15 +59,9 @@ public abstract class MappingsWriter implements Closeable {
      * @return The indented String
      */
     protected static String indent(final String str) {
-        final StringBuilder builder = new StringBuilder();
-
-        Arrays.stream(str.split("\n")).forEach(line -> builder
-                .append("    ")
-                .append(line)
-                .append("\n")
-        );
-
-        return builder.toString();
+        return Arrays.stream(str.split("\n"))
+                .map(line -> "    " + line + "\n")
+                .collect(Collectors.joining());
     }
 
     protected final PrintWriter writer;
