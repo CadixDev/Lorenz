@@ -58,9 +58,21 @@ public abstract class MappingsWriter implements Closeable {
      * @param str The String to indent
      * @return The indented String
      */
-    protected static String indent(final String str) {
+    protected static String indentSpaces(final String str) {
         return Arrays.stream(str.split("\n"))
                 .map(line -> "    " + line + "\n")
+                .collect(Collectors.joining());
+    }
+
+    /**
+     * Indents the given String at each newline, with a tab.
+     *
+     * @param str The String to indent
+     * @return The indented String
+     */
+    protected static String indentTab(final String str) {
+        return Arrays.stream(str.split("\n"))
+                .map(line -> "\t" + line + "\n")
                 .collect(Collectors.joining());
     }
 

@@ -17,6 +17,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 group = 'me.jamiemansfield'
+archivesBaseName = project.name.toLowerCase()
 version = '0.0.1-SNAPSHOT'
 
 repositories {
