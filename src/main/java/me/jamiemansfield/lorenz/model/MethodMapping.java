@@ -109,7 +109,8 @@ public class MethodMapping extends Mapping {
         if (!super.equals(obj)) return false;
         if (!(obj instanceof MethodMapping)) return false;
         final MethodMapping that = (MethodMapping) obj;
-        return Objects.equals(this.parentClass, that.parentClass) &&
+        return super.equals(that) &&
+                Objects.equals(this.parentClass, that.parentClass) &&
                 Objects.equals(this.obfuscatedDescriptor, that.obfuscatedDescriptor);
     }
 

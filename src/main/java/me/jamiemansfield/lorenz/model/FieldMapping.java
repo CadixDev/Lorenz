@@ -61,7 +61,8 @@ public class FieldMapping extends Mapping {
         if (!super.equals(obj)) return false;
         if (!(obj instanceof FieldMapping)) return false;
         final FieldMapping that = (FieldMapping) obj;
-        return Objects.equals(this.parentClass, that.parentClass);
+        return super.equals(that) &&
+                Objects.equals(this.parentClass, that.parentClass);
     }
 
     @Override

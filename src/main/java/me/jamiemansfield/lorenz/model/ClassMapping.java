@@ -282,7 +282,8 @@ public abstract class ClassMapping extends Mapping {
         if (!super.equals(obj)) return false;
         if (!(obj instanceof ClassMapping)) return false;
         final ClassMapping that = (ClassMapping) obj;
-        return Objects.equals(this.fields, that.fields) &&
+        return super.equals(that) &&
+                Objects.equals(this.fields, that.fields) &&
                 Objects.equals(this.methods, that.methods) &&
                 Objects.equals(this.innerClasses, that.innerClasses);
     }

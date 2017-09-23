@@ -53,4 +53,12 @@ public class TopLevelClassMapping extends ClassMapping {
         return this.getDeobfuscatedName();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof TopLevelClassMapping)) return false;
+        final TopLevelClassMapping that = (TopLevelClassMapping) obj;
+        return super.equals(that);
+    }
+
 }

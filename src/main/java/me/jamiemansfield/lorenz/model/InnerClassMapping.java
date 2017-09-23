@@ -25,6 +25,8 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import java.util.Objects;
+
 /**
  * Represents a de-obfuscation mapping for an inner class.
  */
@@ -52,6 +54,20 @@ public class InnerClassMapping extends ClassMapping {
     @Override
     public String getFullDeobfuscatedName() {
         return String.format("%s$%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof InnerClassMapping)) return false;
+        final InnerClassMapping that = (InnerClassMapping) obj;
+        return super.equals(that) &&
+                Objects.equals(this.parentClass, that.parentClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.parentClass);
     }
 
 }
