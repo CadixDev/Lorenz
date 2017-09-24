@@ -57,7 +57,7 @@ public class MethodMapping extends Mapping {
      * @return The obfuscated signature
      */
     public String getObfuscatedSignature() {
-        return this.obfuscatedDescriptor.getSignature();
+        return this.obfuscatedDescriptor.getSignature().getObfuscated();
     }
 
     /**
@@ -75,7 +75,7 @@ public class MethodMapping extends Mapping {
      * @return The de-obfuscated signature
      */
     public String getDeobfuscatedSignature() {
-        return this.getMappings().deobfuscateMethodSignature(this.getObfuscatedSignature());
+        return this.obfuscatedDescriptor.getSignature().getDeobfuscated();
     }
 
     /**
@@ -84,7 +84,7 @@ public class MethodMapping extends Mapping {
      * @return The de-obfuscated method descriptor
      */
     public MethodDescriptor getDeobfuscatedDescriptor() {
-        return new MethodDescriptor(this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
+        return new MethodDescriptor(this.getMappings(), this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
     }
 
     @Override

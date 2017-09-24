@@ -25,13 +25,12 @@
 
 package me.jamiemansfield.lorenz.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.MethodDescriptor;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Objects;
 
 /**
  * A variety of unit tests pertaining to the de-obfuscation
@@ -51,25 +50,33 @@ public final class DeobfuscateTest {
     @Test
     public void deobfuscateType() {
         final String type = "Lhuy;";
-        assertTrue(Objects.equals(this.mappings.deobfuscateType(type), type));
+        assertEquals(type, this.deobfRawType(type));
 
         final String obfuscatedType = "Lght;";
         final String deobfuscatedType = "Luk/jamierocks/Test;";
-        assertTrue(Objects.equals(this.mappings.deobfuscateType(obfuscatedType), deobfuscatedType));
+        assertEquals(deobfuscatedType, this.deobfRawType(obfuscatedType));
     }
 
     @Test
     public void deobfuscateMethodSignature() {
         final String signature = "(Lhuy;)Lhuy;";
-        assertTrue(Objects.equals(this.mappings.deobfuscateMethodSignature(signature), signature));
+        assertEquals(signature, this.deobfRawSig(signature));
 
         final String simpleObfuscatedSignature = "(Lght;)Lght;";
         final String simpleDeobfuscatedSignature = "(Luk/jamierocks/Test;)Luk/jamierocks/Test;";
-        assertTrue(Objects.equals(this.mappings.deobfuscateMethodSignature(simpleObfuscatedSignature), simpleDeobfuscatedSignature));
+        assertEquals(simpleDeobfuscatedSignature, this.deobfRawSig(simpleObfuscatedSignature));
 
         final String primitivesObfuscatedSignature = "(Lght;Z)Lght;";
         final String primitivesDeobfuscatedSignature = "(Luk/jamierocks/Test;Z)Luk/jamierocks/Test;";
-        assertTrue(Objects.equals(this.mappings.deobfuscateMethodSignature(primitivesObfuscatedSignature), primitivesDeobfuscatedSignature));
+        assertEquals(primitivesDeobfuscatedSignature, this.deobfRawSig(primitivesObfuscatedSignature));
+    }
+
+    private String deobfRawType(final String rawType) {
+        return new MethodDescriptor.Type(this.mappings, rawType).getDeobfuscated();
+    }
+
+    private String deobfRawSig(final String rawSig) {
+        return new MethodDescriptor.Signature(this.mappings, rawSig).getDeobfuscated();
     }
 
 }
