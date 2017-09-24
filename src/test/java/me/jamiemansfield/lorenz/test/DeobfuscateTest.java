@@ -52,6 +52,9 @@ public final class DeobfuscateTest {
         final String type = "Lhuy;";
         assertEquals(type, this.deobfRawType(type));
 
+        final String primitiveType = "Z";
+        assertEquals(primitiveType, this.deobfRawType(primitiveType));
+
         final String obfuscatedType = "Lght;";
         final String deobfuscatedType = "Luk/jamierocks/Test;";
         assertEquals(deobfuscatedType, this.deobfRawType(obfuscatedType));
@@ -71,12 +74,26 @@ public final class DeobfuscateTest {
         assertEquals(primitivesDeobfuscatedSignature, this.deobfRawSig(primitivesObfuscatedSignature));
     }
 
+    /**
+     * A convenience method, to de-obfuscate a raw type using the
+     * test's {@link MappingSet}.
+     *
+     * @param rawType The raw type, for de-obfuscation
+     * @return The de-obfuscated type
+     */
     private String deobfRawType(final String rawType) {
         return new MethodDescriptor.Type(this.mappings, rawType).getDeobfuscated();
     }
 
+    /**
+     * A convenience method, to de-obfuscate a raw signature using the
+     * test's {@link MappingSet}.
+     *
+     * @param rawSig The raw signature, for de-obfuscation
+     * @return The de-obfuscated signature
+     */
     private String deobfRawSig(final String rawSig) {
-        return new MethodDescriptor.Signature(this.mappings, rawSig).getDeobfuscated();
+        return MethodDescriptor.Signature.compile(this.mappings, rawSig).getDeobfuscated();
     }
 
 }

@@ -50,7 +50,7 @@ public final class MethodDescriptor {
      */
     public MethodDescriptor(final MappingSet mappings, final String name, final String signature) {
         this.name = name;
-        this.signature = new Signature(mappings, signature);
+        this.signature = Signature.compile(mappings, signature);
     }
 
     /**
@@ -98,43 +98,63 @@ public final class MethodDescriptor {
      */
     public static final class Signature {
 
-        private final List<Type> paramTypes = Lists.newArrayList();
+        private final List<Type> paramTypes;
         private final Type returnType;
 
         /**
-         * Constructs a method signature, with the given obfuscated signature.
+         * Compiles a {@link Signature} for the given raw signature, and {@link MappingSet}.
          *
-         * @param mappings The mappings set
-         * @param signature The method signature
+         * @param mappings The mapping set, for de-obfuscating
+         * @param signature The raw method signature
+         * @return The signature
          */
-        public Signature(final MappingSet mappings, final String signature) {
-            // Param Types
+        public static Signature compile(final MappingSet mappings, final String signature) {
+            // Grab the raw parameters and return from the signature
             final String rawParams = signature.substring(signature.indexOf('(') + 1, signature.indexOf(')'));
+            final String rawReturn = signature.substring(signature.indexOf(')') + 1);
+
+            // Param Types
+            final List<Type> paramTypes = Lists.newArrayList();
             boolean isParsingObject = false;
             StringBuilder objectBuilder = new StringBuilder();
             for (final char c : rawParams.toCharArray()) {
                 if (isParsingObject) {
+                    // We're parsing an object
                     if (c == ';') {
+                        // This symbol is the end of an object
                         isParsingObject = false;
                         objectBuilder.append(c);
-                        this.paramTypes.add(new Type(mappings, objectBuilder.toString()));
+                        paramTypes.add(new Type(mappings, objectBuilder.toString()));
                         objectBuilder = new StringBuilder();
                     } else {
+                        // Still parsing the object
                         objectBuilder.append(c);
                     }
                 } else {
-                    // Objects
                     if (c == 'L') {
+                        // This symbol is the start of an object
                         isParsingObject = true;
                         objectBuilder.append(c);
                     } else {
-                        this.paramTypes.add(new Type(mappings, "" + c));
+                        // No object is being parsed, and it is not the start of
+                        // one - it must be a primitive
+                        paramTypes.add(new Type(mappings, "" + c));
                     }
                 }
             }
 
-            // Return Type
-            this.returnType = new Type(mappings, signature.substring(signature.indexOf(')') + 1));
+            return new Signature(paramTypes, new Type(mappings, rawReturn));
+        }
+
+        /**
+         * Creates a signature from the given param types, and return type.
+         *
+         * @param paramTypes The parameter types of the method
+         * @param returnType The return type of the method
+         */
+        public Signature(final List<Type> paramTypes, final Type returnType) {
+            this.paramTypes = paramTypes;
+            this.returnType = returnType;
         }
 
         /**
@@ -143,13 +163,20 @@ public final class MethodDescriptor {
          * @return The obfuscated signature
          */
         public String getObfuscated() {
-            return "(" + this.paramTypes + ")" + this.returnType;
+            final StringBuilder typeBuilder = new StringBuilder();
+
+            typeBuilder.append("(");
+            this.paramTypes.forEach(type -> typeBuilder.append(type.getObfuscated()));
+            typeBuilder.append(")");
+            typeBuilder.append(this.returnType.getObfuscated());
+
+            return typeBuilder.toString();
         }
 
         /**
-         * Gets the deobfuscated signature of the method.
+         * Gets the de-obfuscated signature of the method.
          *
-         * @return The deobfuscated signature
+         * @return The de-obfuscated signature
          */
         public String getDeobfuscated() {
             final StringBuilder typeBuilder = new StringBuilder();
@@ -181,7 +208,7 @@ public final class MethodDescriptor {
         /**
          * Creates a new type, with the provided raw type.
          *
-         * @param mappings The mappings set
+         * @param mappings The mappings set, for de-obfuscation
          * @param type The raw type
          */
         public Type(final MappingSet mappings, final String type) {
@@ -200,9 +227,9 @@ public final class MethodDescriptor {
         }
 
         /**
-         * Gets the deobfuscated raw view of the type.
+         * Gets the de-obfuscated raw view of the type.
          *
-         * @return The deobfuscated raw view
+         * @return The de-obfuscated raw view
          */
         public String getDeobfuscated() {
             if (primitive) return this.obfuscatedType;
