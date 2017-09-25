@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.model;
 
 import com.google.common.base.MoreObjects;
+import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 import java.util.Objects;
 
@@ -75,7 +76,7 @@ public class MethodMapping extends Mapping {
      * @return The de-obfuscated signature
      */
     public String getDeobfuscatedSignature() {
-        return this.obfuscatedDescriptor.getSignature().getDeobfuscated();
+        return this.obfuscatedDescriptor.getSignature().getDeobfuscated(this.getMappings());
     }
 
     /**
@@ -84,7 +85,7 @@ public class MethodMapping extends Mapping {
      * @return The de-obfuscated method descriptor
      */
     public MethodDescriptor getDeobfuscatedDescriptor() {
-        return new MethodDescriptor(this.getMappings(), this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
+        return new MethodDescriptor(this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
     }
 
     @Override

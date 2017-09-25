@@ -23,20 +23,22 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.test;
+package me.jamiemansfield.lorenz.test.model;
 
 import static org.junit.Assert.assertEquals;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.model.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.Signature;
+import me.jamiemansfield.lorenz.model.jar.Type;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * A variety of unit tests pertaining to the de-obfuscation
- * methods in {@link MappingSet}.
+ * methods in {@link MethodDescriptor}.
  */
-public final class DeobfuscateTest {
+public final class MethodDescriptorTest {
 
     private MappingSet mappings;
 
@@ -58,6 +60,13 @@ public final class DeobfuscateTest {
         final String obfuscatedType = "Lght;";
         final String deobfuscatedType = "Luk/jamierocks/Test;";
         assertEquals(deobfuscatedType, this.deobfRawType(obfuscatedType));
+
+        final String arrayType = "[[Ljava/lang/String;";
+        assertEquals(arrayType, this.deobfRawType(arrayType));
+
+        final String obfuscatedArrayType = "[[[Lght;";
+        final String deobfuscatedArrayType = "[[[Luk/jamierocks/Test;";
+        assertEquals(deobfuscatedArrayType, deobfRawType(obfuscatedArrayType));
     }
 
     @Test
@@ -72,6 +81,10 @@ public final class DeobfuscateTest {
         final String primitivesObfuscatedSignature = "(Lght;Z)Lght;";
         final String primitivesDeobfuscatedSignature = "(Luk/jamierocks/Test;Z)Luk/jamierocks/Test;";
         assertEquals(primitivesDeobfuscatedSignature, this.deobfRawSig(primitivesObfuscatedSignature));
+
+        final String complexIshObfuscatedSignature = "(ZILght;II)Lhuy;";
+        final String complexIshDeobfuscatedSignature = "(ZILuk/jamierocks/Test;II)Lhuy;";
+        assertEquals(complexIshDeobfuscatedSignature, this.deobfRawSig(complexIshObfuscatedSignature));
     }
 
     /**
@@ -82,7 +95,7 @@ public final class DeobfuscateTest {
      * @return The de-obfuscated type
      */
     private String deobfRawType(final String rawType) {
-        return new MethodDescriptor.Type(this.mappings, rawType).getDeobfuscated();
+        return Type.of(rawType).getDeobfuscated(this.mappings);
     }
 
     /**
@@ -93,7 +106,7 @@ public final class DeobfuscateTest {
      * @return The de-obfuscated signature
      */
     private String deobfRawSig(final String rawSig) {
-        return MethodDescriptor.Signature.compile(this.mappings, rawSig).getDeobfuscated();
+        return Signature.compile(rawSig).getDeobfuscated(this.mappings);
     }
 
 }

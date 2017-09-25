@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Maps;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -187,7 +188,7 @@ public abstract class ClassMapping extends Mapping {
      * @return The method mapping
      */
     public MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.getOrCreateMethodMapping(new MethodDescriptor(this.getMappings(), obfuscatedName, obfuscatedSignature));
+        return this.getOrCreateMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
     }
 
     /**
