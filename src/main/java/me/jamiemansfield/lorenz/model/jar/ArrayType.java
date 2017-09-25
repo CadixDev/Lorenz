@@ -28,6 +28,8 @@ package me.jamiemansfield.lorenz.model.jar;
 import com.google.common.base.Strings;
 import me.jamiemansfield.lorenz.MappingSet;
 
+import java.util.Objects;
+
 /**
  * Represents an array type within Java.
  *
@@ -60,6 +62,25 @@ public class ArrayType implements Type {
     @Override
     public String getDeobfuscated(final MappingSet mappings) {
         return this.arrayDims + this.component.getDeobfuscated(mappings);
+    }
+
+    @Override
+    public String toString() {
+        return this.getObfuscated();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ArrayType)) return false;
+        final ArrayType that = (ArrayType) obj;
+        return Objects.equals(this.arrayDims, that.arrayDims) &&
+                Objects.equals(this.component, that.component);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.arrayDims, this.component);
     }
 
 }

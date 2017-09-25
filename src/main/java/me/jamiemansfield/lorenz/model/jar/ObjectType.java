@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.model.jar;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -71,4 +72,16 @@ public class ObjectType implements Type {
         return typeBuilder.toString();
     }
 
+    @Override
+    public String toString() {
+        return this.getObfuscated();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ObjectType)) return false;
+        final ObjectType that = (ObjectType) obj;
+        return Objects.equals(this.className, that.className);
+    }
 }

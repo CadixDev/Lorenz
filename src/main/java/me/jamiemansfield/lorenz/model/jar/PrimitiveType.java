@@ -70,6 +70,11 @@ public enum PrimitiveType implements Type {
         return this.obfuscatedView;
     }
 
+    @Override
+    public String toString() {
+        return this.getObfuscated();
+    }
+
     /**
      * Establishes whether the given key, is a valid primitive
      * key.

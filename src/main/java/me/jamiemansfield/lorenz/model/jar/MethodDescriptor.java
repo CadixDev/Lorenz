@@ -38,14 +38,24 @@ public final class MethodDescriptor {
     private final Signature signature;
 
     /**
-     * Creates a method descriptor, with the given name and signature.
+     * Creates a method descriptor, with the given name and {@link Signature}.
      *
      * @param name The method name
      * @param signature The method signature
      */
-    public MethodDescriptor(final String name, final String signature) {
+    public MethodDescriptor(final String name, final Signature signature) {
         this.name = name;
-        this.signature = Signature.compile(signature);
+        this.signature = signature;
+    }
+
+    /**
+     * Creates a method descriptor, with the given method name and raw signature.
+     *
+     * @param name The method name
+     * @param signature The method's raw signature
+     */
+    public MethodDescriptor(final String name, final String signature) {
+        this(name, Signature.compile(signature));
     }
 
     /**

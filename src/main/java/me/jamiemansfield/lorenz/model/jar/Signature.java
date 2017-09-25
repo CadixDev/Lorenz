@@ -29,6 +29,7 @@ import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the signature of a method.
@@ -163,6 +164,20 @@ public final class Signature {
     @Override
     public String toString() {
         return this.getObfuscated();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Signature)) return false;
+        final Signature that = (Signature) obj;
+        return Objects.equals(this.paramTypes, that.paramTypes) &&
+                Objects.equals(this.returnType, that.returnType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.paramTypes, this.returnType);
     }
 
 }
