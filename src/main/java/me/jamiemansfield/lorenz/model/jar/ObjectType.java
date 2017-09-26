@@ -84,4 +84,5 @@ public class ObjectType implements Type {
         final ObjectType that = (ObjectType) obj;
         return Objects.equals(this.className, that.className);
     }
+
 }

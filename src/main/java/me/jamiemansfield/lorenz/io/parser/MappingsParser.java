@@ -30,21 +30,25 @@ import me.jamiemansfield.lorenz.MappingSet;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.function.Function;
 
 /**
- * Represents a parser, that parses mappings.
+ * Represents a parser, that parses mappings from a {@link BufferedReader}
  */
 public abstract class MappingsParser implements Closeable {
 
     protected final BufferedReader reader;
+    protected final Function<MappingSet, MappingsProcessor> processor;
 
     /**
      * Creates a new mappings parser, from the given {@link BufferedReader}.
      *
      * @param reader The buffered reader
+     * @param processor The function to create a {@link MappingsProcessor} for the format
      */
-    protected MappingsParser(final BufferedReader reader) {
+    protected MappingsParser(final BufferedReader reader, final Function<MappingSet, MappingsProcessor> processor) {
         this.reader = reader;
+        this.processor = processor;
     }
 
     /**
@@ -64,7 +68,18 @@ public abstract class MappingsParser implements Closeable {
      * @param mappings The mapping set
      * @return The mapping set, to allow for chaining
      */
-    public abstract MappingSet parse(final MappingSet mappings);
+    public MappingSet parse(final MappingSet mappings) {
+        final MappingsProcessor processor = this.processor.apply(mappings);
+        this.reader.lines()
+                // Process line
+                .forEach(line -> {
+                    try {
+                        processor.processLine(line);
+                    } catch (final IOException ignored) {
+                    }
+                });
+        return processor.getResult();
+    }
 
     @Override
     public void close() throws IOException {

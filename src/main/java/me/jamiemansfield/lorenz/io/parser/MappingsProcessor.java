@@ -25,20 +25,29 @@
 
 package me.jamiemansfield.lorenz.io.parser;
 
-import java.io.BufferedReader;
+import com.google.common.io.LineProcessor;
+import me.jamiemansfield.lorenz.MappingSet;
 
 /**
- * An implementation of {@link MappingsParser} for the SRG format.
+ * A {@link LineProcessor} for {@link MappingsParser}s.
  */
-public class SrgParser extends MappingsParser {
+public abstract class MappingsProcessor implements LineProcessor<MappingSet> {
+
+    protected final MappingSet mappings;
 
     /**
-     * Creates a new SRG mappings parser, from the given {@link BufferedReader}.
+     * Creates a mappings processor, to process the lines in a
+     * mappings file.
      *
-     * @param reader The buffered reader
+     * @param mappings The mappings set
      */
-    public SrgParser(final BufferedReader reader) {
-        super(reader, SrgProcessor::new);
+    protected MappingsProcessor(final MappingSet mappings) {
+        this.mappings = mappings;
+    }
+
+    @Override
+    public MappingSet getResult() {
+        return this.mappings;
     }
 
 }
