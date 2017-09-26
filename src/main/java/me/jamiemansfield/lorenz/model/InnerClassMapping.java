@@ -47,6 +47,21 @@ public class InnerClassMapping extends ClassMapping {
     }
 
     @Override
+    public void setDeobfuscatedName(final String deobfuscatedName) {
+        if (!deobfuscatedName.contains("$")) {
+            super.setDeobfuscatedName(deobfuscatedName);
+            return;
+        }
+
+        // Split the obfuscated name, to fetch the parent class name, and inner class name
+        final int lastIndex = deobfuscatedName.lastIndexOf('$');
+        final String innerClassName = deobfuscatedName.substring(lastIndex + 1);
+
+        // Set the correct class name!
+        super.setDeobfuscatedName(innerClassName);
+    }
+
+    @Override
     public String getFullObfuscatedName() {
         return String.format("%s$%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
     }

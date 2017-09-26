@@ -117,7 +117,7 @@ public final class MappingSet {
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
         final int lastIndex = obfuscatedName.lastIndexOf('$');
-        final String parentClassName = obfuscatedName.substring(0, lastIndex - 1);
+        final String parentClassName = obfuscatedName.substring(0, lastIndex);
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
@@ -144,7 +144,7 @@ public final class MappingSet {
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
         final int lastIndex = obfuscatedName.lastIndexOf('$');
-        final String parentClassName = obfuscatedName.substring(0, lastIndex - 1);
+        final String parentClassName = obfuscatedName.substring(0, lastIndex);
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
