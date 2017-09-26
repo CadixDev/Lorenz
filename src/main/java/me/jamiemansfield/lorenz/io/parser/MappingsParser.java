@@ -33,7 +33,9 @@ import java.io.IOException;
 import java.util.function.Function;
 
 /**
- * Represents a parser, that parses mappings from a {@link BufferedReader}
+ * Represents a parser, that parses mappings from a {@link BufferedReader}.
+ *
+ * @see SrgParser
  */
 public abstract class MappingsParser implements Closeable {
 

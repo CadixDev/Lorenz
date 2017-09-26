@@ -45,12 +45,19 @@ public class SrgProcessor extends MappingsProcessor {
     private static final int METHOD_MAPPING_ELEMENT_COUNT = 5;
 
     /**
-     * Creates a mappings processor for the SRG format.
+     * Creates a mappings processor for the SRG format, with the provided {@link MappingSet}.
      *
      * @param mappings The mappings set
      */
     public SrgProcessor(final MappingSet mappings) {
         super(mappings);
+    }
+
+    /**
+     * Creates a mappings processor for the SRG format.
+     */
+    public SrgProcessor() {
+        this(new MappingSet());
     }
 
     @Override

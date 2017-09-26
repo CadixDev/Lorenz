@@ -30,6 +30,8 @@ import me.jamiemansfield.lorenz.MappingSet;
 
 /**
  * A {@link LineProcessor} for {@link MappingsParser}s.
+ *
+ * @see SrgProcessor
  */
 public abstract class MappingsProcessor implements LineProcessor<MappingSet> {
 

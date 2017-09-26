@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.test.model;
+package me.jamiemansfield.lorenz.test.model.jar;
 
 import static org.junit.Assert.assertEquals;
 
