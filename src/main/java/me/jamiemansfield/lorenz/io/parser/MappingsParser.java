@@ -25,67 +25,32 @@
 
 package me.jamiemansfield.lorenz.io.parser;
 
+import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.function.Function;
-
 /**
- * Represents a parser, that parses mappings from a {@link BufferedReader}.
+ * A parser for a given mappings format, that is built upon
+ * Guava's {@link LineProcessor}.
  *
  * @see SrgParser
  */
-public abstract class MappingsParser implements Closeable {
+public abstract class MappingsParser implements LineProcessor<MappingSet> {
 
-    protected final BufferedReader reader;
-    protected final Function<MappingSet, MappingsProcessor> processor;
-
-    /**
-     * Creates a new mappings parser, from the given {@link BufferedReader}.
-     *
-     * @param reader The buffered reader
-     * @param processor The function to create a {@link MappingsProcessor} for the format
-     */
-    protected MappingsParser(final BufferedReader reader, final Function<MappingSet, MappingsProcessor> processor) {
-        this.reader = reader;
-        this.processor = processor;
-    }
+    protected final MappingSet mappings;
 
     /**
-     * Parses mappings from the previously given {@link BufferedReader}, to
-     * a new {@link MappingSet}
+     * Creates a mappings parser, to process the lines in a
+     * mappings file.
      *
-     * @return The mapping set
+     * @param mappings The mappings set
      */
-    public MappingSet parse() {
-        return this.parse(new MappingSet());
-    }
-
-    /**
-     * Parses mappings from the previously given {@link BufferedReader}, to
-     * the given {@link MappingSet}.
-     *
-     * @param mappings The mapping set
-     * @return The mapping set, to allow for chaining
-     */
-    public MappingSet parse(final MappingSet mappings) {
-        final MappingsProcessor processor = this.processor.apply(mappings);
-        this.reader.lines()
-                // Process line
-                .forEach(line -> {
-                    try {
-                        processor.processLine(line);
-                    } catch (final IOException ignored) {
-                    }
-                });
-        return processor.getResult();
+    protected MappingsParser(final MappingSet mappings) {
+        this.mappings = mappings;
     }
 
     @Override
-    public void close() throws IOException {
-        this.reader.close();
+    public MappingSet getResult() {
+        return this.mappings;
     }
 
 }
