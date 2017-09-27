@@ -36,7 +36,7 @@ import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.Signature;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -44,12 +44,12 @@ import java.io.IOException;
 /**
  * A variety of unit tests pertaining to {@link SrgParser}.
  */
-public final class SrgProcessorTest {
+public final class SrgParserTest {
 
-    private MappingSet mappings;
+    private static MappingSet mappings;
 
-    @Before
-    public void initialise() throws IOException {
+    @BeforeClass
+    public static void initialise() throws IOException {
         final SrgParser parser = new SrgParser();
 
         // Feed in mappings
@@ -61,16 +61,16 @@ public final class SrgProcessorTest {
         parser.processLine("MD: ght/hyuip (I)Z uk/jamierocks/Test/isEven (I)Z");
         parser.processLine("MD: ght$ds/hyuip (I)Z uk/jamierocks/Test$Example/isOdd (I)Z");
 
-        this.mappings = parser.getResult();
+        mappings = parser.getResult();
     }
 
     @Test
     public void topLevelClass() {
         // 1. Check the class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(mappings.hasTopLevelClassMapping("ght"));
 
         // 2. Get the class mapping, and check the obfuscated and de-obfuscated name
-        final TopLevelClassMapping classMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping classMapping = mappings.getOrCreateTopLevelClassMapping("ght");
         assertEquals("ght", classMapping.getObfuscatedName());
         assertEquals("uk/jamierocks/Test", classMapping.getDeobfuscatedName());
     }
@@ -78,10 +78,10 @@ public final class SrgProcessorTest {
     @Test
     public void innerClass() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(mappings.hasTopLevelClassMapping("ght"));
 
         // 2. Get the parent class mapping, and check the inner class mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping parentMapping = mappings.getOrCreateTopLevelClassMapping("ght");
         assertTrue(parentMapping.hasInnerClassMapping("ds"));
 
         // 3. Get the inner class mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
@@ -104,10 +104,10 @@ public final class SrgProcessorTest {
     @Test
     public void field() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(mappings.hasTopLevelClassMapping("ght"));
 
         // 2. Get the class mapping, and check the field mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping parentMapping = mappings.getOrCreateTopLevelClassMapping("ght");
         assertTrue(parentMapping.hasFieldMapping("rft"));
 
         // 3. Get the field mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
@@ -135,10 +135,10 @@ public final class SrgProcessorTest {
     @Test
     public void method() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(mappings.hasTopLevelClassMapping("ght"));
 
         // 2. Get the class mapping, and check the method mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping parentMapping = mappings.getOrCreateTopLevelClassMapping("ght");
         final Signature isEvenSignature = Signature.compile("(I)Z");
         final MethodDescriptor isEvenDescriptor = new MethodDescriptor("hyuip", isEvenSignature);
         assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));

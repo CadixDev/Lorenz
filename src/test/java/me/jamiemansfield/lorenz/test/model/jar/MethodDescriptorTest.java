@@ -31,21 +31,21 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.Signature;
 import me.jamiemansfield.lorenz.model.jar.Type;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * A variety of unit tests pertaining to the de-obfuscation
- * methods in {@link MethodDescriptor}.
+ * pertaining to {@link MethodDescriptor}.
  */
 public final class MethodDescriptorTest {
 
-    private MappingSet mappings;
+    private static MappingSet mappings;
 
-    @Before
-    public void initialise() {
-        this.mappings = new MappingSet();
-        this.mappings.getOrCreateTopLevelClassMapping("ght")
+    @BeforeClass
+    public static void initialise() {
+        mappings = new MappingSet();
+        mappings.getOrCreateTopLevelClassMapping("ght")
                 .setDeobfuscatedName("uk/jamierocks/Test");
     }
 
@@ -95,7 +95,7 @@ public final class MethodDescriptorTest {
      * @return The de-obfuscated type
      */
     private String deobfRawType(final String rawType) {
-        return Type.of(rawType).getDeobfuscated(this.mappings);
+        return Type.of(rawType).getDeobfuscated(mappings);
     }
 
     /**
@@ -106,7 +106,7 @@ public final class MethodDescriptorTest {
      * @return The de-obfuscated signature
      */
     private String deobfRawSig(final String rawSig) {
-        return Signature.compile(rawSig).getDeobfuscated(this.mappings);
+        return Signature.compile(rawSig).getDeobfuscated(mappings);
     }
 
 }

@@ -32,6 +32,12 @@ import java.util.Objects;
 
 /**
  * Represents a de-obfuscation mapping for software that runs on the JVM.
+ *
+ * @see ClassMapping
+ * @see InnerClassMapping
+ * @see TopLevelClassMapping
+ * @see FieldMapping
+ * @see MethodMapping
  */
 public abstract class Mapping {
 
