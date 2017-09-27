@@ -136,7 +136,7 @@ public abstract class ClassMapping extends Mapping {
      * @return The method mapping, to allow for chaining
      */
     public MethodMapping addMethodMapping(final MethodMapping mapping) {
-        this.methods.put(mapping.getObfuscatedDescriptor(), mapping);
+        this.methods.put(mapping.getDescriptor(), mapping);
         return mapping;
     }
 
@@ -144,39 +144,36 @@ public abstract class ClassMapping extends Mapping {
      * Establishes whether the class mapping contains a method mapping
      * of the given obfuscated name.
      *
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method
-     *                             mapping
+     * @param descriptor The descriptor of the method mapping
      * @return {@code True} should a method mapping of the given
      *         obfuscated name exist in the class mapping, else
      *         {@code false}
      */
-    public boolean hasMethodMapping(final MethodDescriptor obfuscatedDescriptor) {
-        return this.methods.containsKey(obfuscatedDescriptor);
+    public boolean hasMethodMapping(final MethodDescriptor descriptor) {
+        return this.methods.containsKey(descriptor);
     }
 
     /**
      * Gets the method mapping of the given obfuscated name of the
      * class mapping, should it exist.
      *
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method
-     *                             mapping
+     * @param descriptor The descriptor of the method mapping
      * @return The method mapping, wrapped in an {@link Optional}
      */
-    public Optional<MethodMapping> getMethodMapping(final MethodDescriptor obfuscatedDescriptor) {
-        return Optional.ofNullable(this.methods.get(obfuscatedDescriptor));
+    public Optional<MethodMapping> getMethodMapping(final MethodDescriptor descriptor) {
+        return Optional.ofNullable(this.methods.get(descriptor));
     }
 
     /**
      * Gets, or creates should it not exist, a method mapping of the
      * given obfuscated descriptor.
      *
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method
-     *                             mapping
+     * @param descriptor The descriptor of the method mapping
      * @return The method mapping
      */
-    public MethodMapping getOrCreateMethodMapping(final MethodDescriptor obfuscatedDescriptor) {
-        return this.getMethodMapping(obfuscatedDescriptor)
-                .orElseGet(() -> this.addMethodMapping(new MethodMapping(this, obfuscatedDescriptor, obfuscatedDescriptor.getName())));
+    public MethodMapping getOrCreateMethodMapping(final MethodDescriptor descriptor) {
+        return this.getMethodMapping(descriptor)
+                .orElseGet(() -> this.addMethodMapping(new MethodMapping(this, descriptor, descriptor.getName())));
     }
 
     /**

@@ -147,8 +147,8 @@ public final class SrgProcessorTest {
         final MethodMapping methodMapping = parentMapping.getOrCreateMethodMapping(isEvenDescriptor);
         assertEquals("hyuip", methodMapping.getObfuscatedName());
         assertEquals("isEven", methodMapping.getDeobfuscatedName());
-        assertEquals("(I)Z", methodMapping.getObfuscatedDescriptor().getSignature().getObfuscated());
-        assertEquals("(I)Z", methodMapping.getObfuscatedDescriptor().getSignature().getDeobfuscated(this.mappings));
+        assertEquals("(I)Z", methodMapping.getObfuscatedSignature());
+        assertEquals("(I)Z", methodMapping.getDeobfuscatedSignature());
         assertEquals("ght/hyuip", methodMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test/isEven", methodMapping.getFullDeobfuscatedName());
 
@@ -163,8 +163,8 @@ public final class SrgProcessorTest {
         final MethodMapping innerMethodMapping = classMapping.getOrCreateMethodMapping(isEvenDescriptor);
         assertEquals("hyuip", innerMethodMapping.getObfuscatedName());
         assertEquals("isOdd", innerMethodMapping.getDeobfuscatedName());
-        assertEquals("(I)Z", innerMethodMapping.getObfuscatedDescriptor().getSignature().getObfuscated());
-        assertEquals("(I)Z", innerMethodMapping.getObfuscatedDescriptor().getSignature().getDeobfuscated(this.mappings));
+        assertEquals("(I)Z", innerMethodMapping.getObfuscatedSignature());
+        assertEquals("(I)Z", innerMethodMapping.getDeobfuscatedSignature());
         assertEquals("ght$ds/hyuip", innerMethodMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test$Example/isOdd", innerMethodMapping.getFullDeobfuscatedName());
     }

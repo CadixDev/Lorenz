@@ -26,7 +26,9 @@
 package me.jamiemansfield.lorenz.model;
 
 import com.google.common.base.MoreObjects;
+import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.Signature;
 
 import java.util.Objects;
 
@@ -36,56 +38,61 @@ import java.util.Objects;
 public class MethodMapping extends Mapping {
 
     private final ClassMapping parentClass;
-    private final MethodDescriptor obfuscatedDescriptor;
+    private final MethodDescriptor descriptor;
 
     /**
      * Creates a new method mapping, from the given parameters.
      *
      * @param parentClass The class mapping, this mapping belongs to
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method
+     * @param descriptor The descriptor of the method
      * @param deobfuscatedName The de-obfuscated name
      */
-    public MethodMapping(final ClassMapping parentClass, final MethodDescriptor obfuscatedDescriptor,
+    public MethodMapping(final ClassMapping parentClass, final MethodDescriptor descriptor,
             final String deobfuscatedName) {
-        super(parentClass.getMappings(), obfuscatedDescriptor.getName(), deobfuscatedName);
+        super(parentClass.getMappings(), descriptor.getName(), deobfuscatedName);
         this.parentClass = parentClass;
-        this.obfuscatedDescriptor = obfuscatedDescriptor;
+        this.descriptor = descriptor;
+    }
+
+    /**
+     * Gets the {@link MethodDescriptor} of the method.
+     *
+     * @return The method descriptor
+     */
+    public MethodDescriptor getDescriptor() {
+        return this.descriptor;
+    }
+
+    /**
+     * Gets the {@link Signature} of the method.
+     *
+     * @return The method signature
+     * @see MethodDescriptor#getSignature()
+     */
+    public Signature getSignature() {
+        return this.descriptor.getSignature();
     }
 
     /**
      * Gets the obfuscated signature of the method.
      *
      * @return The obfuscated signature
+     * @see MethodDescriptor#getSignature()
+     * @see Signature#getObfuscated()
      */
     public String getObfuscatedSignature() {
-        return this.obfuscatedDescriptor.getSignature().getObfuscated();
-    }
-
-    /**
-     * Gets the obfuscated {@link MethodDescriptor} of the method.
-     *
-     * @return The obfuscated method descriptor
-     */
-    public MethodDescriptor getObfuscatedDescriptor() {
-        return this.obfuscatedDescriptor;
+        return this.descriptor.getSignature().getObfuscated();
     }
 
     /**
      * Gets the de-obfuscated signature of the method.
      *
      * @return The de-obfuscated signature
+     * @see MethodDescriptor#getSignature()
+     * @see Signature#getDeobfuscated(MappingSet)
      */
     public String getDeobfuscatedSignature() {
-        return this.obfuscatedDescriptor.getSignature().getDeobfuscated(this.getMappings());
-    }
-
-    /**
-     * Gets the de-obfuscated {@link MethodDescriptor} of the method.
-     *
-     * @return The de-obfuscated method descriptor
-     */
-    public MethodDescriptor getDeobfuscatedDescriptor() {
-        return new MethodDescriptor(this.getDeobfuscatedName(), this.getDeobfuscatedSignature());
+        return this.descriptor.getSignature().getDeobfuscated(this.getMappings());
     }
 
     @Override
@@ -101,8 +108,8 @@ public class MethodMapping extends Mapping {
     @Override
     protected MoreObjects.ToStringHelper buildToString() {
         return super.buildToString()
-                .add("obfuscatedDescriptor", this.obfuscatedDescriptor)
-                .add("deobfuscatedDescriptor", this.getDeobfuscatedDescriptor());
+                .add("obfuscatedSignature", this.getObfuscatedSignature())
+                .add("deobfuscatedSignature", this.getDeobfuscatedSignature());
     }
 
     @Override
@@ -112,12 +119,12 @@ public class MethodMapping extends Mapping {
         final MethodMapping that = (MethodMapping) obj;
         return super.equals(that) &&
                 Objects.equals(this.parentClass, that.parentClass) &&
-                Objects.equals(this.obfuscatedDescriptor, that.obfuscatedDescriptor);
+                Objects.equals(this.descriptor, that.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parentClass, this.obfuscatedDescriptor);
+        return Objects.hash(super.hashCode(), this.parentClass, this.descriptor);
     }
 
 }
