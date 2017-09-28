@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.test.io.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import me.jamiemansfield.lorenz.MappingSet;
@@ -53,6 +54,8 @@ public final class SrgParserTest {
         final SrgParser parser = new SrgParser();
 
         // Feed in mappings
+        parser.processLine("# CL: yu uk/jamierocks/Comment");
+        parser.processLine("CL: uih uk/jamierocks/CommentTest # CL: op uk/jr/Operator");
         parser.processLine("CL: ght uk/jamierocks/Test");
         parser.processLine("CL: ght$ds uk/jamierocks/Test$Example");
         parser.processLine("CL: ght$ds$bg uk/jamierocks/Test$Example$Inner");
@@ -62,6 +65,22 @@ public final class SrgParserTest {
         parser.processLine("MD: ght$ds/hyuip (I)Z uk/jamierocks/Test$Example/isOdd (I)Z");
 
         mappings = parser.getResult();
+    }
+
+    @Test
+    public void commentRemoval() {
+        // 1. Check an all comments line
+        final String emptyLine = "# This is a comment";
+        assertEquals("", SrgParser.removeComments(emptyLine).trim());
+
+        // 2. Check a mixed line
+        final String mixedLine = "blah blah blah # This is a comment";
+        assertEquals("blah blah blah", SrgParser.removeComments(mixedLine).trim());
+
+        // 3. Check that SrgParser#processLine(String) won't accept comments
+        assertFalse(mappings.hasTopLevelClassMapping("yu"));
+        assertTrue(mappings.hasTopLevelClassMapping("uih"));
+        assertFalse(mappings.hasTopLevelClassMapping("op"));
     }
 
     @Test

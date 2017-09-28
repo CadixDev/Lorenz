@@ -28,6 +28,8 @@ package me.jamiemansfield.lorenz.io.parser;
 import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
 
+import java.util.regex.Pattern;
+
 /**
  * A parser for a given mappings format, that is built upon
  * Guava's {@link LineProcessor}.
@@ -35,6 +37,11 @@ import me.jamiemansfield.lorenz.MappingSet;
  * @see SrgParser
  */
 public abstract class MappingsParser implements LineProcessor<MappingSet> {
+
+    /**
+     * A regular expression used to split {@link String}s at spaces.
+     */
+    protected static final Pattern SPACE = Pattern.compile(" ", Pattern.LITERAL);
 
     protected final MappingSet mappings;
 

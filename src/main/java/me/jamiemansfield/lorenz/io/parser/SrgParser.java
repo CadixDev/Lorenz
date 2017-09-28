@@ -26,15 +26,30 @@
 package me.jamiemansfield.lorenz.io.parser;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.util.Patterns;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
  * The mappings parser for the SRG format.
  */
 public class SrgParser extends MappingsParser {
+
+    /**
+     * A regex expression used to remove comments from lines.
+     */
+    private static final Pattern HASH_COMMENT = Pattern.compile("#.+");
+
+    /**
+     * Removes present comments, from the given {@link String} line.
+     *
+     * @param line The line
+     * @return The comment-omitted line
+     */
+    public static String removeComments(final String line) {
+        return HASH_COMMENT.matcher(line).replaceAll("");
+    }
 
     private static final String CLASS_MAPPING_KEY = "CL:";
     private static final String FIELD_MAPPING_KEY = "FD:";
@@ -65,7 +80,7 @@ public class SrgParser extends MappingsParser {
         Stream.of(rawLine)
                 // Handle comments, by removing them.
                 // This implementation will allow comments to be placed anywhere
-                .map(line -> Patterns.HASH_COMMENT.matcher(line).replaceAll(""))
+                .map(SrgParser::removeComments)
                 // Trim the line
                 .map(String::trim)
                 // Filter out empty lines
@@ -77,7 +92,7 @@ public class SrgParser extends MappingsParser {
                         return;
                     }
                     // Split up the line, for further processing
-                    final String[] split = Patterns.SPACE.split(line);
+                    final String[] split = SPACE.split(line);
                     final int len = split.length;
 
                     // Establish the type of mapping

@@ -27,6 +27,7 @@ package me.jamiemansfield.lorenz.model.jar;
 
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.Mapping;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -59,17 +60,7 @@ public class ObjectType implements Type {
     @Override
     public String getDeobfuscated(final MappingSet mappings) {
         final Optional<ClassMapping> typeMapping = mappings.getClassMapping(this.className);
-        final StringBuilder typeBuilder = new StringBuilder();
-
-        typeBuilder.append("L");
-        if (typeMapping.isPresent()) {
-            typeBuilder.append(typeMapping.get().getFullDeobfuscatedName());
-        } else {
-            typeBuilder.append(this.className);
-        }
-        typeBuilder.append(";");
-
-        return typeBuilder.toString();
+        return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(this.className) + ";";
     }
 
     @Override
