@@ -29,7 +29,7 @@ dependencies {
     compile 'com.google.guava:guava:22.0'
 
     // Testing
-    compile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
 
 license {
