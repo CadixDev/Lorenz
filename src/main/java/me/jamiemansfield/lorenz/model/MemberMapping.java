@@ -52,12 +52,12 @@ public abstract class MemberMapping extends Mapping {
 
     @Override
     public String getFullObfuscatedName() {
-        return String.format("%s$%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     public String getFullDeobfuscatedName() {
-        return String.format("%s$%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s/%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
     @Override
