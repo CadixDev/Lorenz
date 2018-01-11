@@ -72,12 +72,13 @@ public class InnerClassMapping extends ClassMapping {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
         if (!super.equals(obj)) return false;
         if (!(obj instanceof InnerClassMapping)) return false;
+
         final InnerClassMapping that = (InnerClassMapping) obj;
-        return super.equals(that) &&
-                Objects.equals(this.parentClass, that.parentClass);
+        return Objects.equals(this.parentClass, that.parentClass);
     }
 
     @Override

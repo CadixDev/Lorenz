@@ -276,12 +276,13 @@ public abstract class ClassMapping extends Mapping {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
         if (!super.equals(obj)) return false;
         if (!(obj instanceof ClassMapping)) return false;
+
         final ClassMapping that = (ClassMapping) obj;
-        return super.equals(that) &&
-                Objects.equals(this.fields, that.fields) &&
+        return Objects.equals(this.fields, that.fields) &&
                 Objects.equals(this.methods, that.methods) &&
                 Objects.equals(this.innerClasses, that.innerClasses);
     }

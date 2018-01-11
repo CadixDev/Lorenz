@@ -36,6 +36,7 @@ import java.util.Objects;
  * @see ClassMapping
  * @see InnerClassMapping
  * @see TopLevelClassMapping
+ * @see MemberMapping
  * @see FieldMapping
  * @see MethodMapping
  */
@@ -134,6 +135,7 @@ public abstract class Mapping {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Mapping)) return false;
+
         final Mapping that = (Mapping) obj;
         return Objects.equals(this.obfuscatedName, that.obfuscatedName) &&
                 Objects.equals(this.deobfuscatedName, that.deobfuscatedName);

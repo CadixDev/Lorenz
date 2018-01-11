@@ -35,9 +35,8 @@ import java.util.Objects;
 /**
  * Represents a de-obfuscation mapping for methods.
  */
-public class MethodMapping extends Mapping {
+public class MethodMapping extends MemberMapping {
 
-    private final ClassMapping parentClass;
     private final MethodDescriptor descriptor;
 
     /**
@@ -49,8 +48,7 @@ public class MethodMapping extends Mapping {
      */
     public MethodMapping(final ClassMapping parentClass, final MethodDescriptor descriptor,
             final String deobfuscatedName) {
-        super(parentClass.getMappings(), descriptor.getName(), deobfuscatedName);
-        this.parentClass = parentClass;
+        super(parentClass, descriptor.getName(), deobfuscatedName);
         this.descriptor = descriptor;
     }
 
@@ -96,16 +94,6 @@ public class MethodMapping extends Mapping {
     }
 
     @Override
-    public String getFullObfuscatedName() {
-        return String.format("%s/%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
-    }
-
-    @Override
-    public String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
-    }
-
-    @Override
     protected MoreObjects.ToStringHelper buildToString() {
         return super.buildToString()
                 .add("obfuscatedSignature", this.getObfuscatedSignature())
@@ -113,18 +101,18 @@ public class MethodMapping extends Mapping {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
         if (!super.equals(obj)) return false;
         if (!(obj instanceof MethodMapping)) return false;
+
         final MethodMapping that = (MethodMapping) obj;
-        return super.equals(that) &&
-                Objects.equals(this.parentClass, that.parentClass) &&
-                Objects.equals(this.descriptor, that.descriptor);
+        return Objects.equals(this.descriptor, that.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parentClass, this.descriptor);
+        return Objects.hash(super.hashCode(), this.descriptor);
     }
 
 }

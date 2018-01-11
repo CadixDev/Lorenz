@@ -25,25 +25,54 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import java.util.Objects;
+
 /**
- * Represents a de-obfuscation mapping for fields.
+ * Represents a mapping that is a member to a {@link ClassMapping}.
+ *
+ * @see FieldMapping
+ * @see MethodMapping
  */
-public class FieldMapping extends MemberMapping {
+public abstract class MemberMapping extends Mapping {
+
+    private final ClassMapping parentClass;
 
     /**
-     * Creates a new field mapping, from the given parameters.
+     * Creates a new member mapping, from the given parameters.
      *
      * @param parentClass The class mapping, this mapping belongs to
      * @param obfuscatedName The obfuscated name
      * @param deobfuscatedName The de-obfuscated name
      */
-    public FieldMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
-        super(parentClass, obfuscatedName, deobfuscatedName);
+    protected MemberMapping(final ClassMapping parentClass, final String obfuscatedName,
+            final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
+        this.parentClass = parentClass;
+    }
+
+    @Override
+    public String getFullObfuscatedName() {
+        return String.format("%s$%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
+    }
+
+    @Override
+    public String getFullDeobfuscatedName() {
+        return String.format("%s$%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof FieldMapping;
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof MemberMapping)) return false;
+
+        final MemberMapping that = (MemberMapping) obj;
+        return Objects.equals(this.parentClass, that.parentClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.parentClass);
     }
 
 }
