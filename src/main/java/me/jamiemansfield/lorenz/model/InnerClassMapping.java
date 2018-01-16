@@ -30,7 +30,7 @@ import java.util.Objects;
 /**
  * Represents a de-obfuscation mapping for an inner class.
  */
-public class InnerClassMapping extends ClassMapping {
+public class InnerClassMapping extends ClassMapping implements IMemberMapping {
 
     private final ClassMapping parentClass;
 
@@ -44,6 +44,11 @@ public class InnerClassMapping extends ClassMapping {
     public InnerClassMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
         super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
         this.parentClass = parentClass;
+    }
+
+    @Override
+    public ClassMapping getParentClass() {
+        return this.parentClass;
     }
 
     @Override

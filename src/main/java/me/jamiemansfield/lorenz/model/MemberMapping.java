@@ -28,12 +28,12 @@ package me.jamiemansfield.lorenz.model;
 import java.util.Objects;
 
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
+ * A basic implementation of {@link IMemberMapping}.
  *
  * @see FieldMapping
  * @see MethodMapping
  */
-public abstract class MemberMapping extends Mapping {
+public abstract class MemberMapping extends Mapping implements IMemberMapping {
 
     private final ClassMapping parentClass;
 
@@ -48,6 +48,11 @@ public abstract class MemberMapping extends Mapping {
             final String deobfuscatedName) {
         super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
         this.parentClass = parentClass;
+    }
+
+    @Override
+    public final ClassMapping getParentClass() {
+        return this.parentClass;
     }
 
     @Override
