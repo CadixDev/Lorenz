@@ -26,12 +26,12 @@
 package me.jamiemansfield.lorenz.model;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Maps;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,9 +47,9 @@ import java.util.Optional;
  */
 public abstract class ClassMapping extends Mapping {
 
-    private final Map<String, FieldMapping> fields = Maps.newHashMap();
-    private final Map<MethodDescriptor, MethodMapping> methods = Maps.newHashMap();
-    private final Map<String, InnerClassMapping> innerClasses = Maps.newHashMap();
+    private final Map<String, FieldMapping> fields = new HashMap<>();
+    private final Map<MethodDescriptor, MethodMapping> methods = new HashMap<>();
+    private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
 
     /**
      * Creates a new class mapping, from the given parameters.

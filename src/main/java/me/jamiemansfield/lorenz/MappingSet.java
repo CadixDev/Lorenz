@@ -25,13 +25,13 @@
 
 package me.jamiemansfield.lorenz;
 
-import com.google.common.collect.Maps;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,7 +40,7 @@ import java.util.Optional;
  */
 public final class MappingSet {
 
-    private final Map<String, TopLevelClassMapping> topLevelClasses = Maps.newHashMap();
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
 
     /**
      * Creates a new mapping set.
