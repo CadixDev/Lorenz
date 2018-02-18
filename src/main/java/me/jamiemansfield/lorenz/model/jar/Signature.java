@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.model.jar;
 import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -159,6 +160,25 @@ public final class Signature {
         typeBuilder.append(this.returnType.getDeobfuscated(mappings));
 
         return typeBuilder.toString();
+    }
+
+    /**
+     * Gets the return {@link Type} of the method.
+     *
+     * @return The method's return type
+     */
+    public Type getReturnType() {
+        return this.returnType;
+    }
+
+    /**
+     * Gets an immutable-view of the parameter {@link Type}s of the
+     * method.
+     *
+     * @return The method's param types
+     */
+    public List<Type> getParamTypes() {
+        return Collections.unmodifiableList(this.paramTypes);
     }
 
     @Override

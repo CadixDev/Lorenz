@@ -37,6 +37,7 @@ import java.util.Objects;
  */
 public class ArrayType implements Type {
 
+    private final int dimCount;
     private final String arrayDims;
     private final Type component;
     private final String obfuscatedView;
@@ -49,6 +50,7 @@ public class ArrayType implements Type {
      * @param component The component type
      */
     public ArrayType(final int arrayDims, final Type component) {
+        this.dimCount = arrayDims;
         this.arrayDims = Strings.repeat("[", arrayDims);
         this.component = component;
         this.obfuscatedView = this.arrayDims + component.getObfuscated();
@@ -62,6 +64,24 @@ public class ArrayType implements Type {
     @Override
     public String getDeobfuscated(final MappingSet mappings) {
         return this.arrayDims + this.component.getDeobfuscated(mappings);
+    }
+
+    /**
+     * Gets the dimension count of the array.
+     *
+     * @return The dimension count
+     */
+    public int getDimCount() {
+        return this.dimCount;
+    }
+
+    /**
+     * Gets the {@link Type} of the array.
+     *
+     * @return The array's type
+     */
+    public Type getComponent() {
+        return this.component;
     }
 
     @Override
