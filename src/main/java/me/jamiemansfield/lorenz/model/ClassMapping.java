@@ -254,17 +254,16 @@ public abstract class ClassMapping extends Mapping {
      *         {@code false} otherwise
      */
     public boolean hasMappings() {
-        return this.hasDeobfuscatedName() || (
+        return this.hasDeobfuscatedName() ||
                 this.getFieldMappings().stream()
                         .filter(Mapping::hasDeobfuscatedName)
-                        .count() != 0
-                && this.getMethodMappings().stream()
+                        .count() != 0 ||
+                this.getMethodMappings().stream()
                         .filter(Mapping::hasDeobfuscatedName)
-                        .count() != 0
-                && this.getInnerClassMappings().stream()
+                        .count() != 0 ||
+                this.getInnerClassMappings().stream()
                         .filter(ClassMapping::hasMappings)
-                        .count() != 0
-                );
+                        .count() != 0;
     }
 
     @Override
