@@ -76,4 +76,9 @@ public class ObjectType implements Type {
         return Objects.equals(this.className, that.className);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.className);
+    }
+
 }
