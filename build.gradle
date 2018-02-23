@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'net.minecrell.licenser'
 
 sourceCompatibility = '1.8'
@@ -18,7 +19,7 @@ targetCompatibility = '1.8'
 
 group = 'me.jamiemansfield'
 archivesBaseName = project.name.toLowerCase()
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0'
 
 repositories {
     mavenCentral()
@@ -64,12 +65,30 @@ artifacts {
     archives sourcesJar
 }
 
+signing {
+    sign configurations.archives
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
+            // repo.jamiemansfield.me
             if (System.getenv('MAVEN_RELEASES') != null) {
                 repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
                 snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
+            }
+
+            // Maven Central
+            if (ossrhUsername != null) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
             }
 
             pom {
@@ -95,8 +114,16 @@ uploadArchives {
                     licenses {
                         license {
                             name = 'MIT License'
-                            url = 'http://opensource.org/licenses/MIT'
+                            url = 'https://opensource.org/licenses/MIT'
                             distribution = 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'jamierocks'
+                            name 'Jamie Mansfield'
+                            email 'dev@jamierocks.uk'
                         }
                     }
                 }
