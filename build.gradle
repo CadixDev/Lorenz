@@ -73,13 +73,13 @@ uploadArchives {
     repositories {
         mavenDeployer {
             // repo.jamiemansfield.me
-            if (System.getenv('MAVEN_RELEASES') != null) {
+            if (System.getenv('MAVEN_RELEASES') != null && System.getenv('MAVEN_SNAPSHOTS') != null) {
                 repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
                 snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
             }
 
             // Maven Central
-            if (ossrhUsername != null) {
+            if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
                 repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
