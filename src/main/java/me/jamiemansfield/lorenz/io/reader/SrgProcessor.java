@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.parser;
+package me.jamiemansfield.lorenz.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
- * The mappings parser for the SRG format.
+ * The mappings processor for the SRG format.
  */
-public class SrgParser extends MappingsParser {
+public class SrgProcessor extends MappingsProcessor {
 
     /**
      * A regex expression used to remove comments from lines.
@@ -64,14 +64,14 @@ public class SrgParser extends MappingsParser {
      *
      * @param mappings The mappings set
      */
-    public SrgParser(final MappingSet mappings) {
+    public SrgProcessor(final MappingSet mappings) {
         super(mappings);
     }
 
     /**
      * Creates a mappings parser for the SRG format.
      */
-    public SrgParser() {
+    public SrgProcessor() {
         this(new MappingSet());
     }
 
@@ -80,7 +80,7 @@ public class SrgParser extends MappingsParser {
         Stream.of(rawLine)
                 // Handle comments, by removing them.
                 // This implementation will allow comments to be placed anywhere
-                .map(SrgParser::removeComments)
+                .map(SrgProcessor::removeComments)
                 // Trim the line
                 .map(String::trim)
                 // Filter out empty lines

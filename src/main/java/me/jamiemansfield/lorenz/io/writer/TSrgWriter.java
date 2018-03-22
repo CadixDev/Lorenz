@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.io.writer;
 
-import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
@@ -33,23 +32,18 @@ import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 /**
- * An implementation of {@link MappingsWriter} for the SRG format.
+ * An implementation of {@link MappingsWriter} for the TSRG format.
  */
-public class SrgWriter extends MappingsWriter {
-
-    private final List<String> classes = Lists.newArrayList();
-    private final List<String> fields = Lists.newArrayList();
-    private final List<String> methods = Lists.newArrayList();
+public class TSrgWriter extends MappingsWriter {
 
     /**
-     * Creates a new SRG mappings writer, from the given {@link PrintWriter}.
+     * Creates a new TSRG mappings writer, from the given {@link PrintWriter}.
      *
      * @param writer The print writer, to write to
      */
-    public SrgWriter(final PrintWriter writer) {
+    public TSrgWriter(final PrintWriter writer) {
         super(writer);
     }
 
@@ -60,16 +54,6 @@ public class SrgWriter extends MappingsWriter {
                 .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
-
-        // Write everything to the print writer
-        this.classes.forEach(this.writer::println);
-        this.fields.forEach(this.writer::println);
-        this.methods.forEach(this.writer::println);
-
-        // Clear out the lists, to ensure that mappings aren't written twice (or more)
-        this.classes.clear();
-        this.fields.clear();
-        this.methods.clear();
     }
 
     /**
@@ -80,7 +64,7 @@ public class SrgWriter extends MappingsWriter {
     protected void writeClassMapping(final ClassMapping mapping) {
         // Check if the mapping should be written, and if so write it
         if (mapping.hasDeobfuscatedName()) {
-            this.classes.add(String.format("CL: %s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
+            this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
 
         // Write inner class mappings
@@ -109,7 +93,7 @@ public class SrgWriter extends MappingsWriter {
      */
     protected void writeFieldMapping(final FieldMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.fields.add(String.format("FD: %s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
+        this.writer.println(String.format("\t%s %s", mapping.getObfuscatedName(), mapping.getDeobfuscatedName()));
     }
 
     /**
@@ -119,9 +103,9 @@ public class SrgWriter extends MappingsWriter {
      */
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.methods.add(String.format("MD: %s %s %s %s",
-                mapping.getFullObfuscatedName(), mapping.getObfuscatedSignature(),
-                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedSignature()));
+        this.writer.println(String.format("\t%s %s %s",
+                mapping.getObfuscatedName(), mapping.getObfuscatedSignature(),
+                mapping.getDeobfuscatedName()));
     }
 
 }

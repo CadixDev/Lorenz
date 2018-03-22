@@ -30,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.parser.SrgParser;
+import me.jamiemansfield.lorenz.io.reader.SrgProcessor;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
@@ -43,7 +43,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * A variety of unit tests pertaining to {@link SrgParser}.
+ * A variety of unit tests pertaining to {@link SrgProcessor}.
  */
 public final class SrgParserTest {
 
@@ -51,7 +51,7 @@ public final class SrgParserTest {
 
     @BeforeClass
     public static void initialise() throws IOException {
-        final SrgParser parser = new SrgParser();
+        final SrgProcessor parser = new SrgProcessor();
 
         // Feed in mappings
         parser.processLine("# CL: yu uk/jamierocks/Comment");
@@ -71,11 +71,11 @@ public final class SrgParserTest {
     public void commentRemoval() {
         // 1. Check an all comments line
         final String emptyLine = "# This is a comment";
-        assertEquals("", SrgParser.removeComments(emptyLine).trim());
+        assertEquals("", SrgProcessor.removeComments(emptyLine).trim());
 
         // 2. Check a mixed line
         final String mixedLine = "blah blah blah # This is a comment";
-        assertEquals("blah blah blah", SrgParser.removeComments(mixedLine).trim());
+        assertEquals("blah blah blah", SrgProcessor.removeComments(mixedLine).trim());
 
         // 3. Check that SrgParser#processLine(String) won't accept comments
         assertFalse(mappings.hasTopLevelClassMapping("yu"));

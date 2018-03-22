@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.parser;
+package me.jamiemansfield.lorenz.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
@@ -34,22 +34,22 @@ import java.util.function.Function;
 
 /**
  * Represents a reader that parses mappings from a {@link BufferedReader},
- * using a {@link MappingsParser}.
+ * using a {@link MappingsProcessor}.
  *
  * @see SrgReader
  */
 public abstract class MappingsReader implements Closeable {
 
     protected final BufferedReader reader;
-    protected final Function<MappingSet, MappingsParser> parser;
+    protected final Function<MappingSet, MappingsProcessor> parser;
 
     /**
      * Creates a new mappings reader, for the given {@link BufferedReader}.
      *
      * @param reader The buffered reader
-     * @param parser The function to create a {@link MappingsParser} for the format
+     * @param parser The function to create a {@link MappingsProcessor} for the format
      */
-    protected MappingsReader(final BufferedReader reader, final Function<MappingSet, MappingsParser> parser) {
+    protected MappingsReader(final BufferedReader reader, final Function<MappingSet, MappingsProcessor> parser) {
         this.reader = reader;
         this.parser = parser;
     }
@@ -72,7 +72,7 @@ public abstract class MappingsReader implements Closeable {
      * @return The mapping set, to allow for chaining
      */
     public MappingSet parse(final MappingSet mappings) {
-        final MappingsParser processor = this.parser.apply(mappings);
+        final MappingsProcessor processor = this.parser.apply(mappings);
         this.reader.lines()
                 // Process line
                 .forEach(line -> {

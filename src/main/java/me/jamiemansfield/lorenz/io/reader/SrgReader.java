@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.parser;
+package me.jamiemansfield.lorenz.io.reader;
 
 import java.io.BufferedReader;
 
@@ -38,7 +38,7 @@ public class SrgReader extends MappingsReader {
      * @param reader The buffered reader
      */
     public SrgReader(final BufferedReader reader) {
-        super(reader, SrgParser::new);
+        super(reader, SrgProcessor::new);
     }
 
 }

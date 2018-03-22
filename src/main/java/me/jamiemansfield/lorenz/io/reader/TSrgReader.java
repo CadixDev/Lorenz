@@ -23,41 +23,22 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.parser;
+package me.jamiemansfield.lorenz.io.reader;
 
-import com.google.common.io.LineProcessor;
-import me.jamiemansfield.lorenz.MappingSet;
-
-import java.util.regex.Pattern;
+import java.io.BufferedReader;
 
 /**
- * A parser for a given mappings format, that is built upon
- * Guava's {@link LineProcessor}.
- *
- * @see SrgParser
+ * An implementation of {@link MappingsReader} for the TSRG format.
  */
-public abstract class MappingsParser implements LineProcessor<MappingSet> {
+public class TSrgReader extends MappingsReader {
 
     /**
-     * A regular expression used to split {@link String}s at spaces.
-     */
-    protected static final Pattern SPACE = Pattern.compile(" ", Pattern.LITERAL);
-
-    protected final MappingSet mappings;
-
-    /**
-     * Creates a mappings parser, to process the lines in a
-     * mappings file.
+     * Creates a new TSRG mappings reader, for the given {@link BufferedReader}.
      *
-     * @param mappings The mappings set
+     * @param reader The buffered reader
      */
-    protected MappingsParser(final MappingSet mappings) {
-        this.mappings = mappings;
-    }
-
-    @Override
-    public MappingSet getResult() {
-        return this.mappings;
+    public TSrgReader(final BufferedReader reader) {
+        super(reader, TSrgProcessor::new);
     }
 
 }
