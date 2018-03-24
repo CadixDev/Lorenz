@@ -29,7 +29,6 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -65,8 +64,6 @@ public class TSrgProcessor extends MappingsProcessor {
                 // Handle comments, by removing them.
                 // This implementation will allow comments to be placed anywhere
                 .map(SrgProcessor::removeComments)
-                // Trim the line
-                .map(String::trim)
                 // Filter out empty lines
                 .filter(line -> !line.isEmpty())
                 // Process line
@@ -79,7 +76,7 @@ public class TSrgProcessor extends MappingsProcessor {
                     final String[] split = SPACE.split(line);
                     final int len = split.length;
 
-                    // Establish the type of mapping
+                    // Process class mappings
                     if (!split[0].startsWith("\t") && len == CLASS_MAPPING_ELEMENT_COUNT) {
                         final String obfuscatedName = split[0];
                         final String deobfuscatedName = split[1];
@@ -87,25 +84,29 @@ public class TSrgProcessor extends MappingsProcessor {
                         // Get mapping, and set de-obfuscated name
                         this.currentClass = this.mappings.getOrCreateClassMapping(obfuscatedName);
                         this.currentClass.setDeobfuscatedName(deobfuscatedName);
-                    } else if (split[0].startsWith("\t") && len == FIELD_MAPPING_ELEMENT_COUNT) {
+                    }
+                    else if (split[0].startsWith("\t") && this.currentClass != null) {
                         final String obfuscatedName = split[0].replace("\t", "");
-                        final String deobfuscatedName = split[1];
 
-                        // Get mapping, and set de-obfuscated name
-                        Optional.ofNullable(this.currentClass).ifPresent(mapping ->
-                                mapping.getOrCreateFieldMapping(obfuscatedName)
-                                        .setDeobfuscatedName(deobfuscatedName)
-                        );
-                    } else if (split[0].startsWith("\t") && len == METHOD_MAPPING_ELEMENT_COUNT) {
-                        final String obfuscatedName = split[0].replace("\t", "");
-                        final String obfuscatedSignature = split[1];
-                        final String deobfuscatedName = split[2];
+                        // Process field mapping
+                        if (len == FIELD_MAPPING_ELEMENT_COUNT) {
+                            final String deobfuscatedName = split[1];
 
-                        // Get mapping, and set de-obfuscated name
-                        Optional.ofNullable(this.currentClass).ifPresent(mapping ->
-                                mapping.getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
-                                        .setDeobfuscatedName(deobfuscatedName)
-                        );
+                            // Get mapping, and set de-obfuscated name
+                            this.currentClass
+                                    .getOrCreateFieldMapping(obfuscatedName)
+                                    .setDeobfuscatedName(deobfuscatedName);
+                        }
+                        // Process method mapping
+                        else if (len == METHOD_MAPPING_ELEMENT_COUNT) {
+                            final String obfuscatedSignature = split[1];
+                            final String deobfuscatedName = split[2];
+
+                            // Get mapping, and set de-obfuscated name
+                            this.currentClass
+                                    .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                                    .setDeobfuscatedName(deobfuscatedName);
+                        }
                     } else {
                         System.out.println("Failed to process line: " + line);
                     }

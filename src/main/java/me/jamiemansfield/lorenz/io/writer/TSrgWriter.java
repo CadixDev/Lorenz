@@ -67,12 +67,6 @@ public class TSrgWriter extends MappingsWriter {
             this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
 
-        // Write inner class mappings
-        mapping.getInnerClassMappings().stream()
-                .filter(ClassMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
-                .forEach(this::writeClassMapping);
-
         // Write field mappings
         mapping.getFieldMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
@@ -84,6 +78,12 @@ public class TSrgWriter extends MappingsWriter {
                 .filter(Mapping::hasDeobfuscatedName)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeMethodMapping);
+
+        // Write inner class mappings
+        mapping.getInnerClassMappings().stream()
+                .filter(ClassMapping::hasMappings)
+                .sorted(ALPHABETISE_MAPPINGS)
+                .forEach(this::writeClassMapping);
     }
 
     /**
