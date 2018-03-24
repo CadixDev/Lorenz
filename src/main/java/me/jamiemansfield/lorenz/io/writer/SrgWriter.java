@@ -77,7 +77,7 @@ public class SrgWriter extends MappingsWriter {
      *
      * @param mapping The class mapping
      */
-    protected void writeClassMapping(final ClassMapping mapping) {
+    protected void writeClassMapping(final ClassMapping<?> mapping) {
         // Check if the mapping should be written, and if so write it
         if (mapping.hasDeobfuscatedName()) {
             this.classes.add(String.format("CL: %s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));

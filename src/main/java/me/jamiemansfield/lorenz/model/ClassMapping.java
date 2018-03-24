@@ -25,42 +25,17 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import com.google.common.base.MoreObjects;
-import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Represents a de-obfuscation mapping for classes.
  *
- * This class will likely not be of too great use, and most will find
- * the child classes for top-level, and inner classes more useful.
- *
- * @see TopLevelClassMapping
- * @see InnerClassMapping
+ * @param <M> The type of the mapping
  */
-public abstract class ClassMapping extends Mapping {
-
-    private final Map<String, FieldMapping> fields = new HashMap<>();
-    private final Map<MethodDescriptor, MethodMapping> methods = new HashMap<>();
-    private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
-
-    /**
-     * Creates a new class mapping, from the given parameters.
-     *
-     * @param mappings The mappings set, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    protected ClassMapping(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
-        super(mappings, obfuscatedName, deobfuscatedName);
-    }
+public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
 
     /**
      * Gets an immutable collection of all of the field mappings
@@ -68,33 +43,7 @@ public abstract class ClassMapping extends Mapping {
      *
      * @return The field mappings
      */
-    public Collection<FieldMapping> getFieldMappings() {
-        return Collections.unmodifiableCollection(this.fields.values());
-    }
-
-    /**
-     * Adds the given {@link FieldMapping} to the class mapping.
-     *
-     * @param mapping The field mapping to add
-     * @return The field mapping, to allow for chaining
-     */
-    public FieldMapping addFieldMapping(final FieldMapping mapping) {
-        this.fields.put(mapping.getObfuscatedName(), mapping);
-        return mapping;
-    }
-
-    /**
-     * Establishes whether the class mapping contains a field mapping
-     * of the given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the field mapping
-     * @return {@code True} should a field mapping of the given
-     *         obfuscated name exist in the class mapping, else
-     *         {@code false}
-     */
-    public boolean hasFieldMapping(final String obfuscatedName) {
-        return this.fields.containsKey(obfuscatedName);
-    }
+    Collection<FieldMapping> getFieldMappings();
 
     /**
      * Gets the field mapping of the given obfuscated name of the
@@ -103,8 +52,27 @@ public abstract class ClassMapping extends Mapping {
      * @param obfuscatedName The obfuscated name of the field mapping
      * @return The field mapping, wrapped in an {@link Optional}
      */
-    public Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.fields.get(obfuscatedName));
+    Optional<FieldMapping> getFieldMapping(final String obfuscatedName);
+
+    /**
+     * Creates a new field mapping, attached to this class mapping, using
+     * the given obfuscated and de-obfuscated name.
+     *
+     * @param obfuscatedName The obfuscated name of the field
+     * @param deobfuscatedName The de-obfuscated name of the field
+     * @return The field mapping
+     */
+    FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName);
+
+    /**
+     * Creates a new field mapping, attached to this class mapping, using
+     * the given obfuscated name.
+     *
+     * @param obfuscatedName The obfuscated name of the field
+     * @return The field mapping
+     */
+    default FieldMapping createFieldMapping(final String obfuscatedName) {
+        return this.createFieldMapping(obfuscatedName, obfuscatedName);
     }
 
     /**
@@ -114,10 +82,21 @@ public abstract class ClassMapping extends Mapping {
      * @param obfuscatedName The obfuscated name of the field mapping
      * @return The field mapping
      */
-    public FieldMapping getOrCreateFieldMapping(final String obfuscatedName) {
+    default FieldMapping getOrCreateFieldMapping(final String obfuscatedName) {
         return this.getFieldMapping(obfuscatedName)
-                .orElseGet(() -> this.addFieldMapping(new FieldMapping(this, obfuscatedName, obfuscatedName)));
+                .orElseGet(() -> this.createFieldMapping(obfuscatedName));
     }
+
+    /**
+     * Establishes whether the class mapping contains a field mapping
+     * of the given obfuscated name.
+     *
+     * @param obfuscatedName The obfuscated name of the field mapping
+     * @return {@code true} should a field mapping of the given
+     *         obfuscated name exists in the class mapping;
+     *         {@code false} otherwise
+     */
+    boolean hasFieldMapping(final String obfuscatedName);
 
     /**
      * Gets an immutable collection of all of the method mappings
@@ -125,19 +104,72 @@ public abstract class ClassMapping extends Mapping {
      *
      * @return The method mappings
      */
-    public Collection<MethodMapping> getMethodMappings() {
-        return Collections.unmodifiableCollection(this.methods.values());
+    Collection<MethodMapping> getMethodMappings();
+
+    /**
+     * Gets the method mapping of the given obfuscated name of the
+     * class mapping, should it exist.
+     *
+     * @param descriptor The descriptor of the method mapping
+     * @return The method mapping, wrapped in an {@link Optional}
+     */
+    Optional<MethodMapping> getMethodMapping(final MethodDescriptor descriptor);
+
+    /**
+     * Creates a new method mapping, attached to this class mapping, using
+     * the given method descriptor and de-obfuscated name.
+     *
+     * @param descriptor The method descriptor
+     * @param deobfuscatedName The de-obfuscated name of the method
+     * @return The method mapping
+     */
+    MethodMapping createMethodMapping(final MethodDescriptor descriptor, final String deobfuscatedName);
+
+    /**
+     * Creates a new method mapping, attached to this class mapping, using
+     * the given method descriptor.
+     *
+     * @param descriptor The method descriptor
+     * @return The method mapping
+     */
+    default MethodMapping createMethodMapping(final MethodDescriptor descriptor) {
+        return this.createMethodMapping(descriptor, descriptor.getName());
     }
 
     /**
-     * Adds the given {@link MethodMapping} to the class mapping.
+     * Creates a new method mapping, attached to this class mapping, using
+     * the given obfuscated method name and signature.
      *
-     * @param mapping The method mapping to add
-     * @return The method mapping, to allow for chaining
+     * @param obfuscatedName The obfuscated method name
+     * @param obfuscatedSignature The obfuscated method signature
+     * @return The method mapping
      */
-    public MethodMapping addMethodMapping(final MethodMapping mapping) {
-        this.methods.put(mapping.getDescriptor(), mapping);
-        return mapping;
+    default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
+        return this.createMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
+    }
+
+    /**
+     * Gets, or creates should it not exist, a method mapping of the
+     * given obfuscated descriptor.
+     *
+     * @param descriptor The descriptor of the method mapping
+     * @return The method mapping
+     */
+    default MethodMapping getOrCreateMethodMapping(final MethodDescriptor descriptor) {
+        return this.getMethodMapping(descriptor)
+                .orElseGet(() -> this.createMethodMapping(descriptor));
+    }
+
+    /**
+     * Gets, or creates should it not exist, a method mapping of the
+     * given obfuscated name, and signature.
+     *
+     * @param obfuscatedName The obfuscated name of the method mapping
+     * @param obfuscatedSignature The obfuscated signature of the method mapping
+     * @return The method mapping
+     */
+    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
+        return this.getOrCreateMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
     }
 
     /**
@@ -149,44 +181,7 @@ public abstract class ClassMapping extends Mapping {
      *         obfuscated name exist in the class mapping, else
      *         {@code false}
      */
-    public boolean hasMethodMapping(final MethodDescriptor descriptor) {
-        return this.methods.containsKey(descriptor);
-    }
-
-    /**
-     * Gets the method mapping of the given obfuscated name of the
-     * class mapping, should it exist.
-     *
-     * @param descriptor The descriptor of the method mapping
-     * @return The method mapping, wrapped in an {@link Optional}
-     */
-    public Optional<MethodMapping> getMethodMapping(final MethodDescriptor descriptor) {
-        return Optional.ofNullable(this.methods.get(descriptor));
-    }
-
-    /**
-     * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated descriptor.
-     *
-     * @param descriptor The descriptor of the method mapping
-     * @return The method mapping
-     */
-    public MethodMapping getOrCreateMethodMapping(final MethodDescriptor descriptor) {
-        return this.getMethodMapping(descriptor)
-                .orElseGet(() -> this.addMethodMapping(new MethodMapping(this, descriptor, descriptor.getName())));
-    }
-
-    /**
-     * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated name, and signature.
-     *
-     * @param obfuscatedName The obfuscated name of the method mapping
-     * @param obfuscatedSignature The obfuscated signature of the method mapping
-     * @return The method mapping
-     */
-    public MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.getOrCreateMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
-    }
+    boolean hasMethodMapping(final MethodDescriptor descriptor);
 
     /**
      * Gets an immutable collection of all of the inner class
@@ -194,34 +189,7 @@ public abstract class ClassMapping extends Mapping {
      *
      * @return The inner class mappings
      */
-    public Collection<InnerClassMapping> getInnerClassMappings() {
-        return Collections.unmodifiableCollection(this.innerClasses.values());
-    }
-
-    /**
-     * Adds the given {@link InnerClassMapping} to the class mapping.
-     *
-     * @param mapping The inner class mapping to add
-     * @return The inner class mapping, to allow for chaining
-     */
-    public InnerClassMapping addInnerClassMapping(final InnerClassMapping mapping) {
-        this.innerClasses.put(mapping.getObfuscatedName(), mapping);
-        return mapping;
-    }
-
-    /**
-     * Establishes whether the class mapping contains a inner class
-     * mapping of the given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the inner class
-     *                       mapping
-     * @return {@code True} should a inner class mapping of the
-     *         given obfuscated name exist in the class mapping,
-     *         else {@code false}
-     */
-    public boolean hasInnerClassMapping(final String obfuscatedName) {
-        return this.innerClasses.containsKey(obfuscatedName);
-    }
+    Collection<InnerClassMapping> getInnerClassMappings();
 
     /**
      * Gets the inner class mapping of the given obfuscated name of the
@@ -230,8 +198,27 @@ public abstract class ClassMapping extends Mapping {
      * @param obfuscatedName The obfuscated name of the inner class mapping
      * @return The inner class mapping, wrapped in an {@link Optional}
      */
-    public Optional<InnerClassMapping> getInnerClassMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.innerClasses.get(obfuscatedName));
+    Optional<InnerClassMapping> getInnerClassMapping(final String obfuscatedName);
+
+    /**
+     * Creates a new inner class mapping, attached to this class mapping, using
+     * the given obfuscated and de-obfuscated class name.
+     *
+     * @param obfuscatedName The obfuscated class name
+     * @param deobfuscatedName The de-obfuscated class name
+     * @return The class mapping
+     */
+    InnerClassMapping createInnerClassMapping(final String obfuscatedName, final String deobfuscatedName);
+
+    /**
+     * Creates a new inner class mapping, attached to this class mapping, using
+     * the given obfuscated class name.
+     *
+     * @param obfuscatedName The obfuscated class name
+     * @return The class mapping
+     */
+    default InnerClassMapping createInnerClassMapping(final String obfuscatedName) {
+        return this.createInnerClassMapping(obfuscatedName, obfuscatedName);
     }
 
     /**
@@ -241,19 +228,31 @@ public abstract class ClassMapping extends Mapping {
      * @param obfuscatedName The obfuscated name of the inner class mapping
      * @return The inner class mapping
      */
-    public InnerClassMapping getOrCreateInnerClassMapping(final String obfuscatedName) {
+    default InnerClassMapping getOrCreateInnerClassMapping(final String obfuscatedName) {
         return this.getInnerClassMapping(obfuscatedName)
-                .orElseGet(() -> this.addInnerClassMapping(new InnerClassMapping(this, obfuscatedName, obfuscatedName)));
+                .orElseGet(() -> this.createInnerClassMapping(obfuscatedName));
     }
+
+    /**
+     * Establishes whether the class mapping contains a inner class
+     * mapping of the given obfuscated name.
+     *
+     * @param obfuscatedName The obfuscated name of the inner class
+     *                       mapping
+     * @return {@code true} should a inner class mapping of the
+     *         given obfuscated name exist in the class mapping;
+     *         {@code false} otherwise
+     */
+    boolean hasInnerClassMapping(final String obfuscatedName);
 
     /**
      * Establishes whether the class mapping has a de-obfuscation mapping, or
      * has some mappings within it.
      *
-     * @return {@code True} if the class mappings has mappings,
+     * @return {@code true} if the class mappings has mappings;
      *         {@code false} otherwise
      */
-    public boolean hasMappings() {
+    default boolean hasMappings() {
         return this.hasDeobfuscatedName() ||
                 this.getFieldMappings().stream()
                         .filter(Mapping::hasDeobfuscatedName)
@@ -264,31 +263,6 @@ public abstract class ClassMapping extends Mapping {
                 this.getInnerClassMappings().stream()
                         .filter(ClassMapping::hasMappings)
                         .count() != 0;
-    }
-
-    @Override
-    protected MoreObjects.ToStringHelper buildToString() {
-        return super.buildToString()
-                .add("fields", this.getFieldMappings())
-                .add("methods", this.getMethodMappings())
-                .add("innerClasses", this.getInnerClassMappings());
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof ClassMapping)) return false;
-
-        final ClassMapping that = (ClassMapping) obj;
-        return Objects.equals(this.fields, that.fields) &&
-                Objects.equals(this.methods, that.methods) &&
-                Objects.equals(this.innerClasses, that.innerClasses);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.fields, this.methods, this.innerClasses);
     }
 
 }

@@ -25,49 +25,22 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import com.google.common.base.MoreObjects;
 import me.jamiemansfield.lorenz.MappingSet;
 
-import java.util.Objects;
-
 /**
- * Represents a de-obfuscation mapping for software that runs on the JVM.
+ * Represents a de-obfuscation mapping for mappable constructs of the Java
+ * class format - e.g. classes, fields, and methods.
  *
- * @see ClassMapping
- * @see InnerClassMapping
- * @see TopLevelClassMapping
- * @see MemberMapping
- * @see FieldMapping
- * @see MethodMapping
+ * @param <M> The type of the mapping, used for chaining
  */
-public abstract class Mapping {
-
-    private final MappingSet mappings;
-    private final String obfuscatedName;
-    private String deobfuscatedName;
-
-    /**
-     * Creates a new de-obfuscation mapping, based on the given obfuscated name
-     * and de-obfuscated name.
-     *
-     * @param mappings The mappings set, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    protected Mapping(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
-        this.mappings = mappings;
-        this.obfuscatedName = obfuscatedName;
-        this.deobfuscatedName = deobfuscatedName;
-    }
+public interface Mapping<M extends Mapping> {
 
     /**
      * Gets the obfuscated name of the member being represented.
      *
      * @return The obfuscated name
      */
-    public String getObfuscatedName() {
-        return this.obfuscatedName;
-    }
+    String getObfuscatedName();
 
     /**
      * Gets the de-obfuscated name of the member being represented.
@@ -75,75 +48,42 @@ public abstract class Mapping {
      *
      * @return The de-obfuscated name
      */
-    public String getDeobfuscatedName() {
-        return this.deobfuscatedName;
-    }
+    String getDeobfuscatedName();
 
     /**
      * Sets the de-obfuscated name of the member.
      *
      * @param deobfuscatedName The new de-obfuscated name
+     * @return {@link this} for chaining
      */
-    public void setDeobfuscatedName(final String deobfuscatedName) {
-        this.deobfuscatedName = deobfuscatedName;
-    }
+    M setDeobfuscatedName(final String deobfuscatedName);
 
     /**
      * Gets the fully-qualified obfuscated name of the member.
      *
      * @return The fully-qualified obfuscated name
      */
-    public abstract String getFullObfuscatedName();
+    String getFullObfuscatedName();
 
     /**
      * Gets the fully-qualified de-obfuscated name of the member.
      *
      * @return The fully-qualified de-obfuscated name
      */
-    public abstract String getFullDeobfuscatedName();
+    String getFullDeobfuscatedName();
 
     /**
      * Establishes whether the mapping has had a de-obfuscated name set.
      *
      * @return {@code True} if the mapping is mapped, {@code false} otherwise
      */
-    public boolean hasDeobfuscatedName() {
-        return !Objects.equals(this.obfuscatedName, this.deobfuscatedName);
-    }
+    boolean hasDeobfuscatedName();
 
     /**
      * Gets the {@link MappingSet} that the mappings belongs to.
      *
      * @return The owning mapping set
      */
-    public MappingSet getMappings() {
-        return this.mappings;
-    }
-
-    protected MoreObjects.ToStringHelper buildToString() {
-        return MoreObjects.toStringHelper(this)
-                .add("obfuscatedName", this.obfuscatedName)
-                .add("deobfuscatedName", this.deobfuscatedName);
-    }
-
-    @Override
-    public String toString() {
-        return this.buildToString().toString();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Mapping)) return false;
-
-        final Mapping that = (Mapping) obj;
-        return Objects.equals(this.obfuscatedName, that.obfuscatedName) &&
-                Objects.equals(this.deobfuscatedName, that.deobfuscatedName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.obfuscatedName, this.deobfuscatedName);
-    }
+    MappingSet getMappings();
 
 }

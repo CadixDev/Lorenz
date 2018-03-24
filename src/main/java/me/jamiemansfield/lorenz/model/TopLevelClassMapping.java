@@ -25,41 +25,19 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.MappingSet;
-
 /**
  * Represents a de-obfuscation mapping for a top-level class.
  */
-public class TopLevelClassMapping extends ClassMapping {
-
-    /**
-     * Creates a new top-level class mapping, from the given parameters.
-     *
-     * @param mappings The mappings set, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    public TopLevelClassMapping(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
-        super(mappings, obfuscatedName, deobfuscatedName);
-    }
+public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping> {
 
     @Override
-    public String getFullObfuscatedName() {
+    default String getFullObfuscatedName() {
         return this.getObfuscatedName();
     }
 
     @Override
-    public String getFullDeobfuscatedName() {
+    default String getFullDeobfuscatedName() {
         return this.getDeobfuscatedName();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof TopLevelClassMapping)) return false;
-        final TopLevelClassMapping that = (TopLevelClassMapping) obj;
-        return super.equals(that);
     }
 
 }

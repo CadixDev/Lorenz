@@ -23,62 +23,54 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.jar;
+package me.jamiemansfield.lorenz.model.impl;
 
-import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.Mapping;
+import me.jamiemansfield.lorenz.model.MemberMapping;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
- * Represents an object type within Java.
+ * An abstract basic implementation of {@link MemberMapping}.
  *
- * @see <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-ObjectType">ObjectType</a>
+ * @param <M> The type of the mapping
  */
-public class ObjectType implements Type {
+public abstract class AbstractMemberMappingImpl<M extends MemberMapping>
+        extends AbstractMappingImpl<M> implements MemberMapping<M> {
 
-    private final String className;
-    private final String obfuscatedView;
+    private final ClassMapping parentClass;
 
     /**
-     * Creates a new object type, of the given class name.
+     * Creates a new member mapping, from the given parameters.
      *
-     * @param className The class name
+     * @param parentClass The class mapping, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    public ObjectType(final String className) {
-        this.className = className;
-        this.obfuscatedView = "L" + className + ";";
+    protected AbstractMemberMappingImpl(final ClassMapping parentClass, final String obfuscatedName,
+            final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
+        this.parentClass = parentClass;
     }
 
     @Override
-    public String getObfuscated() {
-        return this.obfuscatedView;
+    public final ClassMapping getParentClass() {
+        return this.parentClass;
     }
 
     @Override
-    public String getDeobfuscated(final MappingSet mappings) {
-        final Optional<ClassMapping<?>> typeMapping = mappings.getClassMapping(this.className);
-        return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(this.className) + ";";
-    }
-
-    @Override
-    public String toString() {
-        return this.getObfuscated();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof ObjectType)) return false;
-        final ObjectType that = (ObjectType) obj;
-        return Objects.equals(this.className, that.className);
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof AbstractMemberMappingImpl)) return false;
+
+        final AbstractMemberMappingImpl that = (AbstractMemberMappingImpl) obj;
+        return Objects.equals(this.parentClass, that.parentClass);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.className);
+        return Objects.hash(super.hashCode(), this.parentClass);
     }
 
 }

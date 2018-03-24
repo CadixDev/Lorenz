@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.impl.TopLevelClassMappingImpl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -103,7 +104,7 @@ public final class MappingSet {
      */
     public TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
         return this.getTopLevelClassMapping(obfuscatedName)
-                .orElseGet(() -> this.addTopLevelClassMapping(new TopLevelClassMapping(this, obfuscatedName, obfuscatedName)));
+                .orElseGet(() -> this.addTopLevelClassMapping(new TopLevelClassMappingImpl(this, obfuscatedName, obfuscatedName)));
     }
 
     /**
@@ -112,7 +113,7 @@ public final class MappingSet {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    public Optional<ClassMapping> getClassMapping(final String obfuscatedName) {
+    public Optional<ClassMapping<?>> getClassMapping(final String obfuscatedName) {
         if (!obfuscatedName.contains("$")) return Optional.ofNullable(this.getTopLevelClassMapping(obfuscatedName).orElse(null));
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
@@ -121,14 +122,11 @@ public final class MappingSet {
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
-        final Optional<ClassMapping> parentClassMapping = this.getClassMapping(parentClassName);
+        final Optional<ClassMapping<?>> parentClassMapping = this.getClassMapping(parentClassName);
         if (!parentClassMapping.isPresent()) return Optional.empty();
 
-        // Get the inner class
+        // Get and return the inner class
         final Optional<InnerClassMapping> innerClassMapping = parentClassMapping.get().getInnerClassMapping(innerClassName);
-        if (!innerClassMapping.isPresent()) return Optional.empty();
-
-        // Return the inner class
         return Optional.ofNullable(innerClassMapping.orElse(null));
     }
 

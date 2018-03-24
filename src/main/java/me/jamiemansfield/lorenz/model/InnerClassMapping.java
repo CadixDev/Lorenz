@@ -25,70 +25,31 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import java.util.Objects;
-
 /**
  * Represents a de-obfuscation mapping for an inner class.
  */
-public class InnerClassMapping extends ClassMapping implements IMemberMapping {
-
-    private final ClassMapping parentClass;
+public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, MemberMapping<InnerClassMapping> {
 
     /**
-     * Creates a new inner class mapping, from the given parameters.
+     * Sets the de-obfuscated name of this inner class mapping.
      *
-     * @param parentClass The class mapping, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
+     * <em>Most notably, implementations will need to support the input being
+     * a fully-qualified name!</em>
+     *
+     * @param deobfuscatedName The new de-obfuscated name
+     * @return {@code this}, for chaining
      */
-    public InnerClassMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
-        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
-        this.parentClass = parentClass;
+    @Override
+    InnerClassMapping setDeobfuscatedName(final String deobfuscatedName);
+
+    @Override
+    default String getFullObfuscatedName() {
+        return String.format("%s$%s", this.getParentClass().getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
-    public ClassMapping getParentClass() {
-        return this.parentClass;
-    }
-
-    @Override
-    public void setDeobfuscatedName(final String deobfuscatedName) {
-        if (!deobfuscatedName.contains("$")) {
-            super.setDeobfuscatedName(deobfuscatedName);
-            return;
-        }
-
-        // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final int lastIndex = deobfuscatedName.lastIndexOf('$');
-        final String innerClassName = deobfuscatedName.substring(lastIndex + 1);
-
-        // Set the correct class name!
-        super.setDeobfuscatedName(innerClassName);
-    }
-
-    @Override
-    public String getFullObfuscatedName() {
-        return String.format("%s$%s", this.parentClass.getFullObfuscatedName(), this.getObfuscatedName());
-    }
-
-    @Override
-    public String getFullDeobfuscatedName() {
-        return String.format("%s$%s", this.parentClass.getFullDeobfuscatedName(), this.getDeobfuscatedName());
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof InnerClassMapping)) return false;
-
-        final InnerClassMapping that = (InnerClassMapping) obj;
-        return Objects.equals(this.parentClass, that.parentClass);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parentClass);
+    default String getFullDeobfuscatedName() {
+        return String.format("%s$%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }

@@ -28,22 +28,16 @@ package me.jamiemansfield.lorenz.model;
 /**
  * Represents a de-obfuscation mapping for fields.
  */
-public class FieldMapping extends MemberMapping {
+public interface FieldMapping extends MemberMapping<FieldMapping> {
 
-    /**
-     * Creates a new field mapping, from the given parameters.
-     *
-     * @param parentClass The class mapping, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    public FieldMapping(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
-        super(parentClass, obfuscatedName, deobfuscatedName);
+    @Override
+    default String getFullObfuscatedName() {
+        return String.format("%s/%s", this.getParentClass().getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof FieldMapping;
+    default String getFullDeobfuscatedName() {
+        return String.format("%s/%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }

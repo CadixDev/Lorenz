@@ -23,22 +23,30 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model;
+package me.jamiemansfield.lorenz.model.impl;
+
+import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.FieldMapping;
 
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
- *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
+ * A basic implementation of {@link FieldMapping}.
  */
-public interface IMemberMapping {
+public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping> implements FieldMapping {
 
     /**
-     * Gets the parent {@link ClassMapping} of this member mapping.
+     * Creates a new field mapping, from the given parameters.
      *
-     * @return The parent class
+     * @param parentClass The class mapping, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    ClassMapping getParentClass();
+    public FieldMappingImpl(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
+        super(parentClass, obfuscatedName, deobfuscatedName);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj || super.equals(obj) && obj instanceof me.jamiemansfield.lorenz.model.FieldMapping;
+    }
 
 }

@@ -23,20 +23,34 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model;
+package me.jamiemansfield.lorenz.model.impl;
+
+import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
- *
- * @param <M> The type of the mapping
+ * A basic implementation of {@link TopLevelClassMapping}.
  */
-public interface MemberMapping<M extends MemberMapping> extends Mapping<M> {
+public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelClassMapping> implements TopLevelClassMapping {
 
     /**
-     * Gets the parent {@link ClassMapping} of this member mapping.
+     * Creates a new top-level class mapping, from the given parameters.
      *
-     * @return The parent class
+     * @param mappings The mappings set, this mapping belongs to
+     * @param obfuscatedName The obfuscated name
+     * @param deobfuscatedName The de-obfuscated name
      */
-    ClassMapping getParentClass();
+    public TopLevelClassMappingImpl(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
+        super(mappings, obfuscatedName, deobfuscatedName);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof TopLevelClassMappingImpl)) return false;
+        final TopLevelClassMappingImpl that = (TopLevelClassMappingImpl) obj;
+        return super.equals(that);
+    }
 
 }

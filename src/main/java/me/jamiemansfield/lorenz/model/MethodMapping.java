@@ -25,41 +25,21 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import com.google.common.base.MoreObjects;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.Signature;
 
-import java.util.Objects;
-
 /**
  * Represents a de-obfuscation mapping for methods.
  */
-public class MethodMapping extends MemberMapping {
-
-    private final MethodDescriptor descriptor;
-
-    /**
-     * Creates a new method mapping, from the given parameters.
-     *
-     * @param parentClass The class mapping, this mapping belongs to
-     * @param descriptor The descriptor of the method
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    public MethodMapping(final ClassMapping parentClass, final MethodDescriptor descriptor,
-            final String deobfuscatedName) {
-        super(parentClass, descriptor.getName(), deobfuscatedName);
-        this.descriptor = descriptor;
-    }
+public interface MethodMapping extends MemberMapping<MethodMapping> {
 
     /**
      * Gets the {@link MethodDescriptor} of the method.
      *
      * @return The method descriptor
      */
-    public MethodDescriptor getDescriptor() {
-        return this.descriptor;
-    }
+    MethodDescriptor getDescriptor();
 
     /**
      * Gets the {@link Signature} of the method.
@@ -67,8 +47,8 @@ public class MethodMapping extends MemberMapping {
      * @return The method signature
      * @see MethodDescriptor#getSignature()
      */
-    public Signature getSignature() {
-        return this.descriptor.getSignature();
+    default Signature getSignature() {
+        return this.getDescriptor().getSignature();
     }
 
     /**
@@ -78,8 +58,8 @@ public class MethodMapping extends MemberMapping {
      * @see MethodDescriptor#getSignature()
      * @see Signature#getObfuscated()
      */
-    public String getObfuscatedSignature() {
-        return this.descriptor.getSignature().getObfuscated();
+    default String getObfuscatedSignature() {
+        return this.getSignature().getObfuscated();
     }
 
     /**
@@ -89,30 +69,18 @@ public class MethodMapping extends MemberMapping {
      * @see MethodDescriptor#getSignature()
      * @see Signature#getDeobfuscated(MappingSet)
      */
-    public String getDeobfuscatedSignature() {
-        return this.descriptor.getSignature().getDeobfuscated(this.getMappings());
+    default String getDeobfuscatedSignature() {
+        return this.getSignature().getDeobfuscated(this.getMappings());
     }
 
     @Override
-    protected MoreObjects.ToStringHelper buildToString() {
-        return super.buildToString()
-                .add("obfuscatedSignature", this.getObfuscatedSignature())
-                .add("deobfuscatedSignature", this.getDeobfuscatedSignature());
+    default String getFullObfuscatedName() {
+        return String.format("%s/%s", this.getParentClass().getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MethodMapping)) return false;
-
-        final MethodMapping that = (MethodMapping) obj;
-        return Objects.equals(this.descriptor, that.descriptor);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.descriptor);
+    default String getFullDeobfuscatedName() {
+        return String.format("%s/%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }
