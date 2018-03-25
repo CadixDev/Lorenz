@@ -55,7 +55,7 @@ public class TSrgProcessor extends MappingsProcessor {
      * Creates a mappings parser for the TSRG format.
      */
     public TSrgProcessor() {
-        this(new MappingSet());
+        this(MappingSet.create());
     }
 
     @Override

@@ -61,7 +61,7 @@ public abstract class MappingsReader implements Closeable {
      * @return The mapping set
      */
     public MappingSet parse() {
-        return this.parse(new MappingSet());
+        return this.parse(MappingSet.create());
     }
 
     /**

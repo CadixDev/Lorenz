@@ -23,34 +23,46 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.impl;
+package me.jamiemansfield.lorenz.impl;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.impl.model.TopLevelClassMappingImpl;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 
-/**
- * A basic implementation of {@link TopLevelClassMapping}.
- */
-public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelClassMapping> implements TopLevelClassMapping {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-    /**
-     * Creates a new top-level class mapping, from the given parameters.
-     *
-     * @param mappings The mappings set, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
-     */
-    public TopLevelClassMappingImpl(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
-        super(mappings, obfuscatedName, deobfuscatedName);
+/**
+ * A basic implementation of {@link MappingSet}.
+ */
+public class MappingSetImpl implements MappingSet {
+
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+
+    @Override
+    public Collection<TopLevelClassMapping> getTopLevelClassMappings() {
+        return Collections.unmodifiableCollection(this.topLevelClasses.values());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof TopLevelClassMappingImpl)) return false;
-        final TopLevelClassMappingImpl that = (TopLevelClassMappingImpl) obj;
-        return super.equals(that);
+    public TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName) {
+        return this.topLevelClasses.compute(obfuscatedName, (name, existingMapping) -> {
+            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
+            return new TopLevelClassMappingImpl(this, obfuscatedName, deobfuscatedName);
+        });
+    }
+
+    @Override
+    public Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName) {
+        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName));
+    }
+
+    @Override
+    public boolean hasTopLevelClassMapping(final String obfuscatedName) {
+        return this.topLevelClasses.containsKey(obfuscatedName);
     }
 
 }

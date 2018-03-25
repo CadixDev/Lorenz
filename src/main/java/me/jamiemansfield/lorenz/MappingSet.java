@@ -25,28 +25,26 @@
 
 package me.jamiemansfield.lorenz;
 
+import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.impl.TopLevelClassMappingImpl;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * Represents a container for a set of mappings.
  */
-public final class MappingSet {
-
-    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+public interface MappingSet {
 
     /**
-     * Creates a new mapping set.
+     * Creates a mapping set, using the default Lorenz model implementation.
+     *
+     * @return The mapping set
      */
-    public MappingSet() {
+    static MappingSet create() {
+        return new MappingSetImpl();
     }
 
     /**
@@ -55,34 +53,17 @@ public final class MappingSet {
      *
      * @return The top-level class mappings
      */
-    public Collection<TopLevelClassMapping> getTopLevelClassMappings() {
-        return Collections.unmodifiableCollection(this.topLevelClasses.values());
-    }
+    Collection<TopLevelClassMapping> getTopLevelClassMappings();
 
     /**
-     * Adds the given {@link TopLevelClassMapping} to the mapping set.
-     *
-     * @param mapping The top-level class mapping to add
-     * @return The top-level class mapping, to allow for chaining
-     */
-    public TopLevelClassMapping addTopLevelClassMapping(final TopLevelClassMapping mapping) {
-        this.topLevelClasses.put(mapping.getObfuscatedName(), mapping);
-        return mapping;
-    }
-
-    /**
-     * Establishes whether the mapping set contains a top-level class
-     * mapping of the given obfuscated name.
+     * Creates a top-level class mapping with the given obfuscated and de-obfuscated
+     * names.
      *
      * @param obfuscatedName The obfuscated name of the top-level class
-     *                       mapping
-     * @return {@code True} should a top-level class mapping of the
-     *         given obfuscated name exist in the mapping set,
-     *         else {@code false}
+     * @param deobfuscatedName The de-obfuscated name of the top-level class
+     * @return The top-level class mapping, to allow for chaining
      */
-    public boolean hasTopLevelClassMapping(final String obfuscatedName) {
-        return this.topLevelClasses.containsKey(obfuscatedName);
-    }
+    TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName);
 
     /**
      * Gets the top-level class mapping of the given obfuscated name of the
@@ -91,9 +72,7 @@ public final class MappingSet {
      * @param obfuscatedName The obfuscated name of the top-level class mapping
      * @return The top-level class mapping, wrapped in an {@link Optional}
      */
-    public Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName));
-    }
+    Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName);
 
     /**
      * Gets, or creates should it not exist, a top-level class mapping of the
@@ -102,10 +81,22 @@ public final class MappingSet {
      * @param obfuscatedName The obfuscated name of the top-level class mapping
      * @return The top-level class mapping
      */
-    public TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
+    default TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
         return this.getTopLevelClassMapping(obfuscatedName)
-                .orElseGet(() -> this.addTopLevelClassMapping(new TopLevelClassMappingImpl(this, obfuscatedName, obfuscatedName)));
+                .orElseGet(() -> this.createTopLevelClassMapping(obfuscatedName, obfuscatedName));
     }
+
+    /**
+     * Establishes whether the mapping set contains a top-level class
+     * mapping of the given obfuscated name.
+     *
+     * @param obfuscatedName The obfuscated name of the top-level class
+     *                       mapping
+     * @return {@code true} should a top-level class mapping of the
+     *         given obfuscated name exist in the mapping set;
+     *         {@code false} otherwise
+     */
+    boolean hasTopLevelClassMapping(final String obfuscatedName);
 
     /**
      * Gets the class mapping of the given obfuscated name.
@@ -113,7 +104,7 @@ public final class MappingSet {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    public Optional<ClassMapping<?>> getClassMapping(final String obfuscatedName) {
+    default Optional<ClassMapping<?>> getClassMapping(final String obfuscatedName) {
         if (!obfuscatedName.contains("$")) return Optional.ofNullable(this.getTopLevelClassMapping(obfuscatedName).orElse(null));
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
@@ -137,7 +128,7 @@ public final class MappingSet {
      * @param obfuscatedName The obfuscated name of the class mapping
      * @return The class mapping
      */
-    public ClassMapping getOrCreateClassMapping(final String obfuscatedName) {
+    default ClassMapping getOrCreateClassMapping(final String obfuscatedName) {
         if (!obfuscatedName.contains("$")) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name

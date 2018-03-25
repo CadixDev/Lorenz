@@ -72,7 +72,7 @@ public class SrgProcessor extends MappingsProcessor {
      * Creates a mappings parser for the SRG format.
      */
     public SrgProcessor() {
-        this(new MappingSet());
+        this(MappingSet.create());
     }
 
     @Override

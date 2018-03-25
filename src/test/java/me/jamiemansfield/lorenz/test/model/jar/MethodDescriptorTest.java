@@ -44,7 +44,7 @@ public final class MethodDescriptorTest {
 
     @BeforeClass
     public static void initialise() {
-        mappings = new MappingSet();
+        mappings = MappingSet.create();
         mappings.getOrCreateTopLevelClassMapping("ght")
                 .setDeobfuscatedName("uk/jamierocks/Test");
     }

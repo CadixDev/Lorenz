@@ -23,30 +23,54 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.impl;
+package me.jamiemansfield.lorenz.impl.model;
 
 import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.FieldMapping;
+import me.jamiemansfield.lorenz.model.MemberMapping;
+
+import java.util.Objects;
 
 /**
- * A basic implementation of {@link FieldMapping}.
+ * An abstract basic implementation of {@link MemberMapping}.
+ *
+ * @param <M> The type of the mapping
  */
-public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping> implements FieldMapping {
+public abstract class AbstractMemberMappingImpl<M extends MemberMapping>
+        extends AbstractMappingImpl<M> implements MemberMapping<M> {
+
+    private final ClassMapping parentClass;
 
     /**
-     * Creates a new field mapping, from the given parameters.
+     * Creates a new member mapping, from the given parameters.
      *
      * @param parentClass The class mapping, this mapping belongs to
      * @param obfuscatedName The obfuscated name
      * @param deobfuscatedName The de-obfuscated name
      */
-    public FieldMappingImpl(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
-        super(parentClass, obfuscatedName, deobfuscatedName);
+    protected AbstractMemberMappingImpl(final ClassMapping parentClass, final String obfuscatedName,
+            final String deobfuscatedName) {
+        super(parentClass.getMappings(), obfuscatedName, deobfuscatedName);
+        this.parentClass = parentClass;
+    }
+
+    @Override
+    public final ClassMapping getParentClass() {
+        return this.parentClass;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof me.jamiemansfield.lorenz.model.FieldMapping;
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof AbstractMemberMappingImpl)) return false;
+
+        final AbstractMemberMappingImpl that = (AbstractMemberMappingImpl) obj;
+        return Objects.equals(this.parentClass, that.parentClass);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.parentClass);
     }
 
 }

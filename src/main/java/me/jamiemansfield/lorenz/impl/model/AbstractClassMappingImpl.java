@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.impl;
+package me.jamiemansfield.lorenz.impl.model;
 
 import com.google.common.base.MoreObjects;
 import me.jamiemansfield.lorenz.MappingSet;
