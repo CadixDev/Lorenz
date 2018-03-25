@@ -18,6 +18,6 @@ repositories {
 }
 
 dependencies {
-    compile 'me.jamiemansfield:lorenz:0.0.1-SNAPSHOT'
+    compile 'me.jamiemansfield:lorenz:0.1.0-SNAPSHOT'
 }
 ```
