@@ -25,7 +25,7 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -113,7 +113,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @param descriptor The descriptor of the method mapping
      * @return The method mapping, wrapped in an {@link Optional}
      */
-    Optional<MethodMapping> getMethodMapping(final MethodDescriptor descriptor);
+    Optional<MethodMapping> getMethodMapping(final MethodSignature descriptor);
 
     /**
      * Creates a new method mapping, attached to this class mapping, using
@@ -123,7 +123,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @param deobfuscatedName The de-obfuscated name of the method
      * @return The method mapping
      */
-    MethodMapping createMethodMapping(final MethodDescriptor descriptor, final String deobfuscatedName);
+    MethodMapping createMethodMapping(final MethodSignature descriptor, final String deobfuscatedName);
 
     /**
      * Creates a new method mapping, attached to this class mapping, using
@@ -132,7 +132,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @param descriptor The method descriptor
      * @return The method mapping
      */
-    default MethodMapping createMethodMapping(final MethodDescriptor descriptor) {
+    default MethodMapping createMethodMapping(final MethodSignature descriptor) {
         return this.createMethodMapping(descriptor, descriptor.getName());
     }
 
@@ -145,7 +145,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The method mapping
      */
     default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.createMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
+        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedSignature));
     }
 
     /**
@@ -155,7 +155,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @param descriptor The descriptor of the method mapping
      * @return The method mapping
      */
-    default MethodMapping getOrCreateMethodMapping(final MethodDescriptor descriptor) {
+    default MethodMapping getOrCreateMethodMapping(final MethodSignature descriptor) {
         return this.getMethodMapping(descriptor)
                 .orElseGet(() -> this.createMethodMapping(descriptor));
     }
@@ -169,7 +169,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The method mapping
      */
     default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.getOrCreateMethodMapping(new MethodDescriptor(obfuscatedName, obfuscatedSignature));
+        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedSignature));
     }
 
     /**
@@ -181,7 +181,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      *         obfuscated name exist in the class mapping, else
      *         {@code false}
      */
-    boolean hasMethodMapping(final MethodDescriptor descriptor);
+    boolean hasMethodMapping(final MethodSignature descriptor);
 
     /**
      * Gets an immutable collection of all of the inner class

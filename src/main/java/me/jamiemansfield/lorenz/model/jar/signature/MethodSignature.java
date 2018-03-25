@@ -23,60 +23,70 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.impl.model;
+package me.jamiemansfield.lorenz.model.jar.signature;
 
 import com.google.common.base.MoreObjects;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
-import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 import java.util.Objects;
 
 /**
- * A basic implementation of {@link MethodMapping}.
+ * Represents a method within a class.
  */
-public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> implements MethodMapping {
+public class MethodSignature extends MemberSignature {
 
-    private final MethodSignature descriptor;
+    private final MethodDescriptor descriptor;
 
     /**
-     * Creates a new method mapping, from the given parameters.
+     * Creates a method signature, with the given name and {@link MethodDescriptor}.
      *
-     * @param parentClass The class mapping, this mapping belongs to
-     * @param descriptor The descriptor of the method
-     * @param deobfuscatedName The de-obfuscated name
+     * @param name The method name
+     * @param descriptor The method descriptor
      */
-    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature descriptor,
-            final String deobfuscatedName) {
-        super(parentClass, descriptor.getName(), deobfuscatedName);
+    public MethodSignature(final String name, final MethodDescriptor descriptor) {
+        super(name);
         this.descriptor = descriptor;
     }
 
-    @Override
-    public MethodSignature getDescriptor() {
+    /**
+     * Creates a method descriptor, with the given method name and raw descriptor.
+     *
+     * @param name The method name
+     * @param descriptor The method's raw descriptor
+     */
+    public MethodSignature(final String name, final String descriptor) {
+        this(name, MethodDescriptor.compile(descriptor));
+    }
+
+    /**
+     * Gets the descriptor of the method.
+     *
+     * @return The descriptor
+     */
+    public MethodDescriptor getDescriptor() {
         return this.descriptor;
     }
 
     @Override
-    protected MoreObjects.ToStringHelper buildToString() {
-        return super.buildToString()
-                .add("obfuscatedSignature", this.getObfuscatedSignature())
-                .add("deobfuscatedSignature", this.getDeobfuscatedSignature());
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", this.name)
+                .add("descriptor", this.descriptor)
+                .toString();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MethodMappingImpl)) return false;
-
-        final MethodMappingImpl that = (MethodMappingImpl) obj;
-        return Objects.equals(this.descriptor, that.descriptor);
+        if (!(obj instanceof MethodSignature)) return false;
+        final MethodSignature that = (MethodSignature) obj;
+        return Objects.equals(this.name, that.name) &&
+                Objects.equals(this.descriptor, that.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.descriptor);
+        return Objects.hash(this.name, this.descriptor);
     }
 
 }

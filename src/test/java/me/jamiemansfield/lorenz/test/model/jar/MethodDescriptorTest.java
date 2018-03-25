@@ -29,7 +29,6 @@ import static org.junit.Assert.assertEquals;
 
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
-import me.jamiemansfield.lorenz.model.jar.Signature;
 import me.jamiemansfield.lorenz.model.jar.Type;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -70,21 +69,21 @@ public final class MethodDescriptorTest {
     }
 
     @Test
-    public void deobfuscateMethodSignature() {
-        final String signature = "(Lhuy;)Lhuy;";
-        assertEquals(signature, this.deobfRawSig(signature));
+    public void deobfuscateMethodDescriptor() {
+        final String descriptor = "(Lhuy;)Lhuy;";
+        assertEquals(descriptor, this.deobfRawDesc(descriptor));
 
-        final String simpleObfuscatedSignature = "(Lght;)Lght;";
-        final String simpleDeobfuscatedSignature = "(Luk/jamierocks/Test;)Luk/jamierocks/Test;";
-        assertEquals(simpleDeobfuscatedSignature, this.deobfRawSig(simpleObfuscatedSignature));
+        final String simpleObfuscatedDescriptor = "(Lght;)Lght;";
+        final String simpleDeobfuscatedDescriptor = "(Luk/jamierocks/Test;)Luk/jamierocks/Test;";
+        assertEquals(simpleDeobfuscatedDescriptor, this.deobfRawDesc(simpleObfuscatedDescriptor));
 
-        final String primitivesObfuscatedSignature = "(Lght;Z)Lght;";
-        final String primitivesDeobfuscatedSignature = "(Luk/jamierocks/Test;Z)Luk/jamierocks/Test;";
-        assertEquals(primitivesDeobfuscatedSignature, this.deobfRawSig(primitivesObfuscatedSignature));
+        final String primitivesObfuscatedDescriptor = "(Lght;Z)Lght;";
+        final String primitivesDeobfuscatedDescriptor = "(Luk/jamierocks/Test;Z)Luk/jamierocks/Test;";
+        assertEquals(primitivesDeobfuscatedDescriptor, this.deobfRawDesc(primitivesObfuscatedDescriptor));
 
-        final String complexIshObfuscatedSignature = "(ZILght;II)Lhuy;";
-        final String complexIshDeobfuscatedSignature = "(ZILuk/jamierocks/Test;II)Lhuy;";
-        assertEquals(complexIshDeobfuscatedSignature, this.deobfRawSig(complexIshObfuscatedSignature));
+        final String complexIshObfuscatedDescriptor = "(ZILght;II)Lhuy;";
+        final String complexIshDeobfuscatedDescriptor = "(ZILuk/jamierocks/Test;II)Lhuy;";
+        assertEquals(complexIshDeobfuscatedDescriptor, this.deobfRawDesc(complexIshObfuscatedDescriptor));
     }
 
     /**
@@ -99,14 +98,14 @@ public final class MethodDescriptorTest {
     }
 
     /**
-     * A convenience method, to de-obfuscate a raw signature using the
+     * A convenience method, to de-obfuscate a raw descriptor using the
      * test's {@link MappingSet}.
      *
-     * @param rawSig The raw signature, for de-obfuscation
-     * @return The de-obfuscated signature
+     * @param descriptor The raw descriptor, for de-obfuscation
+     * @return The de-obfuscated descriptor
      */
-    private String deobfRawSig(final String rawSig) {
-        return Signature.compile(rawSig).getDeobfuscated(mappings);
+    private String deobfRawDesc(final String descriptor) {
+        return MethodDescriptor.compile(descriptor).getDeobfuscated(mappings);
     }
 
 }

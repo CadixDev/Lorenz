@@ -35,8 +35,8 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
-import me.jamiemansfield.lorenz.model.jar.Signature;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -143,8 +143,8 @@ public abstract class ProcessorTest {
 
         // 2. Get the class mapping, and check the method mapping has been added to it
         final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
-        final Signature isEvenSignature = Signature.compile("(I)Z");
-        final MethodDescriptor isEvenDescriptor = new MethodDescriptor("hyuip", isEvenSignature);
+        final MethodDescriptor isEvenSignature = MethodDescriptor.compile("(I)Z");
+        final MethodSignature isEvenDescriptor = new MethodSignature("hyuip", isEvenSignature);
         assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
 
         // 3. Get the method mapping, and verify it

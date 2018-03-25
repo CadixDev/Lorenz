@@ -31,7 +31,7 @@ import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
-import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
         extends AbstractMappingImpl<M> implements ClassMapping<M> {
 
     private final Map<String, FieldMapping> fields = new HashMap<>();
-    private final Map<MethodDescriptor, MethodMapping> methods = new HashMap<>();
+    private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
 
     /**
@@ -92,12 +92,12 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
-    public Optional<MethodMapping> getMethodMapping(final MethodDescriptor descriptor) {
+    public Optional<MethodMapping> getMethodMapping(final MethodSignature descriptor) {
         return Optional.ofNullable(this.methods.get(descriptor));
     }
 
     @Override
-    public MethodMapping createMethodMapping(final MethodDescriptor descriptor, final String deobfuscatedName) {
+    public MethodMapping createMethodMapping(final MethodSignature descriptor, final String deobfuscatedName) {
         return this.methods.compute(descriptor, (desc, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
             return new MethodMappingImpl(this, descriptor, deobfuscatedName);
@@ -105,7 +105,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
-    public boolean hasMethodMapping(final MethodDescriptor descriptor) {
+    public boolean hasMethodMapping(final MethodSignature descriptor) {
         return this.methods.containsKey(descriptor);
     }
 

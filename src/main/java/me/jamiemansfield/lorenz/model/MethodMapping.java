@@ -26,8 +26,8 @@
 package me.jamiemansfield.lorenz.model;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
-import me.jamiemansfield.lorenz.model.jar.Signature;
 
 /**
  * Represents a de-obfuscation mapping for methods.
@@ -35,28 +35,28 @@ import me.jamiemansfield.lorenz.model.jar.Signature;
 public interface MethodMapping extends MemberMapping<MethodMapping> {
 
     /**
-     * Gets the {@link MethodDescriptor} of the method.
+     * Gets the {@link MethodSignature} of the method.
      *
      * @return The method descriptor
      */
-    MethodDescriptor getDescriptor();
+    MethodSignature getDescriptor();
 
     /**
-     * Gets the {@link Signature} of the method.
+     * Gets the {@link MethodDescriptor} of the method.
      *
      * @return The method signature
-     * @see MethodDescriptor#getSignature()
+     * @see MethodSignature#getDescriptor()
      */
-    default Signature getSignature() {
-        return this.getDescriptor().getSignature();
+    default MethodDescriptor getSignature() {
+        return this.getDescriptor().getDescriptor();
     }
 
     /**
      * Gets the obfuscated signature of the method.
      *
      * @return The obfuscated signature
-     * @see MethodDescriptor#getSignature()
-     * @see Signature#getObfuscated()
+     * @see MethodSignature#getDescriptor()
+     * @see MethodDescriptor#getObfuscated()
      */
     default String getObfuscatedSignature() {
         return this.getSignature().getObfuscated();
@@ -66,8 +66,8 @@ public interface MethodMapping extends MemberMapping<MethodMapping> {
      * Gets the de-obfuscated signature of the method.
      *
      * @return The de-obfuscated signature
-     * @see MethodDescriptor#getSignature()
-     * @see Signature#getDeobfuscated(MappingSet)
+     * @see MethodSignature#getDescriptor()
+     * @see MethodDescriptor#getDeobfuscated(MappingSet)
      */
     default String getDeobfuscatedSignature() {
         return this.getSignature().getDeobfuscated(this.getMappings());

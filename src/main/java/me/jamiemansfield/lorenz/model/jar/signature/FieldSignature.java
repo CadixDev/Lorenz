@@ -23,60 +23,59 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.impl.model;
+package me.jamiemansfield.lorenz.model.jar.signature;
 
 import com.google.common.base.MoreObjects;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
-import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.jar.Type;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
- * A basic implementation of {@link MethodMapping}.
+ * A representation of the signature of a field.
  */
-public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> implements MethodMapping {
+public class FieldSignature extends MemberSignature {
 
-    private final MethodSignature descriptor;
+    private final Type type;
 
     /**
-     * Creates a new method mapping, from the given parameters.
+     * Creates a field signature, with the given name and type.
      *
-     * @param parentClass The class mapping, this mapping belongs to
-     * @param descriptor The descriptor of the method
-     * @param deobfuscatedName The de-obfuscated name
+     * @param name The name of the field
+     * @param type The type of the field
      */
-    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature descriptor,
-            final String deobfuscatedName) {
-        super(parentClass, descriptor.getName(), deobfuscatedName);
-        this.descriptor = descriptor;
+    public FieldSignature(final String name, final Type type) {
+        super(name);
+        this.type = type;
     }
 
-    @Override
-    public MethodSignature getDescriptor() {
-        return this.descriptor;
+    /**
+     * Gets the {@link Type} of the field, if present.
+     *
+     * @return The field's type, wrapped in an {@link Optional}
+     */
+    public Optional<Type> getType() {
+        return Optional.ofNullable(this.type);
     }
 
     @Override
     protected MoreObjects.ToStringHelper buildToString() {
         return super.buildToString()
-                .add("obfuscatedSignature", this.getObfuscatedSignature())
-                .add("deobfuscatedSignature", this.getDeobfuscatedSignature());
+                .add("type", this.type);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MethodMappingImpl)) return false;
-
-        final MethodMappingImpl that = (MethodMappingImpl) obj;
-        return Objects.equals(this.descriptor, that.descriptor);
+        if (!(obj instanceof FieldSignature)) return false;
+        final FieldSignature that = (FieldSignature) obj;
+        return Objects.equals(this.name, that.name) &&
+                Objects.equals(this.type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.descriptor);
+        return Objects.hash(this.name, this.type);
     }
 
 }
