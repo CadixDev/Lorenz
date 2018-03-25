@@ -54,7 +54,7 @@ public interface Mapping<M extends Mapping> {
      * Sets the de-obfuscated name of the member.
      *
      * @param deobfuscatedName The new de-obfuscated name
-     * @return {@link this} for chaining
+     * @return {@code this} for chaining
      */
     M setDeobfuscatedName(final String deobfuscatedName);
 
