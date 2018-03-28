@@ -107,81 +107,81 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
     Collection<MethodMapping> getMethodMappings();
 
     /**
-     * Gets the method mapping of the given obfuscated name of the
+     * Gets the method mapping of the given method signature of the
      * class mapping, should it exist.
      *
-     * @param descriptor The descriptor of the method mapping
+     * @param signature The signature of the method mapping
      * @return The method mapping, wrapped in an {@link Optional}
      */
-    Optional<MethodMapping> getMethodMapping(final MethodSignature descriptor);
+    Optional<MethodMapping> getMethodMapping(final MethodSignature signature);
 
     /**
      * Creates a new method mapping, attached to this class mapping, using
-     * the given method descriptor and de-obfuscated name.
+     * the given method signature and de-obfuscated name.
      *
-     * @param descriptor The method descriptor
+     * @param signature The method signature
      * @param deobfuscatedName The de-obfuscated name of the method
      * @return The method mapping
      */
-    MethodMapping createMethodMapping(final MethodSignature descriptor, final String deobfuscatedName);
+    MethodMapping createMethodMapping(final MethodSignature signature, final String deobfuscatedName);
 
     /**
      * Creates a new method mapping, attached to this class mapping, using
-     * the given method descriptor.
+     * the given method signature.
      *
-     * @param descriptor The method descriptor
+     * @param signature The method signature
      * @return The method mapping
      */
-    default MethodMapping createMethodMapping(final MethodSignature descriptor) {
-        return this.createMethodMapping(descriptor, descriptor.getName());
+    default MethodMapping createMethodMapping(final MethodSignature signature) {
+        return this.createMethodMapping(signature, signature.getName());
     }
 
     /**
      * Creates a new method mapping, attached to this class mapping, using
-     * the given obfuscated method name and signature.
+     * the given obfuscated method name and descriptor.
      *
      * @param obfuscatedName The obfuscated method name
-     * @param obfuscatedSignature The obfuscated method signature
+     * @param obfuscatedDescriptor The obfuscated method descriptor
      * @return The method mapping
      */
-    default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedSignature));
+    default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
+        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
     }
 
     /**
      * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated descriptor.
+     * given obfuscated signature.
      *
-     * @param descriptor The descriptor of the method mapping
+     * @param signature The signature of the method mapping
      * @return The method mapping
      */
-    default MethodMapping getOrCreateMethodMapping(final MethodSignature descriptor) {
-        return this.getMethodMapping(descriptor)
-                .orElseGet(() -> this.createMethodMapping(descriptor));
+    default MethodMapping getOrCreateMethodMapping(final MethodSignature signature) {
+        return this.getMethodMapping(signature)
+                .orElseGet(() -> this.createMethodMapping(signature));
     }
 
     /**
      * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated name, and signature.
+     * given obfuscated name, and descriptor.
      *
      * @param obfuscatedName The obfuscated name of the method mapping
-     * @param obfuscatedSignature The obfuscated signature of the method mapping
+     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
      * @return The method mapping
      */
-    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedSignature) {
-        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedSignature));
+    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
+        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
     }
 
     /**
      * Establishes whether the class mapping contains a method mapping
      * of the given obfuscated name.
      *
-     * @param descriptor The descriptor of the method mapping
-     * @return {@code True} should a method mapping of the given
-     *         obfuscated name exist in the class mapping, else
-     *         {@code false}
+     * @param signature The signature of the method mapping
+     * @return {@code true} should a method mapping of the given
+     *         obfuscated name exist in the class mapping;
+     *         {@code false} otherwise
      */
-    boolean hasMethodMapping(final MethodSignature descriptor);
+    boolean hasMethodMapping(final MethodSignature signature);
 
     /**
      * Gets an immutable collection of all of the inner class

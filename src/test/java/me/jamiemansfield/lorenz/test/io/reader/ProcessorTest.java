@@ -151,8 +151,8 @@ public abstract class ProcessorTest {
         final MethodMapping methodMapping = parentMapping.getOrCreateMethodMapping(isEvenDescriptor);
         assertEquals("hyuip", methodMapping.getObfuscatedName());
         assertEquals("isEven", methodMapping.getDeobfuscatedName());
-        assertEquals("(I)Z", methodMapping.getObfuscatedSignature());
-        assertEquals("(I)Z", methodMapping.getDeobfuscatedSignature());
+        assertEquals("(I)Z", methodMapping.getObfuscatedDescriptor());
+        assertEquals("(I)Z", methodMapping.getDeobfuscatedDescriptor());
         assertEquals("ght/hyuip", methodMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test/isEven", methodMapping.getFullDeobfuscatedName());
 
@@ -167,8 +167,8 @@ public abstract class ProcessorTest {
         final MethodMapping innerMethodMapping = classMapping.getOrCreateMethodMapping(isEvenDescriptor);
         assertEquals("hyuip", innerMethodMapping.getObfuscatedName());
         assertEquals("isOdd", innerMethodMapping.getDeobfuscatedName());
-        assertEquals("(I)Z", innerMethodMapping.getObfuscatedSignature());
-        assertEquals("(I)Z", innerMethodMapping.getDeobfuscatedSignature());
+        assertEquals("(I)Z", innerMethodMapping.getObfuscatedDescriptor());
+        assertEquals("(I)Z", innerMethodMapping.getDeobfuscatedDescriptor());
         assertEquals("ght$ds/hyuip", innerMethodMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test$Example/isOdd", innerMethodMapping.getFullDeobfuscatedName());
     }

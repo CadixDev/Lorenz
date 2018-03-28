@@ -53,15 +53,15 @@ public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> 
     }
 
     @Override
-    public MethodSignature getDescriptor() {
+    public MethodSignature getSignature() {
         return this.descriptor;
     }
 
     @Override
     protected MoreObjects.ToStringHelper buildToString() {
         return super.buildToString()
-                .add("obfuscatedSignature", this.getObfuscatedSignature())
-                .add("deobfuscatedSignature", this.getDeobfuscatedSignature());
+                .add("obfuscatedSignature", this.getObfuscatedDescriptor())
+                .add("deobfuscatedSignature", this.getDeobfuscatedDescriptor());
     }
 
     @Override

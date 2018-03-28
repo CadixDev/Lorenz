@@ -125,7 +125,7 @@ public class CSrgWriter extends MappingsWriter {
         // The SHOULD_WRITE test should have already have been performed, so we're good
         this.methods.add(String.format("%s %s %s %s",
                 mapping.getParentClass().getFullObfuscatedName(),
-                mapping.getObfuscatedName(), mapping.getObfuscatedSignature(),
+                mapping.getObfuscatedName(), mapping.getObfuscatedDescriptor(),
                 mapping.getDeobfuscatedName()
         ));
     }

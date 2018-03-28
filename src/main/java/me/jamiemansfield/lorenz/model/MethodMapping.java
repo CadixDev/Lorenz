@@ -39,7 +39,7 @@ public interface MethodMapping extends MemberMapping<MethodMapping> {
      *
      * @return The method descriptor
      */
-    MethodSignature getDescriptor();
+    MethodSignature getSignature();
 
     /**
      * Gets the {@link MethodDescriptor} of the method.
@@ -47,30 +47,30 @@ public interface MethodMapping extends MemberMapping<MethodMapping> {
      * @return The method signature
      * @see MethodSignature#getDescriptor()
      */
-    default MethodDescriptor getSignature() {
-        return this.getDescriptor().getDescriptor();
+    default MethodDescriptor getDescriptor() {
+        return this.getSignature().getDescriptor();
     }
 
     /**
-     * Gets the obfuscated signature of the method.
+     * Gets the obfuscated descriptor of the method.
      *
-     * @return The obfuscated signature
+     * @return The obfuscated descriptor
      * @see MethodSignature#getDescriptor()
      * @see MethodDescriptor#getObfuscated()
      */
-    default String getObfuscatedSignature() {
-        return this.getSignature().getObfuscated();
+    default String getObfuscatedDescriptor() {
+        return this.getDescriptor().getObfuscated();
     }
 
     /**
-     * Gets the de-obfuscated signature of the method.
+     * Gets the de-obfuscated descriptor of the method.
      *
-     * @return The de-obfuscated signature
+     * @return The de-obfuscated descriptor
      * @see MethodSignature#getDescriptor()
      * @see MethodDescriptor#getDeobfuscated(MappingSet)
      */
-    default String getDeobfuscatedSignature() {
-        return this.getSignature().getDeobfuscated(this.getMappings());
+    default String getDeobfuscatedDescriptor() {
+        return this.getDescriptor().getDeobfuscated(this.getMappings());
     }
 
     @Override

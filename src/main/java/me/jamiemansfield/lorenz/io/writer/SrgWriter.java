@@ -120,8 +120,8 @@ public class SrgWriter extends MappingsWriter {
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
         this.methods.add(String.format("MD: %s %s %s %s",
-                mapping.getFullObfuscatedName(), mapping.getObfuscatedSignature(),
-                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedSignature()));
+                mapping.getFullObfuscatedName(), mapping.getObfuscatedDescriptor(),
+                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedDescriptor()));
     }
 
 }

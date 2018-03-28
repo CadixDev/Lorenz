@@ -104,7 +104,7 @@ public class TSrgWriter extends MappingsWriter {
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
         this.writer.println(String.format("\t%s %s %s",
-                mapping.getObfuscatedName(), mapping.getObfuscatedSignature(),
+                mapping.getObfuscatedName(), mapping.getObfuscatedDescriptor(),
                 mapping.getDeobfuscatedName()));
     }
 

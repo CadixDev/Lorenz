@@ -92,21 +92,21 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
-    public Optional<MethodMapping> getMethodMapping(final MethodSignature descriptor) {
-        return Optional.ofNullable(this.methods.get(descriptor));
+    public Optional<MethodMapping> getMethodMapping(final MethodSignature signature) {
+        return Optional.ofNullable(this.methods.get(signature));
     }
 
     @Override
-    public MethodMapping createMethodMapping(final MethodSignature descriptor, final String deobfuscatedName) {
-        return this.methods.compute(descriptor, (desc, existingMapping) -> {
+    public MethodMapping createMethodMapping(final MethodSignature signature, final String deobfuscatedName) {
+        return this.methods.compute(signature, (desc, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return new MethodMappingImpl(this, descriptor, deobfuscatedName);
+            return new MethodMappingImpl(this, signature, deobfuscatedName);
         });
     }
 
     @Override
-    public boolean hasMethodMapping(final MethodSignature descriptor) {
-        return this.methods.containsKey(descriptor);
+    public boolean hasMethodMapping(final MethodSignature signature) {
+        return this.methods.containsKey(signature);
     }
 
     @Override
