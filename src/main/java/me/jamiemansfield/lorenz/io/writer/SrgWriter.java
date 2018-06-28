@@ -37,6 +37,9 @@ import java.util.List;
 
 /**
  * An implementation of {@link MappingsWriter} for the SRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public class SrgWriter extends MappingsWriter {
 

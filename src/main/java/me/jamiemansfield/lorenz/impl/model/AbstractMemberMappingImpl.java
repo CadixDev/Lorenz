@@ -34,6 +34,9 @@ import java.util.Objects;
  * An abstract basic implementation of {@link MemberMapping}.
  *
  * @param <M> The type of the mapping
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public abstract class AbstractMemberMappingImpl<M extends MemberMapping>
         extends AbstractMappingImpl<M> implements MemberMapping<M> {

@@ -37,6 +37,9 @@ import java.util.List;
 
 /**
  * An implementation of {@link MappingsWriter} for the CSRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class CSrgWriter extends MappingsWriter {
 

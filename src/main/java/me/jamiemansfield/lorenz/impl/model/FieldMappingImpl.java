@@ -30,6 +30,9 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 
 /**
  * A basic implementation of {@link FieldMapping}.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping> implements FieldMapping {
 

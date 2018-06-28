@@ -32,6 +32,9 @@ import java.util.Objects;
 
 /**
  * A basic implementation of {@link InnerClassMapping}.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMapping> implements InnerClassMapping {
 

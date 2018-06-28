@@ -29,6 +29,9 @@ import java.io.BufferedReader;
 
 /**
  * An implementation of {@link MappingsReader} for the SRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class SrgReader extends MappingsReader {
 

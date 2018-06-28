@@ -38,11 +38,14 @@ import java.util.Optional;
 
 /**
  * A basic implementation of {@link MappingSet}.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class MappingSetImpl implements MappingSet {
 
     private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
-    private final FieldTypeProvider fieldTypeProvider;
+    private FieldTypeProvider fieldTypeProvider;
 
     public MappingSetImpl(final FieldTypeProvider fieldTypeProvider) {
         this.fieldTypeProvider = fieldTypeProvider;
@@ -74,6 +77,11 @@ public class MappingSetImpl implements MappingSet {
     @Override
     public Optional<FieldTypeProvider> getFieldTypeProvider() {
         return Optional.ofNullable(this.fieldTypeProvider);
+    }
+
+    @Override
+    public void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
+        this.fieldTypeProvider = fieldTypeProvider;
     }
 
 }

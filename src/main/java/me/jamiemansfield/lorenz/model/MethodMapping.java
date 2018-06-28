@@ -31,6 +31,9 @@ import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
 /**
  * Represents a de-obfuscation mapping for methods.
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface MethodMapping extends MemberMapping<MethodMapping> {
 

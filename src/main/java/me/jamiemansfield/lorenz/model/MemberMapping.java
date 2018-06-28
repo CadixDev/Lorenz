@@ -29,6 +29,9 @@ package me.jamiemansfield.lorenz.model;
  * Represents a mapping that is a member to a {@link ClassMapping}.
  *
  * @param <M> The type of the mapping
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface MemberMapping<M extends MemberMapping> extends Mapping<M> {
 

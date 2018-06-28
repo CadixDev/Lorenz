@@ -36,6 +36,9 @@ import java.util.Optional;
  * Represents an object type within Java.
  *
  * @see <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-ObjectType">ObjectType</a>
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public class ObjectType implements Type {
 

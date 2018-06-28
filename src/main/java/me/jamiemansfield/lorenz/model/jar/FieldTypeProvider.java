@@ -35,6 +35,9 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
  * include this data. <em>Writers that do need to make use of
  * field types should throw a {@link RuntimeException} if a
  * provider is not present!</em>
+ *
+ * @author Jamie Mansfield
+ * @since 0.3.0
  */
 @FunctionalInterface
 public interface FieldTypeProvider {

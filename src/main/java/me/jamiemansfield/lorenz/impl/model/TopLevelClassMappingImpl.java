@@ -30,6 +30,9 @@ import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 
 /**
  * A basic implementation of {@link TopLevelClassMapping}.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelClassMapping> implements TopLevelClassMapping {
 

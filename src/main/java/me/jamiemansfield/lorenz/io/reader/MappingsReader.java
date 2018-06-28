@@ -38,6 +38,11 @@ import java.util.function.Function;
  * using a {@link MappingsProcessor}.
  *
  * @see SrgReader
+ * @see CSrgReader
+ * @see TSrgReader
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public abstract class MappingsReader implements Closeable {
 
@@ -71,6 +76,7 @@ public abstract class MappingsReader implements Closeable {
      *
      * @param fieldTypeProvider The field type provider to use
      * @return The mapping set
+     * @since 0.3.0
      */
     public MappingSet parse(final FieldTypeProvider fieldTypeProvider) {
         return this.parse(MappingSet.create(fieldTypeProvider));

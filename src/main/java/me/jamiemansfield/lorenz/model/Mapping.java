@@ -32,6 +32,9 @@ import me.jamiemansfield.lorenz.MappingSet;
  * class format - e.g. classes, fields, and methods.
  *
  * @param <M> The type of the mapping, used for chaining
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface Mapping<M extends Mapping> {
 

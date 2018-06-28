@@ -34,6 +34,9 @@ import java.util.Objects;
  * Represents an array type within Java.
  *
  * @see <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-ArrayType">ArrayType</a>
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public class ArrayType implements Type {
 

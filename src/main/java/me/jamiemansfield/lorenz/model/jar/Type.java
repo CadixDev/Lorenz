@@ -33,6 +33,9 @@ import me.jamiemansfield.lorenz.MappingSet;
  * @see PrimitiveType
  * @see ObjectType
  * @see ArrayType
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface Type {
 

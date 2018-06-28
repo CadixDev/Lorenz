@@ -36,6 +36,9 @@ import java.util.Objects;
  * A representation of a method's descriptor.
  *
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.3">Method Descriptors</a>
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public final class MethodDescriptor {
 

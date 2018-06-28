@@ -36,6 +36,9 @@ import java.util.Optional;
 
 /**
  * Represents a container for a set of mappings.
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface MappingSet {
 
@@ -53,6 +56,7 @@ public interface MappingSet {
      *
      * @param fieldTypeProvider The field type provider to use (if applicable)
      * @return The mapping set
+     * @since 0.3.0
      */
     static MappingSet create(final FieldTypeProvider fieldTypeProvider) {
         return new MappingSetImpl(fieldTypeProvider);
@@ -158,6 +162,7 @@ public interface MappingSet {
      * Gets the field type provider in use for this set of mappings.
      *
      * @return The field type provider
+     * @since 0.3.0
      */
     Optional<FieldTypeProvider> getFieldTypeProvider();
 
@@ -165,6 +170,7 @@ public interface MappingSet {
      * Sets the field type provider in use for this set of mappings.
      *
      * @param fieldTypeProvider The field type provider
+     * @since 0.3.0
      */
     void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider);
 

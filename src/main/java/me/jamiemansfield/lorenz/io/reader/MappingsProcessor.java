@@ -35,6 +35,11 @@ import java.util.regex.Pattern;
  * Guava's {@link LineProcessor}.
  *
  * @see SrgProcessor
+ * @see CSrgProcessor
+ * @see TSrgProcessor
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public abstract class MappingsProcessor implements LineProcessor<MappingSet> {
 

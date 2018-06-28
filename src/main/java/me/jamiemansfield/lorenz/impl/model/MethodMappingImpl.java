@@ -34,6 +34,9 @@ import java.util.Objects;
 
 /**
  * A basic implementation of {@link MethodMapping}.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> implements MethodMapping {
 

@@ -35,6 +35,9 @@ import java.util.Objects;
  * An abstract basic implementation of {@link Mapping}.
  *
  * @param <M> The type of the mapping
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public abstract class AbstractMappingImpl<M extends Mapping> implements Mapping<M> {
 

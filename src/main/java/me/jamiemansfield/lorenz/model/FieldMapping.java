@@ -27,6 +27,9 @@ package me.jamiemansfield.lorenz.model;
 
 /**
  * Represents a de-obfuscation mapping for fields.
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface FieldMapping extends MemberMapping<FieldMapping> {
 

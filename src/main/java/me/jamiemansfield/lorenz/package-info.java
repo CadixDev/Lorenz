@@ -23,50 +23,19 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.jar.signature;
-
-import com.google.common.base.MoreObjects;
-
 /**
- * All members within Java have a unique signature that they can be identified with,
- * classes that inherit from this class are a representation of those unique signatures.
+ * Lorenz is a library built to interact with Java de-obfuscation mappings.
  *
- * @see FieldSignature
- * @see MethodSignature
+ * <p>This library gives developers a way to express de-obfuscation mappings, in
+ * addition to performing IO for a variety of formats (users can also write
+ * their own readers and writers).</p>
  *
- * @author Jamie Mansfield
- * @since 0.2.0
+ * <p>I developed Lorenz specifically for my needs, largely around Minecraft, and
+ * so I have implemented IO classes for the following formats:</p>
+ * <ul>
+ *     <li>SRG</li>
+ *     <li>CSRG</li>
+ *     <li>TSRG</li>
+ * </ul>
  */
-public abstract class MemberSignature {
-
-    protected final String name;
-
-    /**
-     * Creates a member signature, with the given name.
-     *
-     * @param name The name of the member
-     */
-    public MemberSignature(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the name of the member.
-     *
-     * @return The name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    protected MoreObjects.ToStringHelper buildToString() {
-        return MoreObjects.toStringHelper(this)
-                .add("name", this.name);
-    }
-
-    @Override
-    public String toString() {
-        return this.buildToString().toString();
-    }
-
-}
+package me.jamiemansfield.lorenz;

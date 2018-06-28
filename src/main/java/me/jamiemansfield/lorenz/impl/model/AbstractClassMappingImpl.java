@@ -44,6 +44,9 @@ import java.util.Optional;
  * A basic implementation of {@link ClassMapping}.
  *
  * @param <M> The type of the class mapping
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public abstract class AbstractClassMappingImpl<M extends ClassMapping>
         extends AbstractMappingImpl<M> implements ClassMapping<M> {

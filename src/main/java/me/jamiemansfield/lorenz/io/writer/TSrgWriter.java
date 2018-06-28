@@ -35,6 +35,9 @@ import java.io.PrintWriter;
 
 /**
  * An implementation of {@link MappingsWriter} for the TSRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class TSrgWriter extends MappingsWriter {
 

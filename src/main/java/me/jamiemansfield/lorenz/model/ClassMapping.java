@@ -34,6 +34,9 @@ import java.util.Optional;
  * Represents a de-obfuscation mapping for classes.
  *
  * @param <M> The type of the mapping
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
 

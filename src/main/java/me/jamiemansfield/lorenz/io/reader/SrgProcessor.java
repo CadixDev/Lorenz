@@ -33,6 +33,9 @@ import java.util.stream.Stream;
 
 /**
  * The mappings processor for the SRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class SrgProcessor extends MappingsProcessor {
 

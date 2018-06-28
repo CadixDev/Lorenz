@@ -32,6 +32,9 @@ import java.util.stream.Stream;
 
 /**
  * The mappings processor for the CSRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class CSrgProcessor extends MappingsProcessor {
 

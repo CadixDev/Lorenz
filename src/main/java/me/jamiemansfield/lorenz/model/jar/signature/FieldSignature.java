@@ -33,6 +33,9 @@ import java.util.Optional;
 
 /**
  * A representation of the signature of a field.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class FieldSignature extends MemberSignature {
 

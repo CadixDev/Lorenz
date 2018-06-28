@@ -33,6 +33,9 @@ import java.util.stream.Stream;
 
 /**
  * The mappings processor for the TSRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class TSrgProcessor extends MappingsProcessor {
 

@@ -43,6 +43,11 @@ import java.util.stream.Collectors;
  * format, and intended to be used with try-for-resources.
  *
  * @see SrgWriter
+ * @see CSrgWriter
+ * @see TSrgWriter
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public abstract class MappingsWriter implements Closeable {
 

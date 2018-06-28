@@ -32,6 +32,9 @@ import java.util.Objects;
 
 /**
  * Represents a method within a class.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class MethodSignature extends MemberSignature {
 

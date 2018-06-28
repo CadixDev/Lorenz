@@ -27,6 +27,9 @@ package me.jamiemansfield.lorenz.model;
 
 /**
  * Represents a de-obfuscation mapping for an inner class.
+ *
+ * @author Jamie Mansfield
+ * @since 0.1.0
  */
 public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, MemberMapping<InnerClassMapping> {
 

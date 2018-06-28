@@ -29,6 +29,9 @@ import java.io.BufferedReader;
 
 /**
  * An implementation of {@link MappingsReader} for the CSRG format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.2.0
  */
 public class CSrgReader extends MappingsReader {
 
