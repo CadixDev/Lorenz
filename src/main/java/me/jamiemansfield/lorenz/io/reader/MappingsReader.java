@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -56,12 +57,23 @@ public abstract class MappingsReader implements Closeable {
 
     /**
      * Parses mappings from the previously given {@link BufferedReader}, to
-     * a new {@link MappingSet}
+     * a new {@link MappingSet}.
      *
      * @return The mapping set
      */
     public MappingSet parse() {
         return this.parse(MappingSet.create());
+    }
+
+    /**
+     * Parses mappings from the previously given {@link BufferedReader}, to
+     * a new {@link MappingSet} using the given {@link FieldTypeProvider}.
+     *
+     * @param fieldTypeProvider The field type provider to use
+     * @return The mapping set
+     */
+    public MappingSet parse(final FieldTypeProvider fieldTypeProvider) {
+        return this.parse(MappingSet.create(fieldTypeProvider));
     }
 
     /**

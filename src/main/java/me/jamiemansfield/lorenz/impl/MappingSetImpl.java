@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.impl;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.impl.model.TopLevelClassMappingImpl;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +42,11 @@ import java.util.Optional;
 public class MappingSetImpl implements MappingSet {
 
     private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+    private final FieldTypeProvider fieldTypeProvider;
+
+    public MappingSetImpl(final FieldTypeProvider fieldTypeProvider) {
+        this.fieldTypeProvider = fieldTypeProvider;
+    }
 
     @Override
     public Collection<TopLevelClassMapping> getTopLevelClassMappings() {
@@ -63,6 +69,11 @@ public class MappingSetImpl implements MappingSet {
     @Override
     public boolean hasTopLevelClassMapping(final String obfuscatedName) {
         return this.topLevelClasses.containsKey(obfuscatedName);
+    }
+
+    @Override
+    public Optional<FieldTypeProvider> getFieldTypeProvider() {
+        return Optional.ofNullable(this.fieldTypeProvider);
     }
 
 }

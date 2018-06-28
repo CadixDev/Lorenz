@@ -29,6 +29,7 @@ import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -44,7 +45,17 @@ public interface MappingSet {
      * @return The mapping set
      */
     static MappingSet create() {
-        return new MappingSetImpl();
+        return new MappingSetImpl(null);
+    }
+
+    /**
+     * Creates a mapping set, using the default Lorenz model implementation.
+     *
+     * @param fieldTypeProvider The field type provider to use (if applicable)
+     * @return The mapping set
+     */
+    static MappingSet create(final FieldTypeProvider fieldTypeProvider) {
+        return new MappingSetImpl(fieldTypeProvider);
     }
 
     /**
@@ -142,5 +153,19 @@ public interface MappingSet {
         // Get the inner class
         return parentClass.getOrCreateInnerClassMapping(innerClassName);
     }
+
+    /**
+     * Gets the field type provider in use for this set of mappings.
+     *
+     * @return The field type provider
+     */
+    Optional<FieldTypeProvider> getFieldTypeProvider();
+
+    /**
+     * Sets the field type provider in use for this set of mappings.
+     *
+     * @param fieldTypeProvider The field type provider
+     */
+    void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider);
 
 }
