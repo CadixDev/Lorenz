@@ -21,7 +21,7 @@ targetCompatibility = '1.8'
 
 group = 'me.jamiemansfield'
 archivesBaseName = project.name.toLowerCase()
-version = '0.3.0-SNAPSHOT'
+version = '0.3.0'
 
 repositories {
     mavenCentral()
@@ -103,6 +103,7 @@ uploadArchives {
                     description = project.description
                     packaging = 'jar'
                     url = project.url
+                    inceptionYear = project.inceptionYear
 
                     scm {
                         url = 'https://github.com/jamiemansfield/Lorenz'
@@ -125,9 +126,11 @@ uploadArchives {
 
                     developers {
                         developer {
-                            id 'jamierocks'
-                            name 'Jamie Mansfield'
-                            email 'dev@jamierocks.uk'
+                            id = 'jamierocks'
+                            name = 'Jamie Mansfield'
+                            email = 'dev@jamierocks.uk'
+                            url = 'https://www.jamiemansfield.me/'
+                            timezone = 'Europe/London'
                         }
                     }
                 }
