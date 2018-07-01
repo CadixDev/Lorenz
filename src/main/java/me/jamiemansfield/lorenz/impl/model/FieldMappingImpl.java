@@ -49,7 +49,7 @@ public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping> im
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof me.jamiemansfield.lorenz.model.FieldMapping;
+        return this == obj || super.equals(obj) && obj instanceof FieldMapping;
     }
 
 }

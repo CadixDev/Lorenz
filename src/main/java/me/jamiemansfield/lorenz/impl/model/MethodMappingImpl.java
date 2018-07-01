@@ -71,10 +71,10 @@ public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> 
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!super.equals(obj)) return false;
-        if (!(obj instanceof MethodMappingImpl)) return false;
+        if (!(obj instanceof MethodMapping)) return false;
 
-        final MethodMappingImpl that = (MethodMappingImpl) obj;
-        return Objects.equals(this.descriptor, that.descriptor);
+        final MethodMapping that = (MethodMapping) obj;
+        return Objects.equals(this.descriptor, that.getDescriptor());
     }
 
     @Override

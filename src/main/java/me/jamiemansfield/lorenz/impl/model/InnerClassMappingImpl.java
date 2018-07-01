@@ -75,10 +75,10 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!super.equals(obj)) return false;
-        if (!(obj instanceof InnerClassMappingImpl)) return false;
+        if (!(obj instanceof InnerClassMapping)) return false;
 
-        final InnerClassMappingImpl that = (InnerClassMappingImpl) obj;
-        return Objects.equals(this.parentClass, that.parentClass);
+        final InnerClassMapping that = (InnerClassMapping) obj;
+        return Objects.equals(this.parentClass, that.getParentClass());
     }
 
     @Override

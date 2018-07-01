@@ -65,10 +65,10 @@ public abstract class AbstractMemberMappingImpl<M extends MemberMapping>
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!super.equals(obj)) return false;
-        if (!(obj instanceof AbstractMemberMappingImpl)) return false;
+        if (!(obj instanceof MemberMapping)) return false;
 
-        final AbstractMemberMappingImpl that = (AbstractMemberMappingImpl) obj;
-        return Objects.equals(this.parentClass, that.parentClass);
+        final MemberMapping that = (MemberMapping) obj;
+        return Objects.equals(this.parentClass, that.getParentClass());
     }
 
     @Override

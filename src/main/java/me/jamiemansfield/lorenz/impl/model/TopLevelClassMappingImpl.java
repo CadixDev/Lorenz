@@ -49,11 +49,7 @@ public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelC
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof TopLevelClassMappingImpl)) return false;
-        final TopLevelClassMappingImpl that = (TopLevelClassMappingImpl) obj;
-        return super.equals(that);
+        return this == obj || super.equals(obj) && obj instanceof TopLevelClassMappingImpl;
     }
 
 }

@@ -99,11 +99,11 @@ public abstract class AbstractMappingImpl<M extends Mapping> implements Mapping<
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof AbstractMappingImpl)) return false;
+        if (!(obj instanceof Mapping)) return false;
 
-        final AbstractMappingImpl that = (AbstractMappingImpl) obj;
-        return Objects.equals(this.obfuscatedName, that.obfuscatedName) &&
-                Objects.equals(this.deobfuscatedName, that.deobfuscatedName);
+        final Mapping that = (Mapping) obj;
+        return Objects.equals(this.obfuscatedName, that.getObfuscatedName()) &&
+                Objects.equals(this.deobfuscatedName, that.getDeobfuscatedName());
     }
 
     @Override
