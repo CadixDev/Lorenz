@@ -26,7 +26,7 @@
 package me.jamiemansfield.lorenz.impl;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.impl.model.TopLevelClassMappingImpl;
+import me.jamiemansfield.lorenz.MappingSetModelFactory;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
@@ -45,10 +45,29 @@ import java.util.Optional;
 public class MappingSetImpl implements MappingSet {
 
     private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+    private final MappingSetModelFactory modelFactory;
     private FieldTypeProvider fieldTypeProvider;
 
+    public MappingSetImpl() {
+        this((FieldTypeProvider) null);
+    }
+
     public MappingSetImpl(final FieldTypeProvider fieldTypeProvider) {
+        this(new MappingSetModelFactoryImpl(), fieldTypeProvider);
+    }
+
+    public MappingSetImpl(final MappingSetModelFactory modelFactory) {
+        this(modelFactory, null);
+    }
+
+    public MappingSetImpl(final MappingSetModelFactory modelFactory, final FieldTypeProvider fieldTypeProvider) {
+        this.modelFactory = modelFactory;
         this.fieldTypeProvider = fieldTypeProvider;
+    }
+
+    @Override
+    public MappingSetModelFactory getModelFactory() {
+        return this.modelFactory;
     }
 
     @Override
@@ -60,7 +79,7 @@ public class MappingSetImpl implements MappingSet {
     public TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName) {
         return this.topLevelClasses.compute(obfuscatedName, (name, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return new TopLevelClassMappingImpl(this, obfuscatedName, deobfuscatedName);
+            return this.getModelFactory().createTopLevelClassMapping(this, obfuscatedName, deobfuscatedName);
         });
     }
 

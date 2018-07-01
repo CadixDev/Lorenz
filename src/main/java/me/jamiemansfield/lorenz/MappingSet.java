@@ -35,7 +35,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * Represents a container for a set of mappings.
+ * The container for {@link TopLevelClassMapping}s, allowing for their creating and
+ * locating any {@link ClassMapping}.
  *
  * @author Jamie Mansfield
  * @since 0.1.0
@@ -46,9 +47,21 @@ public interface MappingSet {
      * Creates a mapping set, using the default Lorenz model implementation.
      *
      * @return The mapping set
+     * @since 0.2.0
      */
     static MappingSet create() {
-        return new MappingSetImpl(null);
+        return new MappingSetImpl();
+    }
+
+    /**
+     * Creates a mapping set, using the given model factory.
+     *
+     * @param modelFactory The model factory to use
+     * @return The mapping set
+     * @since 0.3.0
+     */
+    static MappingSet create(final MappingSetModelFactory modelFactory) {
+        return new MappingSetImpl(modelFactory);
     }
 
     /**
@@ -61,6 +74,26 @@ public interface MappingSet {
     static MappingSet create(final FieldTypeProvider fieldTypeProvider) {
         return new MappingSetImpl(fieldTypeProvider);
     }
+
+    /**
+     * Creates a mapping set, using the given model factory.
+     *
+     * @param modelFactory The model factory to use
+     * @param fieldTypeProvider The field type provider to use (if applicable)
+     * @return The mapping set
+     * @since 0.3.0
+     */
+    static MappingSet create(final MappingSetModelFactory modelFactory, final FieldTypeProvider fieldTypeProvider) {
+        return new MappingSetImpl(modelFactory, fieldTypeProvider);
+    }
+
+    /**
+     * Gets the underlying model factory, that is used to construct
+     * the implementation classes for all the models.
+     *
+     * @return The model factory
+     */
+    MappingSetModelFactory getModelFactory();
 
     /**
      * Gets an immutable collection of all of the top-level class

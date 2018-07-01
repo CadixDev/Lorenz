@@ -80,7 +80,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     public FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName) {
         return this.fields.compute(obfuscatedName, (name, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return new FieldMappingImpl(this, obfuscatedName, deobfuscatedName);
+            return this.getMappings().getModelFactory().createFieldMapping(this, obfuscatedName, deobfuscatedName);
         });
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     public MethodMapping createMethodMapping(final MethodSignature signature, final String deobfuscatedName) {
         return this.methods.compute(signature, (desc, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return new MethodMappingImpl(this, signature, deobfuscatedName);
+            return this.getMappings().getModelFactory().createMethodMapping(this, signature, deobfuscatedName);
         });
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     public InnerClassMapping createInnerClassMapping(final String obfuscatedName, final String deobfuscatedName) {
         return this.innerClasses.compute(obfuscatedName, (name, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return new InnerClassMappingImpl(this, obfuscatedName, deobfuscatedName);
+            return this.getMappings().getModelFactory().createInnerClassMapping(this, obfuscatedName, deobfuscatedName);
         });
     }
 
