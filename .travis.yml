@@ -1,1 +1,13 @@
+# The Basics
 language: java
+
+jdk:
+- oraclejdk8
+
+# Coveralls
+after_success:
+- ./gradlew jacocoTestReport coveralls
+
+# Ugh.
+notifications:
+  email: false

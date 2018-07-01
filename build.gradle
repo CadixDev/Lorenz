@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.net.minecrell:licenser:0.3'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
 
@@ -15,6 +16,8 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
     apply plugin: 'signing'
 }
 apply plugin: 'net.minecrell.licenser'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -33,6 +36,13 @@ dependencies {
 
     // Testing
     testCompile 'junit:junit:4.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls
+        html.enabled = true
+    }
 }
 
 license {
