@@ -29,9 +29,13 @@ import static org.junit.Assert.assertEquals;
 
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.PrimitiveType;
 import me.jamiemansfield.lorenz.model.jar.Type;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A variety of unit tests pertaining to the de-obfuscation
@@ -46,6 +50,28 @@ public final class MethodDescriptorTest {
         mappings = MappingSet.create();
         mappings.getOrCreateTopLevelClassMapping("ght")
                 .setDeobfuscatedName("uk/jamierocks/Test");
+    }
+
+    @Test
+    public void parsing() {
+        final String simpleRaw = "(Z)V";
+        final MethodDescriptor simpleDesc = MethodDescriptor.compile(simpleRaw);
+        assertEquals(simpleRaw, simpleDesc.getObfuscated());
+        assertEquals(simpleRaw, simpleDesc.toString());
+        assertEquals(Collections.singletonList(PrimitiveType.BOOLEAN), simpleDesc.getParamTypes());
+        assertEquals(PrimitiveType.VOID, simpleDesc.getReturnType());
+
+        final String advancedRaw = "(ZI)V";
+        final MethodDescriptor advancedDesc = MethodDescriptor.compile(advancedRaw);
+        assertEquals(advancedRaw, advancedDesc.getObfuscated());
+        assertEquals(advancedRaw, advancedDesc.toString());
+        assertEquals(Arrays.asList(PrimitiveType.BOOLEAN, PrimitiveType.INT), advancedDesc.getParamTypes());
+        assertEquals(PrimitiveType.VOID, advancedDesc.getReturnType());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidParsing() {
+        MethodDescriptor.compile("(uj)K;");
     }
 
     @Test

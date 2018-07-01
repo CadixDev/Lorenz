@@ -47,6 +47,7 @@ public final class TypeTest {
         final Type type = Type.of(raw);
         assertTrue("Type should be an ArrayType!", type instanceof ArrayType);
         assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.toString());
         final ArrayType array = (ArrayType) type;
         assertEquals(2, array.getDimCount());
         assertEquals(PrimitiveType.INT, array.getComponent());
@@ -58,6 +59,7 @@ public final class TypeTest {
         final Type type = Type.of(raw);
         assertTrue("Type should be an ObjectType!", type instanceof ObjectType);
         assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.toString());
     }
 
     @Test
@@ -67,6 +69,13 @@ public final class TypeTest {
         assertTrue("Type should be an PrimitiveType!", type instanceof PrimitiveType);
         assertEquals(PrimitiveType.BOOLEAN, type);
         assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.toString());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void invalidTest() {
+        Type.of("Jungle");
+        Type.of("A");
     }
 
 }
