@@ -28,11 +28,13 @@ package me.jamiemansfield.lorenz.test.model.jar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.ArrayType;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.ObjectType;
 import me.jamiemansfield.lorenz.model.jar.PrimitiveType;
 import me.jamiemansfield.lorenz.model.jar.Type;
+import me.jamiemansfield.lorenz.test.LorenzTests;
 import org.junit.Test;
 
 /**
@@ -76,6 +78,37 @@ public final class TypeTest {
     public void invalidTest() {
         Type.of("Jungle");
         Type.of("A");
+    }
+
+    @Test
+    public void deobfuscateType() {
+        final String type = "Lhuy;";
+        assertEquals(type, this.deobfRawType(type));
+
+        final String primitiveType = "Z";
+        assertEquals(primitiveType, this.deobfRawType(primitiveType));
+
+        final String obfuscatedType = "Lght;";
+        final String deobfuscatedType = "Luk/jamierocks/Test;";
+        assertEquals(deobfuscatedType, this.deobfRawType(obfuscatedType));
+
+        final String arrayType = "[[Ljava/lang/String;";
+        assertEquals(arrayType, this.deobfRawType(arrayType));
+
+        final String obfuscatedArrayType = "[[[Lght;";
+        final String deobfuscatedArrayType = "[[[Luk/jamierocks/Test;";
+        assertEquals(deobfuscatedArrayType, deobfRawType(obfuscatedArrayType));
+    }
+
+    /**
+     * A convenience method, to de-obfuscate a raw type using the
+     * test's {@link MappingSet}.
+     *
+     * @param rawType The raw type, for de-obfuscation
+     * @return The de-obfuscated type
+     */
+    private String deobfRawType(final String rawType) {
+        return Type.of(rawType).getDeobfuscated(LorenzTests.BASIC_MAPPINGS);
     }
 
 }

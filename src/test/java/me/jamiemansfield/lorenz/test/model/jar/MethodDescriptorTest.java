@@ -28,10 +28,11 @@ package me.jamiemansfield.lorenz.test.model.jar;
 import static org.junit.Assert.assertEquals;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.jar.ArrayType;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.ObjectType;
 import me.jamiemansfield.lorenz.model.jar.PrimitiveType;
-import me.jamiemansfield.lorenz.model.jar.Type;
-import org.junit.BeforeClass;
+import me.jamiemansfield.lorenz.test.LorenzTests;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -42,15 +43,6 @@ import java.util.Collections;
  * pertaining to {@link MethodDescriptor}.
  */
 public final class MethodDescriptorTest {
-
-    private static MappingSet mappings;
-
-    @BeforeClass
-    public static void initialise() {
-        mappings = MappingSet.create();
-        mappings.getOrCreateTopLevelClassMapping("ght")
-                .setDeobfuscatedName("uk/jamierocks/Test");
-    }
 
     @Test
     public void parsing() {
@@ -67,31 +59,21 @@ public final class MethodDescriptorTest {
         assertEquals(advancedRaw, advancedDesc.toString());
         assertEquals(Arrays.asList(PrimitiveType.BOOLEAN, PrimitiveType.INT), advancedDesc.getParamTypes());
         assertEquals(PrimitiveType.VOID, advancedDesc.getReturnType());
+
+        final String arrayRaw = "([[Lme/jamiemansfield/Test;)[[[I";
+        final MethodDescriptor arrayDesc = MethodDescriptor.compile(arrayRaw);
+        assertEquals(arrayRaw, arrayDesc.getObfuscated());
+        assertEquals(arrayRaw, arrayDesc.toString());
+        assertEquals(
+                Collections.singletonList(new ArrayType(2, new ObjectType("me/jamiemansfield/Test"))),
+                arrayDesc.getParamTypes()
+        );
+        assertEquals(new ArrayType(3, PrimitiveType.INT), arrayDesc.getReturnType());
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidParsing() {
         MethodDescriptor.compile("(uj)K;");
-    }
-
-    @Test
-    public void deobfuscateType() {
-        final String type = "Lhuy;";
-        assertEquals(type, this.deobfRawType(type));
-
-        final String primitiveType = "Z";
-        assertEquals(primitiveType, this.deobfRawType(primitiveType));
-
-        final String obfuscatedType = "Lght;";
-        final String deobfuscatedType = "Luk/jamierocks/Test;";
-        assertEquals(deobfuscatedType, this.deobfRawType(obfuscatedType));
-
-        final String arrayType = "[[Ljava/lang/String;";
-        assertEquals(arrayType, this.deobfRawType(arrayType));
-
-        final String obfuscatedArrayType = "[[[Lght;";
-        final String deobfuscatedArrayType = "[[[Luk/jamierocks/Test;";
-        assertEquals(deobfuscatedArrayType, deobfRawType(obfuscatedArrayType));
     }
 
     @Test
@@ -113,17 +95,6 @@ public final class MethodDescriptorTest {
     }
 
     /**
-     * A convenience method, to de-obfuscate a raw type using the
-     * test's {@link MappingSet}.
-     *
-     * @param rawType The raw type, for de-obfuscation
-     * @return The de-obfuscated type
-     */
-    private String deobfRawType(final String rawType) {
-        return Type.of(rawType).getDeobfuscated(mappings);
-    }
-
-    /**
      * A convenience method, to de-obfuscate a raw descriptor using the
      * test's {@link MappingSet}.
      *
@@ -131,7 +102,7 @@ public final class MethodDescriptorTest {
      * @return The de-obfuscated descriptor
      */
     private String deobfRawDesc(final String descriptor) {
-        return MethodDescriptor.compile(descriptor).getDeobfuscated(mappings);
+        return MethodDescriptor.compile(descriptor).getDeobfuscated(LorenzTests.BASIC_MAPPINGS);
     }
 
 }
