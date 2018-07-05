@@ -25,13 +25,16 @@
 
 package me.jamiemansfield.lorenz;
 
+import me.jamiemansfield.lorenz.cadix.MappingVisitor;
 import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
+import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
 
 /**
@@ -42,6 +45,12 @@ import java.util.Optional;
  * @since 0.1.0
  */
 public interface MappingSet {
+
+    /**
+     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
+     */
+    Comparator<Mapping> ALPHABETISE_MAPPINGS =
+            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
 
     /**
      * Creates a mapping set, using the default Lorenz model implementation.
@@ -206,5 +215,17 @@ public interface MappingSet {
      * @since 0.3.0
      */
     void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider);
+
+    /**
+     * Has the given {@link MappingVisitor} visit all the mappings in the set.
+     *
+     * @param visitor The mapping visitor
+     * @since 0.4.0
+     */
+    default void accept(final MappingVisitor visitor) {
+        this.getTopLevelClassMappings().stream()
+                .sorted(ALPHABETISE_MAPPINGS)
+                .forEach(mapping -> mapping.accept(visitor));
+    }
 
 }

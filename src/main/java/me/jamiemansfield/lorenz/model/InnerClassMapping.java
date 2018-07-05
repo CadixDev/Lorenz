@@ -25,6 +25,10 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import static me.jamiemansfield.lorenz.MappingSet.ALPHABETISE_MAPPINGS;
+
+import me.jamiemansfield.lorenz.cadix.MappingVisitor;
+
 /**
  * Represents a de-obfuscation mapping for an inner class.
  *
@@ -53,6 +57,27 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
     @Override
     default String getFullDeobfuscatedName() {
         return String.format("%s$%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
+    }
+
+    @Override
+    default void accept(final MappingVisitor visitor) {
+        if (visitor != null && this.hasMappings()) {
+            visitor.visitInnerClass(this.getObfuscatedName(), this.getDeobfuscatedName());
+
+            this.getFieldMappings().stream()
+                    .sorted(ALPHABETISE_MAPPINGS)
+                    .forEach(mapping -> mapping.accept(visitor));
+
+            this.getMethodMappings().stream()
+                    .sorted(ALPHABETISE_MAPPINGS)
+                    .forEach(mapping -> mapping.accept(visitor));
+
+            this.getInnerClassMappings().stream()
+                    .sorted(ALPHABETISE_MAPPINGS)
+                    .forEach(mapping -> mapping.accept(visitor));
+
+            visitor.endInnerClass();
+        }
     }
 
 }

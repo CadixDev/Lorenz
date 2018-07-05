@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.model;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.cadix.MappingVisitor;
 
 /**
  * Represents a de-obfuscation mapping for mappable constructs of the Java
@@ -88,5 +89,13 @@ public interface Mapping<M extends Mapping> {
      * @return The owning mapping set
      */
     MappingSet getMappings();
+
+    /**
+     * Has the given {@link MappingVisitor} visit this mapping.
+     *
+     * @param visitor The mapping visitor
+     * @since 0.4.0
+     */
+    void accept(final MappingVisitor visitor);
 
 }

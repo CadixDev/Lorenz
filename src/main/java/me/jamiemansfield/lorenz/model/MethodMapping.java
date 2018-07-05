@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.model;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.cadix.MappingVisitor;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 
@@ -84,6 +85,13 @@ public interface MethodMapping extends MemberMapping<MethodMapping> {
     @Override
     default String getFullDeobfuscatedName() {
         return String.format("%s/%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
+    }
+
+    @Override
+    default void accept(final MappingVisitor visitor) {
+        if (visitor != null && this.hasDeobfuscatedName()) {
+            visitor.visitMethod(this.getSignature(), this.getDeobfuscatedName());
+        }
     }
 
 }
