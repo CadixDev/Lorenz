@@ -76,7 +76,7 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
                     .sorted(ALPHABETISE_MAPPINGS)
                     .forEach(mapping -> mapping.accept(visitor));
 
-            visitor.endInnerClass();
+            visitor.end();
         }
     }
 

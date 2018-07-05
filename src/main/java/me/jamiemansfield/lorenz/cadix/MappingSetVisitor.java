@@ -27,7 +27,6 @@ package me.jamiemansfield.lorenz.cadix;
 
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Stack;
@@ -74,21 +73,13 @@ public class MappingSetVisitor implements MappingVisitor {
     @Override
     public void visitInnerClass(final String obfuscatedName, final String deobfuscatedName) {
         if (!this.classes.empty()) {
-            final InnerClassMapping mapping = this.classes.peek().getOrCreateInnerClassMapping(obfuscatedName)
-                    .setDeobfuscatedName(deobfuscatedName);
-            this.classes.push(mapping);
+            this.classes.push(this.classes.peek().getOrCreateInnerClassMapping(obfuscatedName)
+                    .setDeobfuscatedName(deobfuscatedName));
         }
     }
 
     @Override
-    public void endInnerClass() {
-        if (!this.classes.empty()) {
-            this.classes.pop();
-        }
-    }
-
-    @Override
-    public void endClass() {
+    public void end() {
         if (!this.classes.empty()) {
             this.classes.pop();
         }

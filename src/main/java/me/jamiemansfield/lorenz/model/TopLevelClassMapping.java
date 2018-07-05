@@ -64,7 +64,7 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping>
                     .sorted(ALPHABETISE_MAPPINGS)
                     .forEach(mapping -> mapping.accept(visitor));
 
-            visitor.endClass();
+            visitor.end();
         }
     }
 

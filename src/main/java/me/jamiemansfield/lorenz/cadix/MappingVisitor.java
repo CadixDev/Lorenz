@@ -70,13 +70,8 @@ public interface MappingVisitor {
     void visitInnerClass(final String obfuscatedName, final String deobfuscatedName);
 
     /**
-     * Finishes visiting the inner class.
+     * Finishes visiting the current class.
      */
-    void endInnerClass();
-
-    /**
-     * Finishes visiting the class.
-     */
-    void endClass();
+    void end();
 
 }

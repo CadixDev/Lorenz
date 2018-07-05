@@ -71,16 +71,9 @@ public class DelegatingMappingVisitor implements MappingVisitor {
     }
 
     @Override
-    public void endInnerClass() {
+    public void end() {
         if (this.visitor != null) {
-            this.visitor.endInnerClass();
-        }
-    }
-
-    @Override
-    public void endClass() {
-        if (this.visitor != null) {
-            this.visitor.endClass();
+            this.visitor.end();
         }
     }
 

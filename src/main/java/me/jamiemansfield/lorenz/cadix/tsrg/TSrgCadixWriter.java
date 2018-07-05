@@ -25,12 +25,10 @@
 
 package me.jamiemansfield.lorenz.cadix.tsrg;
 
-import com.google.common.base.Strings;
 import me.jamiemansfield.lorenz.cadix.MappingVisitor;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.io.PrintWriter;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A {@link MappingVisitor} that can produce a TSRG mappings file.
@@ -43,7 +41,7 @@ public class TSrgCadixWriter implements MappingVisitor {
     private static String TAB = "\t";
 
     private final PrintWriter writer;
-    private final AtomicInteger level = new AtomicInteger(1);
+    private String currentClass;
 
     public TSrgCadixWriter(final PrintWriter writer) {
         this.writer = writer;
@@ -51,38 +49,43 @@ public class TSrgCadixWriter implements MappingVisitor {
 
     @Override
     public void visit(final String obfuscatedName, final String deobfuscatedName) {
-        this.writer.println(String.format("%s %s", obfuscatedName, deobfuscatedName));
+        this.currentClass = obfuscatedName;
+        this.writeClass(deobfuscatedName);
+    }
+
+    private void writeClass(final String deobfuscatedName) {
+        this.writer.println(String.format("%s %s", this.currentClass, deobfuscatedName));
     }
 
     @Override
     public void visitField(final String obfuscatedName, final String deobfuscatedName) {
-        this.writer.println(String.format("%s %s %s",
-                Strings.repeat(TAB, this.level.get()),
-                obfuscatedName, deobfuscatedName));
+        if (this.currentClass != null) {
+            this.writer.println(String.format("%s %s %s", TAB, obfuscatedName, deobfuscatedName));
+        }
     }
 
     @Override
     public void visitMethod(final MethodSignature signature, final String deobfuscatedName) {
-        this.writer.println(String.format("%s %s %s %s",
-                Strings.repeat(TAB, this.level.get()),
-                signature.getName(), signature.getDescriptor().getObfuscated(),
-                signature.getDescriptor().getDeobfuscated(null))); // TODO: rework descriptors
+        if (this.currentClass != null) {
+            this.writer.println(String.format("%s %s %s %s", TAB,
+                    signature.getName(), signature.getDescriptor().getObfuscated(),
+                    deobfuscatedName));
+        }
     }
 
     @Override
     public void visitInnerClass(final String obfuscatedName, final String deobfuscatedName) {
-        this.writer.println(String.format("%s %s %s",
-                Strings.repeat(TAB, this.level.getAndIncrement()),
-                obfuscatedName, deobfuscatedName));
+        if (this.currentClass != null) {
+            this.currentClass = String.format("%s$%s", this.currentClass, obfuscatedName);
+            this.writeClass(deobfuscatedName);
+        }
     }
 
     @Override
-    public void endInnerClass() {
-        this.level.decrementAndGet();
-    }
-
-    @Override
-    public void endClass() {
+    public void end() {
+        if (this.currentClass != null) {
+            this.currentClass = null;
+        }
     }
 
 }
