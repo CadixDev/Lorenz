@@ -31,7 +31,7 @@ import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import java.util.Objects;
 
 /**
- * Represents a method within a class.
+ * Represents a method within a class, by its name and descriptor.
  *
  * @author Jamie Mansfield
  * @since 0.2.0

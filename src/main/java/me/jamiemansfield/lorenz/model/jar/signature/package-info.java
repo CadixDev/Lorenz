@@ -23,50 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.model.jar.signature;
-
-import com.google.common.base.MoreObjects;
-
 /**
- * All members within Java have a unique signature that they can be identified with,
- * classes that inherit from this class are a representation of those unique signatures.
- *
- * @see FieldSignature
- * @see MethodSignature
- *
- * @author Jamie Mansfield
- * @since 0.2.0
+ * A model for method and field signatures.
  */
-public abstract class MemberSignature {
-
-    protected final String name;
-
-    /**
-     * Creates a member signature, with the given name.
-     *
-     * @param name The name of the member
-     */
-    protected MemberSignature(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the name of the member.
-     *
-     * @return The name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    protected MoreObjects.ToStringHelper buildToString() {
-        return MoreObjects.toStringHelper(this)
-                .add("name", this.name);
-    }
-
-    @Override
-    public String toString() {
-        return this.buildToString().toString();
-    }
-
-}
+package me.jamiemansfield.lorenz.model.jar.signature;
