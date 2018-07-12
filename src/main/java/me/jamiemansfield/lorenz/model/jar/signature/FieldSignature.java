@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A representation of the signature of a field.
+ * Represents a field within a class, by its name and descriptor.
  *
  * @author Jamie Mansfield
  * @since 0.2.0

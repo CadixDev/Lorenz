@@ -46,7 +46,7 @@ public abstract class MemberSignature {
      *
      * @param name The name of the member
      */
-    public MemberSignature(final String name) {
+    protected MemberSignature(final String name) {
         this.name = name;
     }
 
