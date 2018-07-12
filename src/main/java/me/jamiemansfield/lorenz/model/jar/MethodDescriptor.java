@@ -33,7 +33,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A representation of a method's descriptor.
+ * A model of a method descriptor, a text representation of a method's
+ * parameter type and return type.
+ *
+ * <p>The format is simply {@code "(ParamTypes...)ReturnType"}, for example
+ * given a method with two integer parameters and a {@link String} return
+ * type - the descriptor would be {@code "(II)Ljava/lang/String;"}.</p>
  *
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.3">Method Descriptors</a>
  *
