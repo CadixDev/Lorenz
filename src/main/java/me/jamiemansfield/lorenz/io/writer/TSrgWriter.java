@@ -65,10 +65,7 @@ public class TSrgWriter extends MappingsWriter {
      * @param mapping The class mapping
      */
     protected void writeClassMapping(final ClassMapping<?> mapping) {
-        // Check if the mapping should be written, and if so write it
-        if (mapping.hasDeobfuscatedName()) {
-            this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
-        }
+        this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
 
         // Write field mappings
         mapping.getFieldMappings().stream()
