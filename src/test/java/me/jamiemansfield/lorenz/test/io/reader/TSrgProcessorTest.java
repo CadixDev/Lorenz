@@ -26,14 +26,14 @@
 package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.reader.TSrgProcessor;
+import me.jamiemansfield.lorenz.io.reader.TSrgReader;
 
 import java.io.IOException;
 
 public class TSrgProcessorTest extends ProcessorTest {
 
     private static MappingSet createMappings() {
-        final TSrgProcessor parser = new TSrgProcessor();
+        final TSrgReader.Processor parser = new TSrgReader.Processor();
 
         // Feed in mappings
         try {

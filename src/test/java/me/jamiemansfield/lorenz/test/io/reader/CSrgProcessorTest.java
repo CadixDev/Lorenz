@@ -26,14 +26,14 @@
 package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.reader.CSrgProcessor;
+import me.jamiemansfield.lorenz.io.reader.CSrgReader;
 
 import java.io.IOException;
 
 public class CSrgProcessorTest extends ProcessorTest {
 
     private static MappingSet createMappings() {
-        final CSrgProcessor parser = new CSrgProcessor();
+        final CSrgReader.Processor parser = new CSrgReader.Processor();
 
         // Feed in mappings
         try {

@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.io.reader;
 
+import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
@@ -32,10 +33,11 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Represents a reader that parses mappings from a {@link BufferedReader},
- * using a {@link MappingsProcessor}.
+ * using a {@link Processor}.
  *
  * @see SrgReader
  * @see CSrgReader
@@ -47,15 +49,15 @@ import java.util.function.Function;
 public abstract class MappingsReader implements Closeable {
 
     protected final BufferedReader reader;
-    protected final Function<MappingSet, MappingsProcessor> parser;
+    protected final Function<MappingSet, Processor> parser;
 
     /**
      * Creates a new mappings reader, for the given {@link BufferedReader}.
      *
      * @param reader The buffered reader
-     * @param parser The function to create a {@link MappingsProcessor} for the format
+     * @param parser The function to create a {@link Processor} for the format
      */
-    protected MappingsReader(final BufferedReader reader, final Function<MappingSet, MappingsProcessor> parser) {
+    protected MappingsReader(final BufferedReader reader, final Function<MappingSet, Processor> parser) {
         this.reader = reader;
         this.parser = parser;
     }
@@ -90,7 +92,7 @@ public abstract class MappingsReader implements Closeable {
      * @return The mapping set, to allow for chaining
      */
     public MappingSet parse(final MappingSet mappings) {
-        final MappingsProcessor processor = this.parser.apply(mappings);
+        final Processor processor = this.parser.apply(mappings);
         this.reader.lines()
                 // Process line
                 .forEach(line -> {
@@ -105,6 +107,42 @@ public abstract class MappingsReader implements Closeable {
     @Override
     public void close() throws IOException {
         this.reader.close();
+    }
+
+    /**
+     * A parser for a given mappings format, that is built upon
+     * Guava's {@link LineProcessor}.
+     *
+     * @see SrgReader.Processor
+     * @see CSrgReader.Processor
+     * @see TSrgReader.Processor
+     *
+     * @since 0.4.0
+     */
+    public static abstract class Processor implements LineProcessor<MappingSet> {
+
+        /**
+         * A regular expression used to split {@link String}s at spaces.
+         */
+        protected static final Pattern SPACE = Pattern.compile(" ", Pattern.LITERAL);
+
+        protected final MappingSet mappings;
+
+        /**
+         * Creates a mappings parser, to process the lines in a
+         * mappings file.
+         *
+         * @param mappings The mappings set
+         */
+        protected Processor(final MappingSet mappings) {
+            this.mappings = mappings;
+        }
+
+        @Override
+        public MappingSet getResult() {
+            return this.mappings;
+        }
+
     }
 
 }
