@@ -93,7 +93,7 @@ public class ArrayType implements Type {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ArrayType)) return false;
         final ArrayType that = (ArrayType) obj;

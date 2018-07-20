@@ -33,6 +33,7 @@ import me.jamiemansfield.lorenz.MappingSet;
  * @see PrimitiveType
  * @see ObjectType
  * @see ArrayType
+ * @see VoidType
  *
  * @author Jamie Mansfield
  * @since 0.1.0
@@ -47,19 +48,19 @@ public interface Type {
      */
     static Type of(final String type) {
         if (type.startsWith("L")) {
-            // Skim off the 'L' and the ';'.
-            final String className = type.substring(1, type.length() - 1);
-
-            return new ObjectType(className);
+            // Remove off the 'L' and the ';'.
+            return new ObjectType(type.substring(1, type.length() - 1));
         }
         else if (type.startsWith("[")) {
             // Get the array dimensions count
             final int arrayDims = type.lastIndexOf('[') + 1;
-
             return new ArrayType(arrayDims, Type.of(type.substring(arrayDims)));
         }
         else if (type.length() == 1 && PrimitiveType.isValidPrimitive(type.charAt(0))) {
             return PrimitiveType.getFromKey(type.charAt(0));
+        }
+        else if (type.length() == 1 && type.charAt(0) == 'V') {
+            return VoidType.INSTANCE;
         }
         throw new RuntimeException("Invalid type: " + type);
     }

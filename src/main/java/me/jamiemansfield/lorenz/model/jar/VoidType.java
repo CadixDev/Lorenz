@@ -27,79 +27,37 @@ package me.jamiemansfield.lorenz.model.jar;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
-import java.util.Arrays;
-
 /**
- * Represents a primitive type within Java.
+ * Represents a void type within Java.
  *
- * @see <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-BaseType">BaseType</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-VoidDescriptor">VoidDescriptor</a>
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.4.0
  */
-public enum PrimitiveType implements Type {
-
-    BYTE('B'),
-    CHAR('C'),
-    DOUBLE('D'),
-    FLOAT('F'),
-    INT('I'),
-    LONG('J'),
-    SHORT('S'),
-    BOOLEAN('Z'),
-    ;
-
-    private final char key;
-    private final String obfuscatedView;
+public class VoidType implements Type {
 
     /**
-     * Creates a new primitive type, with the given character type.
-     *
-     * @param key The character key
+     * The global instance of the void type.
      */
-    PrimitiveType(final char key) {
-        this.key = key;
-        this.obfuscatedView = "" + key;
+    public static final VoidType INSTANCE = new VoidType();
+
+    private VoidType() {
     }
 
     @Override
     public String getObfuscated() {
-        return this.obfuscatedView;
+        return "V";
     }
 
     @Override
     public String getDeobfuscated(final MappingSet mappings) {
-        return this.obfuscatedView;
+        return "V";
     }
 
     @Override
     public String toString() {
-        return this.getObfuscated();
-    }
-
-    /**
-     * Establishes whether the given key, is a valid primitive
-     * key.
-     *
-     * @param key The key
-     * @return {@code True} if the key represents a primitive,
-     *         {@code false} otherwise
-     */
-    public static boolean isValidPrimitive(final char key) {
-        return Arrays.stream(values())
-                .anyMatch(type -> type.key == key);
-    }
-
-    /**
-     * Gets the {@link PrimitiveType} from the given key.
-     *
-     * @param key The key
-     * @return The primitive type
-     */
-    public static PrimitiveType getFromKey(final char key) {
-        return Arrays.stream(values())
-                .filter(type -> type.key == key)
-                .findFirst().orElse(null);
+        return "V";
     }
 
 }

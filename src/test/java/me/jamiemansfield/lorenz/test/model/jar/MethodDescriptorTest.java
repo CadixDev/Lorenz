@@ -32,6 +32,7 @@ import me.jamiemansfield.lorenz.model.jar.ArrayType;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.ObjectType;
 import me.jamiemansfield.lorenz.model.jar.PrimitiveType;
+import me.jamiemansfield.lorenz.model.jar.VoidType;
 import me.jamiemansfield.lorenz.test.LorenzTests;
 import org.junit.Test;
 
@@ -51,14 +52,14 @@ public final class MethodDescriptorTest {
         assertEquals(simpleRaw, simpleDesc.getObfuscated());
         assertEquals(simpleRaw, simpleDesc.toString());
         assertEquals(Collections.singletonList(PrimitiveType.BOOLEAN), simpleDesc.getParamTypes());
-        assertEquals(PrimitiveType.VOID, simpleDesc.getReturnType());
+        assertEquals(VoidType.INSTANCE, simpleDesc.getReturnType());
 
         final String advancedRaw = "(ZI)V";
         final MethodDescriptor advancedDesc = MethodDescriptor.compile(advancedRaw);
         assertEquals(advancedRaw, advancedDesc.getObfuscated());
         assertEquals(advancedRaw, advancedDesc.toString());
         assertEquals(Arrays.asList(PrimitiveType.BOOLEAN, PrimitiveType.INT), advancedDesc.getParamTypes());
-        assertEquals(PrimitiveType.VOID, advancedDesc.getReturnType());
+        assertEquals(VoidType.INSTANCE, advancedDesc.getReturnType());
 
         final String arrayRaw = "([[Lme/jamiemansfield/Test;)[[[I";
         final MethodDescriptor arrayDesc = MethodDescriptor.compile(arrayRaw);

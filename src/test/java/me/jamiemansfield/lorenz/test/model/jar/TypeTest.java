@@ -34,6 +34,7 @@ import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 import me.jamiemansfield.lorenz.model.jar.ObjectType;
 import me.jamiemansfield.lorenz.model.jar.PrimitiveType;
 import me.jamiemansfield.lorenz.model.jar.Type;
+import me.jamiemansfield.lorenz.model.jar.VoidType;
 import me.jamiemansfield.lorenz.test.LorenzTests;
 import org.junit.Test;
 
@@ -65,11 +66,21 @@ public final class TypeTest {
     }
 
     @Test
-    public void primtiveTest() {
+    public void primitiveTest() {
         final String raw = "Z";
         final Type type = Type.of(raw);
         assertTrue("Type should be an PrimitiveType!", type instanceof PrimitiveType);
         assertEquals(PrimitiveType.BOOLEAN, type);
+        assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.toString());
+    }
+
+    @Test
+    public void voidTest() {
+        final String raw = "V";
+        final Type type = Type.of(raw);
+        assertTrue("Type should be an VoidType!", type instanceof VoidType);
+        assertEquals(VoidType.INSTANCE, type);
         assertEquals(raw, type.getObfuscated());
         assertEquals(raw, type.toString());
     }

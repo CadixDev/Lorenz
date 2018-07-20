@@ -68,7 +68,7 @@ public class FieldSignature extends MemberSignature {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof FieldSignature)) return false;
         final FieldSignature that = (FieldSignature) obj;
