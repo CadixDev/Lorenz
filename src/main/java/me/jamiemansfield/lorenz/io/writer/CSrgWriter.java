@@ -32,7 +32,7 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -41,19 +41,19 @@ import java.util.List;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class CSrgWriter extends MappingsWriter {
+public class CSrgWriter extends TextMappingsWriter {
 
     private final List<String> classes = Lists.newArrayList();
     private final List<String> fields = Lists.newArrayList();
     private final List<String> methods = Lists.newArrayList();
 
     /**
-     * Creates a new CSRG mappings writer, from the given {@link PrintWriter}.
+     * Creates a new CSRG mappings writer, from the given {@link OutputStream}.
      *
-     * @param writer The print writer, to write to
+     * @param stream The output stream, to write to
      */
-    public CSrgWriter(final PrintWriter writer) {
-        super(writer);
+    public CSrgWriter(final OutputStream stream) {
+        super(stream);
     }
 
     @Override

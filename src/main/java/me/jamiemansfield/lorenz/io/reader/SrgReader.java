@@ -27,8 +27,8 @@ package me.jamiemansfield.lorenz.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -38,15 +38,15 @@ import java.util.stream.Stream;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class SrgReader extends MappingsReader {
+public class SrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new SRG mappings reader, for the given {@link BufferedReader}.
+     * Creates a new SRG mappings reader, for the given {@link InputStream}.
      *
-     * @param reader The buffered reader
+     * @param stream The input stream
      */
-    public SrgReader(final BufferedReader reader) {
-        super(reader, Processor::new);
+    public SrgReader(final InputStream stream) {
+        super(stream, SrgReader.Processor::new);
     }
 
     /**
@@ -54,7 +54,7 @@ public class SrgReader extends MappingsReader {
      *
      * @since 0.4.0
      */
-    public static class Processor extends MappingsReader.Processor {
+    public static class Processor extends TextMappingsReader.Processor {
 
         /**
          * A regex expression used to remove comments from lines.

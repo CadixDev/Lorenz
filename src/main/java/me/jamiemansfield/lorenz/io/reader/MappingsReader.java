@@ -25,45 +25,40 @@
 
 package me.jamiemansfield.lorenz.io.reader;
 
-import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.function.Function;
-import java.util.regex.Pattern;
+import java.io.InputStream;
 
 /**
- * Represents a reader that parses mappings from a {@link BufferedReader},
- * using a {@link Processor}.
+ * Represents a reader that reads de-obfuscation mappings from a
+ * given {@link InputStream}.
  *
- * @see SrgReader
- * @see CSrgReader
- * @see TSrgReader
+ * @param <S> The type of the stream
+ *
+ * @see TextMappingsReader
+ * @see BinaryMappingsReader
  *
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class MappingsReader implements Closeable {
+public abstract class MappingsReader<S extends InputStream> implements Closeable {
 
-    protected final BufferedReader reader;
-    protected final Function<MappingSet, Processor> parser;
+    protected final S stream;
 
     /**
-     * Creates a new mappings reader, for the given {@link BufferedReader}.
+     * Creates a new mappings reader, for the given {@link InputStream}.
      *
-     * @param reader The buffered reader
-     * @param parser The function to create a {@link Processor} for the format
+     * @param stream The input stream
      */
-    protected MappingsReader(final BufferedReader reader, final Function<MappingSet, Processor> parser) {
-        this.reader = reader;
-        this.parser = parser;
+    protected MappingsReader(final S stream) {
+        this.stream = stream;
     }
 
     /**
-     * Parses mappings from the previously given {@link BufferedReader}, to
+     * Parses mappings from the previously given {@link InputStream}, to
      * a new {@link MappingSet}.
      *
      * @return The mapping set
@@ -73,7 +68,7 @@ public abstract class MappingsReader implements Closeable {
     }
 
     /**
-     * Parses mappings from the previously given {@link BufferedReader}, to
+     * Parses mappings from the previously given {@link InputStream}, to
      * a new {@link MappingSet} using the given {@link FieldTypeProvider}.
      *
      * @param fieldTypeProvider The field type provider to use
@@ -85,64 +80,17 @@ public abstract class MappingsReader implements Closeable {
     }
 
     /**
-     * Parses mappings from the previously given {@link BufferedReader}, to
+     * Parses mappings from the previously given {@link InputStream}, to
      * the given {@link MappingSet}.
      *
      * @param mappings The mapping set
      * @return The mapping set, to allow for chaining
      */
-    public MappingSet parse(final MappingSet mappings) {
-        final Processor processor = this.parser.apply(mappings);
-        this.reader.lines()
-                // Process line
-                .forEach(line -> {
-                    try {
-                        processor.processLine(line);
-                    } catch (final IOException ignored) {
-                    }
-                });
-        return processor.getResult();
-    }
+    public abstract MappingSet parse(final MappingSet mappings);
 
     @Override
     public void close() throws IOException {
-        this.reader.close();
-    }
-
-    /**
-     * A parser for a given mappings format, that is built upon
-     * Guava's {@link LineProcessor}.
-     *
-     * @see SrgReader.Processor
-     * @see CSrgReader.Processor
-     * @see TSrgReader.Processor
-     *
-     * @since 0.4.0
-     */
-    public static abstract class Processor implements LineProcessor<MappingSet> {
-
-        /**
-         * A regular expression used to split {@link String}s at spaces.
-         */
-        protected static final Pattern SPACE = Pattern.compile(" ", Pattern.LITERAL);
-
-        protected final MappingSet mappings;
-
-        /**
-         * Creates a mappings parser, to process the lines in a
-         * mappings file.
-         *
-         * @param mappings The mappings set
-         */
-        protected Processor(final MappingSet mappings) {
-            this.mappings = mappings;
-        }
-
-        @Override
-        public MappingSet getResult() {
-            return this.mappings;
-        }
-
+        this.stream.close();
     }
 
 }

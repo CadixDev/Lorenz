@@ -27,13 +27,10 @@ package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.SrgReader;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class SrgReaderTest extends AbstractMappingsReaderTest {
 
     public SrgReaderTest() throws Exception {
-        super(() -> new SrgReader(new BufferedReader(new InputStreamReader(SrgReaderTest.class.getResourceAsStream("/test.srg")))));
+        super(() -> new SrgReader(SrgReaderTest.class.getResourceAsStream("/test.srg")));
     }
 
 }

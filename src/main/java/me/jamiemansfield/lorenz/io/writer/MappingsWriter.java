@@ -30,6 +30,7 @@ import me.jamiemansfield.lorenz.model.Mapping;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,19 +38,20 @@ import java.util.stream.Collectors;
 
 /**
  * Represents a writer, that is capable of writing de-obfuscation
- * mappings to a {@link PrintWriter}.
+ * mappings to an {@link OutputStream}.
  *
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
  *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
+ * @param <S> The type of the stream
+ *
+ * @see TextMappingsWriter
+ * @see BinaryMappingsWriter
  *
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public abstract class MappingsWriter implements Closeable {
+public abstract class MappingsWriter<S extends OutputStream> implements Closeable {
 
     /**
      * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
@@ -81,15 +83,15 @@ public abstract class MappingsWriter implements Closeable {
                 .collect(Collectors.joining());
     }
 
-    protected final PrintWriter writer;
+    protected final S stream;
 
     /**
-     * Creates a new mappings writer, from the given {@link PrintWriter}.
+     * Creates a new mappings writer, from the given {@link OutputStream}.
      *
-     * @param writer The print writer, to write to
+     * @param stream The output stream, to write to
      */
-    protected MappingsWriter(final PrintWriter writer) {
-        this.writer = writer;
+    protected MappingsWriter(final S stream) {
+        this.stream = stream;
     }
 
     /**
@@ -101,7 +103,7 @@ public abstract class MappingsWriter implements Closeable {
 
     @Override
     public void close() throws IOException {
-        this.writer.close();
+        this.stream.close();
     }
 
 }

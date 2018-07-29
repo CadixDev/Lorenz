@@ -23,14 +23,40 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.test.io.reader;
+package me.jamiemansfield.lorenz.io.writer;
 
-import me.jamiemansfield.lorenz.io.reader.TSrgReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
-public class TSrgReaderTest extends AbstractMappingsReaderTest {
+/**
+ * An implementation of {@link MappingsWriter} designed to aid
+ * with the implementation of mapping writers for text-based
+ * mapping formats.
+ *
+ * @see SrgWriter
+ * @see CSrgWriter
+ * @see TSrgWriter
+ *
+ * @author Jamie Mansfield
+ * @since 0.4.0
+ */
+public abstract class TextMappingsWriter extends MappingsWriter {
 
-    public TSrgReaderTest() throws Exception {
-        super(() -> new TSrgReader(TSrgReaderTest.class.getResourceAsStream("/test.tsrg")));
+    protected final PrintWriter writer;
+
+    /**
+     * Creates a new mappings writer, from the given {@link OutputStream}.
+     *
+     * @param stream The output stream, to write to
+     */
+    protected TextMappingsWriter(final OutputStream stream) {
+        super(stream);
+        this.writer = new PrintWriter(stream);
+    }
+
+    @Override
+    public void close() {
+        this.writer.close();
     }
 
 }

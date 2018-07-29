@@ -23,14 +23,28 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.test.io.reader;
+package me.jamiemansfield.lorenz.io.writer;
 
-import me.jamiemansfield.lorenz.io.reader.TSrgReader;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
 
-public class TSrgReaderTest extends AbstractMappingsReaderTest {
+/**
+ * An implementation of {@link MappingsWriter} designed to aid
+ * with the implementation of binary de-obfuscation mapping
+ * formats.
+ *
+ * @author Jamie Mansfield
+ * @since 0.4.0
+ */
+public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStream> {
 
-    public TSrgReaderTest() throws Exception {
-        super(() -> new TSrgReader(TSrgReaderTest.class.getResourceAsStream("/test.tsrg")));
+    /**
+     * Creates a new mappings writer, from the given {@link OutputStream}.
+     *
+     * @param stream The output stream, to write to
+     */
+    protected BinaryMappingsWriter(final OutputStream stream) {
+        super(new DataOutputStream(stream));
     }
 
 }

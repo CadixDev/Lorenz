@@ -27,8 +27,8 @@ package me.jamiemansfield.lorenz.io.reader;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.stream.Stream;
 
 /**
@@ -37,15 +37,15 @@ import java.util.stream.Stream;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class CSrgReader extends MappingsReader {
+public class CSrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new CSRG mappings reader, for the given {@link BufferedReader}.
+     * Creates a new CSRG mappings reader, for the given {@link InputStream}.
      *
-     * @param reader The buffered reader
+     * @param stream The input stream
      */
-    public CSrgReader(final BufferedReader reader) {
-        super(reader, Processor::new);
+    public CSrgReader(final InputStream stream) {
+        super(stream, Processor::new);
     }
 
     /**
@@ -53,7 +53,7 @@ public class CSrgReader extends MappingsReader {
      *
      * @since 0.4.0
      */
-    public static class Processor extends MappingsReader.Processor {
+    public static class Processor extends TextMappingsReader.Processor {
 
         private static final int CLASS_MAPPING_ELEMENT_COUNT = 2;
         private static final int FIELD_MAPPING_ELEMENT_COUNT = 3;

@@ -27,13 +27,10 @@ package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.CSrgReader;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 public class CSrgReaderTest extends AbstractMappingsReaderTest {
 
     public CSrgReaderTest() throws Exception {
-        super(() -> new CSrgReader(new BufferedReader(new InputStreamReader(CSrgReaderTest.class.getResourceAsStream("/test.csrg")))));
+        super(() -> new CSrgReader(CSrgReaderTest.class.getResourceAsStream("/test.csrg")));
     }
 
 }
