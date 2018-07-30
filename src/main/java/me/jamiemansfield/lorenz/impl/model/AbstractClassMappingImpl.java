@@ -31,6 +31,7 @@ import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
@@ -51,7 +52,7 @@ import java.util.Optional;
 public abstract class AbstractClassMappingImpl<M extends ClassMapping>
         extends AbstractMappingImpl<M> implements ClassMapping<M> {
 
-    private final Map<String, FieldMapping> fields = new HashMap<>();
+    private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
     private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
 
@@ -72,21 +73,21 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
-    public Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.fields.get(obfuscatedName));
+    public Optional<FieldMapping> getFieldMapping(final FieldSignature signature) {
+        return Optional.ofNullable(this.fields.get(signature));
     }
 
     @Override
-    public FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.fields.compute(obfuscatedName, (name, existingMapping) -> {
+    public FieldMapping createFieldMapping(final FieldSignature signature, final String deobfuscatedName) {
+        return this.fields.compute(signature, (name, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getMappings().getModelFactory().createFieldMapping(this, obfuscatedName, deobfuscatedName);
+            return this.getMappings().getModelFactory().createFieldMapping(this, signature, deobfuscatedName);
         });
     }
 
     @Override
-    public boolean hasFieldMapping(final String obfuscatedName) {
-        return this.fields.containsKey(obfuscatedName);
+    public boolean hasFieldMapping(final FieldSignature signature) {
+        return this.fields.containsKey(signature);
     }
 
     @Override

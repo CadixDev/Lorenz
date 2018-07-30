@@ -28,7 +28,7 @@ package me.jamiemansfield.lorenz.impl;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.MappingSetModelFactory;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
+import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -46,23 +46,14 @@ public class MappingSetImpl implements MappingSet {
 
     private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
     private final MappingSetModelFactory modelFactory;
-    private FieldTypeProvider fieldTypeProvider;
+    private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
 
     public MappingSetImpl() {
-        this((FieldTypeProvider) null);
-    }
-
-    public MappingSetImpl(final FieldTypeProvider fieldTypeProvider) {
-        this(new MappingSetModelFactoryImpl(), fieldTypeProvider);
+        this(new MappingSetModelFactoryImpl());
     }
 
     public MappingSetImpl(final MappingSetModelFactory modelFactory) {
-        this(modelFactory, null);
-    }
-
-    public MappingSetImpl(final MappingSetModelFactory modelFactory, final FieldTypeProvider fieldTypeProvider) {
         this.modelFactory = modelFactory;
-        this.fieldTypeProvider = fieldTypeProvider;
     }
 
     @Override
@@ -94,13 +85,8 @@ public class MappingSetImpl implements MappingSet {
     }
 
     @Override
-    public Optional<FieldTypeProvider> getFieldTypeProvider() {
-        return Optional.ofNullable(this.fieldTypeProvider);
-    }
-
-    @Override
-    public void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
-        this.fieldTypeProvider = fieldTypeProvider;
+    public CascadingFieldTypeProvider getFieldTypeProvider() {
+        return this.fieldTypeProvider;
     }
 
 }

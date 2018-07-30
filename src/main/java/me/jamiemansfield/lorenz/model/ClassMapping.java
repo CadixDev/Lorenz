@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
@@ -49,13 +50,36 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
     Collection<FieldMapping> getFieldMappings();
 
     /**
+     * Gets the field mapping of the given signature of the
+     * class mapping, should it exist.
+     *
+     * @param signature The signature of the field
+     * @return The field mapping, wrapped in an {@link Optional}
+     * @since 0.4.0
+     */
+    Optional<FieldMapping> getFieldMapping(final FieldSignature signature);
+
+    /**
      * Gets the field mapping of the given obfuscated name of the
      * class mapping, should it exist.
      *
      * @param obfuscatedName The obfuscated name of the field mapping
      * @return The field mapping, wrapped in an {@link Optional}
      */
-    Optional<FieldMapping> getFieldMapping(final String obfuscatedName);
+    default Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
+        return this.getFieldMapping(new FieldSignature(obfuscatedName, null));
+    }
+
+    /**
+     * Creates a new field mapping, attached to this class mapping, using
+     * the given signature and de-obfuscated name.
+     *
+     * @param signature The signature of the field
+     * @param deobfuscatedName The de-obfuscated name of the field
+     * @return The field mapping
+     * @since 0.4.0
+     */
+    FieldMapping createFieldMapping(final FieldSignature signature, final String deobfuscatedName);
 
     /**
      * Creates a new field mapping, attached to this class mapping, using
@@ -65,7 +89,21 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @param deobfuscatedName The de-obfuscated name of the field
      * @return The field mapping
      */
-    FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName);
+    default FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName) {
+        return this.createFieldMapping(new FieldSignature(obfuscatedName, null), deobfuscatedName);
+    }
+
+    /**
+     * Creates a new field mapping, attached to this class mapping, using
+     * the given obfuscated name.
+     *
+     * @param signature The signature of the field
+     * @return The field mapping
+     * @since 0.4.0
+     */
+    default FieldMapping createFieldMapping(final FieldSignature signature) {
+        return this.createFieldMapping(signature, signature.getName());
+    }
 
     /**
      * Creates a new field mapping, attached to this class mapping, using
@@ -76,6 +114,19 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      */
     default FieldMapping createFieldMapping(final String obfuscatedName) {
         return this.createFieldMapping(obfuscatedName, obfuscatedName);
+    }
+
+    /**
+     * Gets, or creates should it not exist, a field mapping of the
+     * given signature.
+     *
+     * @param signature The signature of the field mapping
+     * @return The field mapping
+     * @since 0.4.0
+     */
+    default FieldMapping getOrCreateFieldMapping(final FieldSignature signature) {
+        return this.getFieldMapping(signature)
+                .orElseGet(() -> this.createFieldMapping(signature));
     }
 
     /**
@@ -92,6 +143,18 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
 
     /**
      * Establishes whether the class mapping contains a field mapping
+     * of the given signature.
+     *
+     * @param signature The signature of the field mapping
+     * @return {@code true} should a field mapping of the given
+     *         signature exists in the class mapping;
+     *         {@code false} otherwise
+     * @since 0.4.0
+     */
+    boolean hasFieldMapping(final FieldSignature signature);
+
+    /**
+     * Establishes whether the class mapping contains a field mapping
      * of the given obfuscated name.
      *
      * @param obfuscatedName The obfuscated name of the field mapping
@@ -99,7 +162,9 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      *         obfuscated name exists in the class mapping;
      *         {@code false} otherwise
      */
-    boolean hasFieldMapping(final String obfuscatedName);
+    default boolean hasFieldMapping(final String obfuscatedName) {
+        return this.hasFieldMapping(new FieldSignature(obfuscatedName, null));
+    }
 
     /**
      * Gets an immutable collection of all of the method mappings
@@ -257,15 +322,9 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      */
     default boolean hasMappings() {
         return this.hasDeobfuscatedName() ||
-                this.getFieldMappings().stream()
-                        .filter(Mapping::hasDeobfuscatedName)
-                        .count() != 0 ||
-                this.getMethodMappings().stream()
-                        .filter(Mapping::hasDeobfuscatedName)
-                        .count() != 0 ||
-                this.getInnerClassMappings().stream()
-                        .filter(ClassMapping::hasMappings)
-                        .count() != 0;
+                this.getFieldMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
+                this.getMethodMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
+                this.getInnerClassMappings().stream().anyMatch(ClassMapping::hasMappings);
     }
 
 }

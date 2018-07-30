@@ -26,9 +26,9 @@
 package me.jamiemansfield.lorenz.impl.model;
 
 import com.google.common.base.MoreObjects;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Objects;
 
@@ -40,24 +40,24 @@ import java.util.Objects;
  */
 public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> implements MethodMapping {
 
-    private final MethodSignature descriptor;
+    private final MethodSignature signature;
 
     /**
      * Creates a new method mapping, from the given parameters.
      *
      * @param parentClass The class mapping, this mapping belongs to
-     * @param descriptor The descriptor of the method
+     * @param signature The signature
      * @param deobfuscatedName The de-obfuscated name
      */
-    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature descriptor,
+    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature signature,
             final String deobfuscatedName) {
-        super(parentClass, descriptor.getName(), deobfuscatedName);
-        this.descriptor = descriptor;
+        super(parentClass, signature.getName(), deobfuscatedName);
+        this.signature = signature;
     }
 
     @Override
     public MethodSignature getSignature() {
-        return this.descriptor;
+        return this.signature;
     }
 
     @Override
@@ -70,16 +70,14 @@ public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> 
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MethodMapping)) return false;
-
+        if (!super.equals(obj) || !(obj instanceof MethodMapping)) return false;
         final MethodMapping that = (MethodMapping) obj;
-        return Objects.equals(this.descriptor, that.getDescriptor());
+        return Objects.equals(this.signature, that.getSignature());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.descriptor);
+        return Objects.hash(super.hashCode(), this.signature);
     }
 
 }

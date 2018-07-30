@@ -30,6 +30,7 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 /**
@@ -58,11 +59,12 @@ public interface MappingSetModelFactory {
      * Creates a {@link FieldMapping} linked to the given {@link ClassMapping}.
      *
      * @param parent The class mapping to link to
-     * @param obfuscatedName The obfuscated name of the field
+     * @param signature The signature of the field
      * @param deobfuscatedName The de-obfuscated name to give the field
      * @return The field mapping
+     * @since 0.4.0
      */
-    FieldMapping createFieldMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName);
+    FieldMapping createFieldMapping(final ClassMapping parent, final FieldSignature signature, final String deobfuscatedName);
 
     /**
      * Creates a {@link MethodMapping} linked to the given {@link ClassMapping}.

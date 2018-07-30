@@ -25,6 +25,11 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import me.jamiemansfield.lorenz.model.jar.Type;
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
+
+import java.util.Optional;
+
 /**
  * Represents a de-obfuscation mapping for fields.
  *
@@ -32,6 +37,27 @@ package me.jamiemansfield.lorenz.model;
  * @since 0.1.0
  */
 public interface FieldMapping extends MemberMapping<FieldMapping> {
+
+    /**
+     * Gets the signature of this field mapping.
+     *
+     * @return The signature
+     * @since 0.4.0
+     */
+    FieldSignature getSignature();
+
+    /**
+     * Gets the {@link Type} of the field, if at all available.
+     *
+     * @return The {@link Type}, wrapped in an {@link Optional}
+     * @since 0.4.0
+     */
+    default Optional<Type> getType() {
+        // First check the signature
+        if (this.getSignature().getType().isPresent()) return this.getSignature().getType();
+        // Check the FieldTypeProvider
+        return this.getMappings().getFieldTypeProvider().provide(this);
+    }
 
     @Override
     default String getFullObfuscatedName() {

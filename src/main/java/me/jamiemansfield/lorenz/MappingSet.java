@@ -29,6 +29,7 @@ import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.util.Collection;
@@ -62,29 +63,6 @@ public interface MappingSet {
      */
     static MappingSet create(final MappingSetModelFactory modelFactory) {
         return new MappingSetImpl(modelFactory);
-    }
-
-    /**
-     * Creates a mapping set, using the default Lorenz model implementation.
-     *
-     * @param fieldTypeProvider The field type provider to use (if applicable)
-     * @return The mapping set
-     * @since 0.3.0
-     */
-    static MappingSet create(final FieldTypeProvider fieldTypeProvider) {
-        return new MappingSetImpl(fieldTypeProvider);
-    }
-
-    /**
-     * Creates a mapping set, using the given model factory.
-     *
-     * @param modelFactory The model factory to use
-     * @param fieldTypeProvider The field type provider to use (if applicable)
-     * @return The mapping set
-     * @since 0.3.0
-     */
-    static MappingSet create(final MappingSetModelFactory modelFactory, final FieldTypeProvider fieldTypeProvider) {
-        return new MappingSetImpl(modelFactory, fieldTypeProvider);
     }
 
     /**
@@ -195,16 +173,34 @@ public interface MappingSet {
      * Gets the field type provider in use for this set of mappings.
      *
      * @return The field type provider
-     * @since 0.3.0
+     * @since 0.4.0
      */
-    Optional<FieldTypeProvider> getFieldTypeProvider();
+    CascadingFieldTypeProvider getFieldTypeProvider();
 
     /**
-     * Sets the field type provider in use for this set of mappings.
+     * Adds the given {@link FieldTypeProvider} to this set of mappings.
      *
      * @param fieldTypeProvider The field type provider
-     * @since 0.3.0
+     * @return {@code this}, for chaining
+     * @see CascadingFieldTypeProvider#add(FieldTypeProvider)
+     * @since 0.4.0
      */
-    void setFieldTypeProvider(final FieldTypeProvider fieldTypeProvider);
+    default MappingSet addFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
+        this.getFieldTypeProvider().add(fieldTypeProvider);
+        return this;
+    }
+
+    /**
+     * Removes the given {@link FieldTypeProvider} to this set of mappings.
+     *
+     * @param fieldTypeProvider The field type provider
+     * @return {@code this}, for chaining
+     * @see CascadingFieldTypeProvider#remove(FieldTypeProvider)
+     * @since 0.4.0
+     */
+    default MappingSet removeFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
+        this.getFieldTypeProvider().remove(fieldTypeProvider);
+        return this;
+    }
 
 }

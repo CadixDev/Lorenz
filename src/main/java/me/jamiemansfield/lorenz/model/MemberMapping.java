@@ -30,6 +30,10 @@ package me.jamiemansfield.lorenz.model;
  *
  * @param <M> The type of the mapping
  *
+ * @see FieldMapping
+ * @see MethodMapping
+ * @see InnerClassMapping
+ *
  * @author Jamie Mansfield
  * @since 0.1.0
  */

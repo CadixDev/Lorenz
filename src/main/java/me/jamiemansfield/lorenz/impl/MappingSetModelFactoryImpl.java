@@ -36,6 +36,7 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 /**
@@ -52,8 +53,8 @@ public class MappingSetModelFactoryImpl implements MappingSetModelFactory {
     }
 
     @Override
-    public FieldMapping createFieldMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName) {
-        return new FieldMappingImpl(parent, obfuscatedName, deobfuscatedName);
+    public FieldMapping createFieldMapping(final ClassMapping parent, final FieldSignature signature, final String deobfuscatedName) {
+        return new FieldMappingImpl(parent, signature, deobfuscatedName);
     }
 
     @Override

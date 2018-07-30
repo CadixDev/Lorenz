@@ -72,8 +72,13 @@ public class FieldSignature extends MemberSignature {
         if (this == obj) return true;
         if (!(obj instanceof FieldSignature)) return false;
         final FieldSignature that = (FieldSignature) obj;
-        return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.type, that.type);
+        if (this.type != null && that.type != null) {
+            return Objects.equals(this.name, that.name) &&
+                    Objects.equals(this.type, that.type);
+        }
+        else {
+            return Objects.equals(this.name, that.name);
+        }
     }
 
     @Override

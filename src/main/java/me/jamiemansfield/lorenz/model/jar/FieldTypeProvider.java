@@ -27,6 +27,8 @@ package me.jamiemansfield.lorenz.model.jar;
 
 import me.jamiemansfield.lorenz.model.FieldMapping;
 
+import java.util.Optional;
+
 /**
  * A provider for establishing the type of a field, when it
  * is not already known.
@@ -44,10 +46,12 @@ public interface FieldTypeProvider {
 
     /**
      * Provides a {@link Type} for the given {@link FieldMapping},
+     * if possible.
      *
      * @param mapping The field mapping
-     * @return The type for the field
+     * @return The type for the field, wrapped in an {@link Optional}
+     * @since 0.4.0
      */
-    Type provide(final FieldMapping mapping);
+    Optional<Type> provide(final FieldMapping mapping);
 
 }

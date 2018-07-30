@@ -38,16 +38,16 @@ import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
 public interface MethodMapping extends MemberMapping<MethodMapping> {
 
     /**
-     * Gets the {@link MethodSignature} of the method.
+     * Gets the signature of this method mapping.
      *
-     * @return The method descriptor
+     * @return The signature
      */
     MethodSignature getSignature();
 
     /**
      * Gets the {@link MethodDescriptor} of the method.
      *
-     * @return The method signature
+     * @return The method descriptor
      * @see MethodSignature#getDescriptor()
      */
     default MethodDescriptor getDescriptor() {

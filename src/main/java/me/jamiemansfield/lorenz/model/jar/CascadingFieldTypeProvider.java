@@ -23,61 +23,54 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.model.jar;
 
-import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.FieldMapping;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Represents a reader that reads de-obfuscation mappings from a
- * given {@link InputStream}.
- *
- * @param <S> The type of the stream
- *
- * @see TextMappingsReader
- * @see BinaryMappingsReader
+ * An implementation of {@link FieldTypeProvider} that is backed by
+ * many - allowing multiples sources to be used.
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
-public abstract class MappingsReader<S extends InputStream> implements Closeable {
+public class CascadingFieldTypeProvider implements FieldTypeProvider {
 
-    protected final S stream;
+    private final List<FieldTypeProvider> providers = new ArrayList<>();
 
     /**
-     * Creates a new mappings reader, for the given {@link InputStream}.
+     * Adds a {@link FieldTypeProvider} to the provider.
      *
-     * @param stream The input stream
+     * @param provider The provider
+     * @return {@code this}, for chaining
      */
-    protected MappingsReader(final S stream) {
-        this.stream = stream;
+    public CascadingFieldTypeProvider add(final FieldTypeProvider provider) {
+        this.providers.add(provider);
+        return this;
     }
 
     /**
-     * Parses mappings from the previously given {@link InputStream}, to
-     * a new {@link MappingSet}.
+     * Removes a {@link FieldTypeProvider} from the provider.
      *
-     * @return The mapping set
+     * @param provider The provider
+     * @return {@code this}, for chaining
      */
-    public MappingSet parse() {
-        return this.parse(MappingSet.create());
+    public CascadingFieldTypeProvider remove(final FieldTypeProvider provider) {
+        this.providers.remove(provider);
+        return this;
     }
-
-    /**
-     * Parses mappings from the previously given {@link InputStream}, to
-     * the given {@link MappingSet}.
-     *
-     * @param mappings The mapping set
-     * @return The mapping set, to allow for chaining
-     */
-    public abstract MappingSet parse(final MappingSet mappings);
 
     @Override
-    public void close() throws IOException {
-        this.stream.close();
+    public Optional<Type> provide(final FieldMapping mapping) {
+        for (final FieldTypeProvider provider : this.providers) {
+            final Optional<Type> type = provider.provide(mapping);
+            if (type.isPresent()) return type;
+        }
+        return Optional.empty();
     }
 
 }

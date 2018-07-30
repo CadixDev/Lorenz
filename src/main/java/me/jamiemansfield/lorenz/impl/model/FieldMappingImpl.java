@@ -27,6 +27,9 @@ package me.jamiemansfield.lorenz.impl.model;
 
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
+import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
+
+import java.util.Objects;
 
 /**
  * A basic implementation of {@link FieldMapping}.
@@ -36,20 +39,31 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
  */
 public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping> implements FieldMapping {
 
+    private final FieldSignature signature;
+
     /**
      * Creates a new field mapping, from the given parameters.
      *
      * @param parentClass The class mapping, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
+     * @param signature The obfuscated signature
      * @param deobfuscatedName The de-obfuscated name
      */
-    public FieldMappingImpl(final ClassMapping parentClass, final String obfuscatedName, final String deobfuscatedName) {
-        super(parentClass, obfuscatedName, deobfuscatedName);
+    public FieldMappingImpl(final ClassMapping parentClass, final FieldSignature signature, final String deobfuscatedName) {
+        super(parentClass, signature.getName(), deobfuscatedName);
+        this.signature = signature;
+    }
+
+    @Override
+    public FieldSignature getSignature() {
+        return this.signature;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof FieldMapping;
+        if (this == obj) return true;
+        if (!super.equals(obj) || !(obj instanceof FieldMapping)) return false;
+        final FieldMapping that = (FieldMapping) obj;
+        return Objects.equals(this.signature, that.getSignature());
     }
 
 }
