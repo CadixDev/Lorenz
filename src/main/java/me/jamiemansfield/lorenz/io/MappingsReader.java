@@ -61,8 +61,9 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
      * a new {@link MappingSet}.
      *
      * @return The mapping set
+     * @throws IOException Should an I/O issue occur
      */
-    public MappingSet read() {
+    public MappingSet read() throws IOException {
         return this.read(MappingSet.create());
     }
 
@@ -72,8 +73,9 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
      *
      * @param mappings The mapping set
      * @return The mapping set, to allow for chaining
+     * @throws IOException Should an I/O issue occur
      */
-    public abstract MappingSet read(final MappingSet mappings);
+    public abstract MappingSet read(final MappingSet mappings) throws IOException;
 
     @Override
     public void close() throws IOException {

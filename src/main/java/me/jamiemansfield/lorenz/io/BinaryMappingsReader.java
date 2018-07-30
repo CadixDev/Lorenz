@@ -25,6 +25,8 @@
 
 package me.jamiemansfield.lorenz.io;
 
+import me.jamiemansfield.lorenz.io.kin.KinReader;
+
 import java.io.DataInputStream;
 import java.io.InputStream;
 
@@ -32,6 +34,8 @@ import java.io.InputStream;
  * An implementation of {@link MappingsReader} designed to aid
  * with the implementation of binary de-obfuscation mapping
  * formats.
+ *
+ * @see KinReader
  *
  * @author Jamie Mansfield
  * @since 0.4.0

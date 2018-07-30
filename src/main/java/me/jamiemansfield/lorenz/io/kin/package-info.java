@@ -23,32 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io;
-
-import me.jamiemansfield.lorenz.io.kin.KinWriter;
-
-import java.io.DataOutputStream;
-import java.io.OutputStream;
-
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of binary de-obfuscation mapping
- * formats.
- *
- * @see KinWriter
- *
- * @author Jamie Mansfield
- * @since 0.4.0
+ * The Lorenz-provided implementation of the Kin mapping format.
  */
-public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStream> {
-
-    /**
-     * Creates a new mappings writer, from the given {@link OutputStream}.
-     *
-     * @param stream The output stream, to write to
-     */
-    protected BinaryMappingsWriter(final OutputStream stream) {
-        super(new DataOutputStream(stream));
-    }
-
-}
+package me.jamiemansfield.lorenz.io.kin;

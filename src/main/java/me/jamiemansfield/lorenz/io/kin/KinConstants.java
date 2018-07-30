@@ -23,32 +23,27 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io;
-
-import me.jamiemansfield.lorenz.io.kin.KinWriter;
-
-import java.io.DataOutputStream;
-import java.io.OutputStream;
+package me.jamiemansfield.lorenz.io.kin;
 
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of binary de-obfuscation mapping
- * formats.
- *
- * @see KinWriter
+ * A collection of constants specific to the Kin mapping
+ * format.
  *
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStream> {
+public final class KinConstants {
 
-    /**
-     * Creates a new mappings writer, from the given {@link OutputStream}.
-     *
-     * @param stream The output stream, to write to
-     */
-    protected BinaryMappingsWriter(final OutputStream stream) {
-        super(new DataOutputStream(stream));
+    public static final int MAGIC = 0x5e8f046;
+    public static final byte VERSION_ONE = (byte) 1;
+    public static final String STANDARD_EXTENSION = "kin";
+
+    // The kashike toHexString impl :p
+    public static String toHexString(final int integer) {
+        return "0x" + Integer.toHexString(integer);
+    }
+
+    private KinConstants() {
     }
 
 }

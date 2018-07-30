@@ -99,7 +99,7 @@ public abstract class MappingsWriter<S extends OutputStream> implements Closeabl
      *
      * @param mappings The mapping set
      */
-    public abstract void write(final MappingSet mappings);
+    public abstract void write(final MappingSet mappings) throws IOException;
 
     @Override
     public void close() throws IOException {
