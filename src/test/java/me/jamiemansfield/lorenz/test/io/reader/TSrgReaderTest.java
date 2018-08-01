@@ -26,11 +26,30 @@
 package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.TSrgReader;
+import org.junit.Test;
+
+import java.io.IOException;
 
 public class TSrgReaderTest extends AbstractSrgReaderTest {
 
     public TSrgReaderTest() throws Exception {
         super(() -> new TSrgReader(TSrgReaderTest.class.getResourceAsStream("/test.tsrg")));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void tooLongInput() throws IOException {
+        // This test should set off the first case where IllegalArgumentException
+        // is thrown
+        final TSrgReader.Processor parser = new TSrgReader.Processor();
+        parser.processLine("this is a faulty mapping because it is too long");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidInput() throws IOException {
+        // This test should set off the first case where IllegalArgumentException
+        // is thrown
+        final TSrgReader.Processor parser = new TSrgReader.Processor();
+        parser.processLine("\t Hi");
     }
 
 }

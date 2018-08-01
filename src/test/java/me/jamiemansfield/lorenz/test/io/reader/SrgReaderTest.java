@@ -26,11 +26,38 @@
 package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.SrgReader;
+import org.junit.Test;
+
+import java.io.IOException;
 
 public class SrgReaderTest extends AbstractSrgReaderTest {
 
     public SrgReaderTest() throws Exception {
         super(() -> new SrgReader(SrgReaderTest.class.getResourceAsStream("/test.srg")));
+    }
+
+    @Test
+    public void ignoresPackages() throws IOException {
+        // This test ensures that package mappings won't set off any exceptions
+        // as they are valid input - even though Lorenz won't parse them :p
+        final SrgReader.Processor parser = new SrgReader.Processor();
+        parser.processLine("PK: abc uk/jamierocks/Example");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void tooLongInput() throws IOException {
+        // This test should set off the first case where IllegalArgumentException
+        // is thrown
+        final SrgReader.Processor parser = new SrgReader.Processor();
+        parser.processLine("this is a faulty mapping because it is too long");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidInput() throws IOException {
+        // This test should set off the first case where IllegalArgumentException
+        // is thrown
+        final SrgReader.Processor parser = new SrgReader.Processor();
+        parser.processLine("PK: TooShort");
     }
 
 }

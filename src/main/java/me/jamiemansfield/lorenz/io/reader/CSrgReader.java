@@ -29,6 +29,7 @@ import me.jamiemansfield.lorenz.MappingSet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -77,7 +78,7 @@ public class CSrgReader extends TextMappingsReader {
 
         @Override
         public boolean processLine(final String rawLine) throws IOException {
-            Stream.of(rawLine)
+            for (final String line : Stream.of(rawLine)
                     // Handle comments, by removing them.
                     // This implementation will allow comments to be placed anywhere
                     .map(SrgReader.Processor::removeComments)
@@ -85,52 +86,50 @@ public class CSrgReader extends TextMappingsReader {
                     .map(String::trim)
                     // Filter out empty lines
                     .filter(line -> !line.isEmpty())
-                    // Process line
-                    .forEach(line -> {
-                        if (line.length() < 4) {
-                            System.out.println("Faulty CSRG mapping encountered: `" + line + "` - ignoring");
-                            return;
-                        }
-                        // Split up the line, for further processing
-                        final String[] split = SPACE.split(line);
-                        final int len = split.length;
+                    .collect(Collectors.toSet())) {
+                if (line.length() < 4) {
+                    throw new IllegalArgumentException("Faulty TSRG mapping encountered: `" + line + "`!");
+                }
+                // Split up the line, for further processing
+                final String[] split = SPACE.split(line);
+                final int len = split.length;
 
-                        // Process class mappings
-                        if (len == CLASS_MAPPING_ELEMENT_COUNT) {
-                            final String obfuscatedName = split[0];
-                            final String deobfuscatedName = split[1];
+                // Process class mappings
+                if (len == CLASS_MAPPING_ELEMENT_COUNT) {
+                    final String obfuscatedName = split[0];
+                    final String deobfuscatedName = split[1];
 
-                            // Get mapping, and set de-obfuscated name
-                            this.mappings.getOrCreateClassMapping(obfuscatedName)
-                                    .setDeobfuscatedName(deobfuscatedName);
-                        }
-                        // Process field mapping
-                        else if (len == FIELD_MAPPING_ELEMENT_COUNT) {
-                            final String parentClass = split[0];
-                            final String obfuscatedName = split[1];
-                            final String deobfuscatedName = split[2];
+                    // Get mapping, and set de-obfuscated name
+                    this.mappings.getOrCreateClassMapping(obfuscatedName)
+                            .setDeobfuscatedName(deobfuscatedName);
+                }
+                // Process field mapping
+                else if (len == FIELD_MAPPING_ELEMENT_COUNT) {
+                    final String parentClass = split[0];
+                    final String obfuscatedName = split[1];
+                    final String deobfuscatedName = split[2];
 
-                            // Get mapping, and set de-obfuscated name
-                            this.mappings.getOrCreateClassMapping(parentClass)
-                                    .getOrCreateFieldMapping(obfuscatedName)
-                                    .setDeobfuscatedName(deobfuscatedName);
-                        }
-                        // Process method mapping
-                        else if (len == METHOD_MAPPING_ELEMENT_COUNT) {
-                            final String parentClass = split[0];
-                            final String obfuscatedName = split[1];
-                            final String obfuscatedSignature = split[2];
-                            final String deobfuscatedName = split[3];
+                    // Get mapping, and set de-obfuscated name
+                    this.mappings.getOrCreateClassMapping(parentClass)
+                            .getOrCreateFieldMapping(obfuscatedName)
+                            .setDeobfuscatedName(deobfuscatedName);
+                }
+                // Process method mapping
+                else if (len == METHOD_MAPPING_ELEMENT_COUNT) {
+                    final String parentClass = split[0];
+                    final String obfuscatedName = split[1];
+                    final String obfuscatedSignature = split[2];
+                    final String deobfuscatedName = split[3];
 
-                            // Get mapping, and set de-obfuscated name
-                            this.mappings.getOrCreateClassMapping(parentClass)
-                                    .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
-                                    .setDeobfuscatedName(deobfuscatedName);
-                        }
-                        else {
-                            System.out.println("Failed to process line: " + line);
-                        }
-                    });
+                    // Get mapping, and set de-obfuscated name
+                    this.mappings.getOrCreateClassMapping(parentClass)
+                            .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                            .setDeobfuscatedName(deobfuscatedName);
+                }
+                else {
+                    throw new IllegalArgumentException("Failed to process line: `" + line + "`!");
+                }
+            }
             return true;
         }
 
