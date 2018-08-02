@@ -65,7 +65,7 @@ public abstract class TextMappingsReader extends MappingsReader {
     }
 
     @Override
-    public MappingSet parse(final MappingSet mappings) {
+    public MappingSet read(final MappingSet mappings) {
         final Processor processor = this.processor.apply(mappings);
         this.reader.lines()
                 // Process line

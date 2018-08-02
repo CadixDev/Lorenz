@@ -50,7 +50,7 @@ public abstract class AbstractSrgReaderTest {
 
     protected AbstractSrgReaderTest(final Callable<MappingsReader> readerFunction) throws Exception {
         final MappingsReader reader = readerFunction.call();
-        this.mappings = reader.parse();
+        this.mappings = reader.read();
         reader.close();
     }
 

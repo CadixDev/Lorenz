@@ -57,23 +57,25 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
     }
 
     /**
-     * Parses mappings from the previously given {@link InputStream}, to
+     * Reads mappings from the previously given {@link InputStream}, to
      * a new {@link MappingSet}.
      *
      * @return The mapping set
+     * @since 0.4.0
      */
-    public MappingSet parse() {
-        return this.parse(MappingSet.create());
+    public MappingSet read() {
+        return this.read(MappingSet.create());
     }
 
     /**
-     * Parses mappings from the previously given {@link InputStream}, to
+     * Reads mappings from the previously given {@link InputStream}, to
      * the given {@link MappingSet}.
      *
      * @param mappings The mapping set
      * @return The mapping set, to allow for chaining
+     * @since 0.4.0
      */
-    public abstract MappingSet parse(final MappingSet mappings);
+    public abstract MappingSet read(final MappingSet mappings);
 
     @Override
     public void close() throws IOException {
