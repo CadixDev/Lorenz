@@ -26,8 +26,11 @@
 package me.jamiemansfield.lorenz.model;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
+import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
+
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Represents a de-obfuscation mapping for methods.
@@ -35,7 +38,7 @@ import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MethodMapping extends MemberMapping<MethodMapping> {
+public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping> {
 
     /**
      * Gets the signature of this method mapping.
@@ -76,14 +79,68 @@ public interface MethodMapping extends MemberMapping<MethodMapping> {
         return this.getDescriptor().getDeobfuscated(this.getMappings());
     }
 
+    /**
+     * Gets an immutable view of all the {@link MethodParameterMapping}s
+     * that belong to this method.
+     *
+     * @return The parameter mappings
+     * @since 0.4.0
+     */
+    Collection<MethodParameterMapping> getParameterMappings();
+
+    /**
+     * Creates a {@link MethodParameterMapping} parented by this method, of
+     * the given integer index.
+     *
+     * @param index The index of the parameter
+     * @param deobfuscatedName The de-obfuscated name to give the parameter
+     * @return The parameter mapping
+     * @since 0.4.0
+     */
+    MethodParameterMapping createParameterMapping(final int index, final String deobfuscatedName);
+
+    /**
+     * Gets a {@link MethodParameterMapping}, if present, of the given
+     * integer index.
+     *
+     * @param index The index of the parameter
+     * @return The parameter mapping, wrapped in an {@link Optional}
+     * @since 0.4.0
+     */
+    Optional<MethodParameterMapping> getParameterMapping(final int index);
+
+    /**
+     * Gets, or creates should it not exist, a parameter mapping of the
+     * given integer index.
+     *
+     * @param index The index of the parameter
+     * @return The parameter mapping
+     * @since 0.4.0
+     */
+    default MethodParameterMapping getOrCreateParameterMapping(final int index) {
+        return this.getParameterMapping(index)
+                .orElseGet(() -> this.createParameterMapping(index, "" + index));
+    }
+
+    /**
+     * Establishes whether the method mapping contains a parameter mapping
+     * of the integer index.
+     *
+     * @param index The index of the parameter
+     * @return {@code true} should a parameter mapping of the given
+     *         index exists in the method mapping; {@code false} otherwise
+     * @since 0.4.0
+     */
+    boolean hasParameterMapping(final int index);
+
     @Override
     default String getFullObfuscatedName() {
-        return String.format("%s/%s", this.getParentClass().getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s/%s", this.getParent().getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     default String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s/%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }

@@ -25,56 +25,46 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
-import me.jamiemansfield.lorenz.model.Mapping;
-import me.jamiemansfield.lorenz.model.MemberMapping;
-
-import java.util.Objects;
+import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 
 /**
- * An abstract basic implementation of {@link MemberMapping}.
- *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
+ * A basic implementation of {@link MethodParameterMapping}.
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
-public abstract class AbstractMemberMappingImpl<M extends MemberMapping, P extends Mapping>
-        extends AbstractMappingImpl<M> implements MemberMapping<M, P> {
+public class MethodParameterMappingImpl
+        extends AbstractMemberMappingImpl<MethodParameterMapping, MethodMapping>
+        implements MethodParameterMapping {
 
-    private final P parent;
+    private final int index;
 
     /**
-     * Creates a new member mapping, from the given parameters.
+     * Creates a new method parameter mapping, from the given parameters.
      *
      * @param parent The mapping, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
+     * @param index The index of the parameter
      * @param deobfuscatedName The de-obfuscated name
      */
-    protected AbstractMemberMappingImpl(final P parent, final String obfuscatedName,
-            final String deobfuscatedName) {
-        super(parent.getMappings(), obfuscatedName, deobfuscatedName);
-        this.parent = parent;
+    public MethodParameterMappingImpl(final MethodMapping parent, final int index, String deobfuscatedName) {
+        super(parent, "" + index, deobfuscatedName);
+        this.index = index;
     }
 
     @Override
-    public P getParent() {
-        return this.parent;
+    public int getIndex() {
+        return this.index;
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MemberMapping)) return false;
-
-        final MemberMapping that = (MemberMapping) obj;
-        return Objects.equals(this.parent, that.getParent());
+    public String getFullObfuscatedName() {
+        return this.getObfuscatedName();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parent);
+    public String getFullDeobfuscatedName() {
+        return this.getDeobfuscatedName();
     }
 
 }

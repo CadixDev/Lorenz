@@ -53,7 +53,7 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
     }
 
     @Override
-    public ClassMapping getParentClass() {
+    public ClassMapping getParent() {
         return this.parentClass;
     }
 
@@ -78,7 +78,7 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
         if (!(obj instanceof InnerClassMapping)) return false;
 
         final InnerClassMapping that = (InnerClassMapping) obj;
-        return Objects.equals(this.parentClass, that.getParentClass());
+        return Objects.equals(this.parentClass, that.getParent());
     }
 
     @Override

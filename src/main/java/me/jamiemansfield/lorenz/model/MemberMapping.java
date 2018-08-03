@@ -29,6 +29,7 @@ package me.jamiemansfield.lorenz.model;
  * Represents a mapping that is a member to a {@link ClassMapping}.
  *
  * @param <M> The type of the mapping
+ * @param <P> The type of the parent mapping
  *
  * @see FieldMapping
  * @see MethodMapping
@@ -37,13 +38,14 @@ package me.jamiemansfield.lorenz.model;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MemberMapping<M extends MemberMapping> extends Mapping<M> {
+public interface MemberMapping<M extends MemberMapping, P extends Mapping> extends Mapping<M> {
 
     /**
-     * Gets the parent {@link ClassMapping} of this member mapping.
+     * Gets the parent {@link Mapping} of this member mapping.
      *
-     * @return The parent class
+     * @return The parent mapping
+     * @since 0.4.0
      */
-    ClassMapping getParentClass();
+    P getParent();
 
 }

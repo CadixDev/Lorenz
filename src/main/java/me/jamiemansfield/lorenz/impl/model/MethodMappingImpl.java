@@ -28,9 +28,15 @@ package me.jamiemansfield.lorenz.impl.model;
 import com.google.common.base.MoreObjects;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A basic implementation of {@link MethodMapping}.
@@ -38,9 +44,10 @@ import java.util.Objects;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> implements MethodMapping {
+public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping, ClassMapping> implements MethodMapping {
 
     private final MethodSignature signature;
+    private final Map<Integer, MethodParameterMapping> parameters = new HashMap<>();
 
     /**
      * Creates a new method mapping, from the given parameters.
@@ -58,6 +65,29 @@ public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping> 
     @Override
     public MethodSignature getSignature() {
         return this.signature;
+    }
+
+    @Override
+    public Collection<MethodParameterMapping> getParameterMappings() {
+        return Collections.unmodifiableCollection(this.parameters.values());
+    }
+
+    @Override
+    public MethodParameterMapping createParameterMapping(final int index, final String deobfuscatedName) {
+        return this.parameters.compute(index, (i, existingMapping) -> {
+            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
+            return this.getMappings().getModelFactory().createMethodParameterMapping(this, index, deobfuscatedName);
+        });
+    }
+
+    @Override
+    public Optional<MethodParameterMapping> getParameterMapping(final int index) {
+        return Optional.ofNullable(this.parameters.get(index));
+    }
+
+    @Override
+    public boolean hasParameterMapping(final int index) {
+        return this.parameters.containsKey(index);
     }
 
     @Override

@@ -29,6 +29,7 @@ import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
@@ -56,6 +57,16 @@ public interface MappingSetModelFactory {
     TopLevelClassMapping createTopLevelClassMapping(final MappingSet parent, final String obfuscatedName, final String deobfuscatedName);
 
     /**
+     * Creates a {@link InnerClassMapping} linked to the given {@link ClassMapping}.
+     *
+     * @param parent The class mapping to link to
+     * @param obfuscatedName The obfuscated name of the class
+     * @param deobfuscatedName The de-obfuscated name to give the class
+     * @return The class mapping
+     */
+    InnerClassMapping createInnerClassMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName);
+
+    /**
      * Creates a {@link FieldMapping} linked to the given {@link ClassMapping}.
      *
      * @param parent The class mapping to link to
@@ -77,13 +88,14 @@ public interface MappingSetModelFactory {
     MethodMapping createMethodMapping(final ClassMapping parent, final MethodSignature signature, final String deobfuscatedName);
 
     /**
-     * Creates a {@link InnerClassMapping} linked to the given {@link ClassMapping}.
+     * Creates a {@link MethodParameterMapping} linked to the given {@link MethodMapping}.
      *
-     * @param parent The class mapping to link to
-     * @param obfuscatedName The obfuscated name of the class
-     * @param deobfuscatedName The de-obfuscated name to give the class
-     * @return The class mapping
+     * @param parent The method mapping to link to
+     * @param index The index of the parameter
+     * @param deobfuscatedName The de-obfuscated name to give the parameter
+     * @return The method parameter mapping
+     * @since 0.4.0
      */
-    InnerClassMapping createInnerClassMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName);
+    MethodParameterMapping createMethodParameterMapping(final MethodMapping parent, final int index, final String deobfuscatedName);
 
 }

@@ -30,11 +30,13 @@ import me.jamiemansfield.lorenz.MappingSetModelFactory;
 import me.jamiemansfield.lorenz.impl.model.FieldMappingImpl;
 import me.jamiemansfield.lorenz.impl.model.InnerClassMappingImpl;
 import me.jamiemansfield.lorenz.impl.model.MethodMappingImpl;
+import me.jamiemansfield.lorenz.impl.model.MethodParameterMappingImpl;
 import me.jamiemansfield.lorenz.impl.model.TopLevelClassMappingImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
@@ -53,6 +55,11 @@ public class MappingSetModelFactoryImpl implements MappingSetModelFactory {
     }
 
     @Override
+    public InnerClassMapping createInnerClassMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName) {
+        return new InnerClassMappingImpl(parent, obfuscatedName, deobfuscatedName);
+    }
+
+    @Override
     public FieldMapping createFieldMapping(final ClassMapping parent, final FieldSignature signature, final String deobfuscatedName) {
         return new FieldMappingImpl(parent, signature, deobfuscatedName);
     }
@@ -63,8 +70,8 @@ public class MappingSetModelFactoryImpl implements MappingSetModelFactory {
     }
 
     @Override
-    public InnerClassMapping createInnerClassMapping(final ClassMapping parent, final String obfuscatedName, final String deobfuscatedName) {
-        return new InnerClassMappingImpl(parent, obfuscatedName, deobfuscatedName);
+    public MethodParameterMapping createMethodParameterMapping(final MethodMapping parent, final int index, final String deobfuscatedName) {
+        return new MethodParameterMappingImpl(parent, index, deobfuscatedName);
     }
 
 }

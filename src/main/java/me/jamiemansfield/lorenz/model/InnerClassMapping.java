@@ -31,12 +31,12 @@ package me.jamiemansfield.lorenz.model;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, MemberMapping<InnerClassMapping> {
+public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, MemberMapping<InnerClassMapping, ClassMapping> {
 
     /**
      * Sets the de-obfuscated name of this inner class mapping.
      *
-     * <em>Most notably, implementations will need to support the input being
+     * <em>Implementations will need to support the input being
      * a fully-qualified name!</em>
      *
      * @param deobfuscatedName The new de-obfuscated name
@@ -47,12 +47,12 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
 
     @Override
     default String getFullObfuscatedName() {
-        return String.format("%s$%s", this.getParentClass().getFullObfuscatedName(), this.getObfuscatedName());
+        return String.format("%s$%s", this.getParent().getFullObfuscatedName(), this.getObfuscatedName());
     }
 
     @Override
     default String getFullDeobfuscatedName() {
-        return String.format("%s$%s", this.getParentClass().getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return String.format("%s$%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
 }

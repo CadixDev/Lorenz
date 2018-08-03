@@ -25,53 +25,25 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.model.jar.Type;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
-
-import java.util.Optional;
-
 /**
- * Represents a de-obfuscation mapping for fields.
+ * Represents a de-obfuscation mapping for a method parameter,
+ * identified by index.
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.4.0
  */
-public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> {
+public interface MethodParameterMapping extends MemberMapping<MethodParameterMapping, MethodMapping> {
 
     /**
-     * Gets the signature of this field mapping.
+     * Gets the index of the method parameter being mapped.
      *
-     * @return The signature
-     * @since 0.4.0
+     * @return The index
      */
-    FieldSignature getSignature();
+    int getIndex();
 
     @Override
     default String getObfuscatedName() {
-        return this.getSignature().getName();
-    }
-
-    /**
-     * Gets the {@link Type} of the field, if at all available.
-     *
-     * @return The {@link Type}, wrapped in an {@link Optional}
-     * @since 0.4.0
-     */
-    default Optional<Type> getType() {
-        // First check the signature
-        if (this.getSignature().getType().isPresent()) return this.getSignature().getType();
-        // Check the FieldTypeProvider
-        return this.getMappings().getFieldTypeProvider().provide(this);
-    }
-
-    @Override
-    default String getFullObfuscatedName() {
-        return String.format("%s/%s", this.getParent().getFullObfuscatedName(), this.getObfuscatedName());
-    }
-
-    @Override
-    default String getFullDeobfuscatedName() {
-        return String.format("%s/%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
+        return "" + this.getIndex();
     }
 
 }
