@@ -27,6 +27,9 @@ package me.jamiemansfield.lorenz.io.reader;
 
 import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.srg.csrg.CSrgReader;
+import me.jamiemansfield.lorenz.io.srg.SrgReader;
+import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

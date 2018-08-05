@@ -23,13 +23,14 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.io.srg;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.reader.MappingsReader;
+import me.jamiemansfield.lorenz.io.reader.TextMappingsReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +38,7 @@ import java.util.stream.Stream;
  * An implementation of {@link MappingsReader} for the SRG format.
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
 public class SrgReader extends TextMappingsReader {
 
@@ -52,25 +53,8 @@ public class SrgReader extends TextMappingsReader {
 
     /**
      * The mappings processor for the SRG format.
-     *
-     * @since 0.4.0
      */
     public static class Processor extends TextMappingsReader.Processor {
-
-        /**
-         * A regex expression used to remove comments from lines.
-         */
-        private static final Pattern HASH_COMMENT = Pattern.compile("#.+");
-
-        /**
-         * Removes present comments, from the given {@link String} line.
-         *
-         * @param line The line
-         * @return The comment-omitted line
-         */
-        public static String removeComments(final String line) {
-            return HASH_COMMENT.matcher(line).replaceAll("");
-        }
 
         private static final String PACKAGE_MAPPING_KEY = "PK:";
         private static final String CLASS_MAPPING_KEY = "CL:";
@@ -104,7 +88,7 @@ public class SrgReader extends TextMappingsReader {
             for (final String line : Stream.of(rawLine)
                     // Handle comments, by removing them.
                     // This implementation will allow comments to be placed anywhere
-                    .map(SrgReader.Processor::removeComments)
+                    .map(SrgConstants::removeComments)
                     // Trim the line
                     .map(String::trim)
                     // Filter out empty lines

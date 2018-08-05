@@ -23,9 +23,13 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.io.srg.tsrg;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.reader.MappingsReader;
+import me.jamiemansfield.lorenz.io.reader.TextMappingsReader;
+import me.jamiemansfield.lorenz.io.srg.SrgConstants;
+import me.jamiemansfield.lorenz.model.ClassMapping;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,35 +37,35 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * An implementation of {@link MappingsReader} for the CSRG format.
+ * An implementation of {@link MappingsReader} for the TSRG format.
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
-public class CSrgReader extends TextMappingsReader {
+public class TSrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new CSRG mappings reader, for the given {@link InputStream}.
+     * Creates a new TSRG mappings reader, for the given {@link InputStream}.
      *
      * @param stream The input stream
      */
-    public CSrgReader(final InputStream stream) {
-        super(stream, Processor::new);
+    public TSrgReader(final InputStream stream) {
+        super(stream, TSrgReader.Processor::new);
     }
 
     /**
-     * The mappings processor for the CSRG format.
-     *
-     * @since 0.4.0
+     * The mappings processor for the TSRG format.
      */
     public static class Processor extends TextMappingsReader.Processor {
 
         private static final int CLASS_MAPPING_ELEMENT_COUNT = 2;
-        private static final int FIELD_MAPPING_ELEMENT_COUNT = 3;
-        private static final int METHOD_MAPPING_ELEMENT_COUNT = 4;
+        private static final int FIELD_MAPPING_ELEMENT_COUNT = 2;
+        private static final int METHOD_MAPPING_ELEMENT_COUNT = 3;
+
+        private ClassMapping currentClass;
 
         /**
-         * Creates a mappings parser for the CSRG format, with the provided {@link MappingSet}.
+         * Creates a mappings parser for the TSRG format, with the provided {@link MappingSet}.
          *
          * @param mappings The mappings set
          */
@@ -70,7 +74,7 @@ public class CSrgReader extends TextMappingsReader {
         }
 
         /**
-         * Creates a mappings parser for the CSRG format.
+         * Creates a mappings parser for the TSRG format.
          */
         public Processor() {
             this(MappingSet.create());
@@ -78,12 +82,11 @@ public class CSrgReader extends TextMappingsReader {
 
         @Override
         public boolean processLine(final String rawLine) throws IOException {
+            // We use a for-each loop here so that exceptions can be thrown.
             for (final String line : Stream.of(rawLine)
                     // Handle comments, by removing them.
                     // This implementation will allow comments to be placed anywhere
-                    .map(SrgReader.Processor::removeComments)
-                    // Trim the line
-                    .map(String::trim)
+                    .map(SrgConstants::removeComments)
                     // Filter out empty lines
                     .filter(line -> !line.isEmpty())
                     .collect(Collectors.toSet())) {
@@ -95,38 +98,37 @@ public class CSrgReader extends TextMappingsReader {
                 final int len = split.length;
 
                 // Process class mappings
-                if (len == CLASS_MAPPING_ELEMENT_COUNT) {
+                if (!split[0].startsWith("\t") && len == CLASS_MAPPING_ELEMENT_COUNT) {
                     final String obfuscatedName = split[0];
                     final String deobfuscatedName = split[1];
 
                     // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(obfuscatedName)
-                            .setDeobfuscatedName(deobfuscatedName);
+                    this.currentClass = this.mappings.getOrCreateClassMapping(obfuscatedName);
+                    this.currentClass.setDeobfuscatedName(deobfuscatedName);
                 }
-                // Process field mapping
-                else if (len == FIELD_MAPPING_ELEMENT_COUNT) {
-                    final String parentClass = split[0];
-                    final String obfuscatedName = split[1];
-                    final String deobfuscatedName = split[2];
+                else if (split[0].startsWith("\t") && this.currentClass != null) {
+                    final String obfuscatedName = split[0].replace("\t", "");
 
-                    // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(parentClass)
-                            .getOrCreateFieldMapping(obfuscatedName)
-                            .setDeobfuscatedName(deobfuscatedName);
-                }
-                // Process method mapping
-                else if (len == METHOD_MAPPING_ELEMENT_COUNT) {
-                    final String parentClass = split[0];
-                    final String obfuscatedName = split[1];
-                    final String obfuscatedSignature = split[2];
-                    final String deobfuscatedName = split[3];
+                    // Process field mapping
+                    if (len == FIELD_MAPPING_ELEMENT_COUNT) {
+                        final String deobfuscatedName = split[1];
 
-                    // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(parentClass)
-                            .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
-                            .setDeobfuscatedName(deobfuscatedName);
-                }
-                else {
+                        // Get mapping, and set de-obfuscated name
+                        this.currentClass
+                                .getOrCreateFieldMapping(obfuscatedName)
+                                .setDeobfuscatedName(deobfuscatedName);
+                    }
+                    // Process method mapping
+                    else if (len == METHOD_MAPPING_ELEMENT_COUNT) {
+                        final String obfuscatedSignature = split[1];
+                        final String deobfuscatedName = split[2];
+
+                        // Get mapping, and set de-obfuscated name
+                        this.currentClass
+                                .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                                .setDeobfuscatedName(deobfuscatedName);
+                    }
+                } else {
                     throw new IllegalArgumentException("Failed to process line: `" + line + "`!");
                 }
             }

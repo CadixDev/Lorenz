@@ -23,9 +23,9 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.test.io.reader;
+package me.jamiemansfield.lorenz.test.io.srg;
 
-import me.jamiemansfield.lorenz.io.reader.SrgReader;
+import me.jamiemansfield.lorenz.io.srg.SrgReader;
 import org.junit.Test;
 
 import java.io.IOException;

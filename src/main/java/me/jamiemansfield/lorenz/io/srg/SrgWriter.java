@@ -23,10 +23,12 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.writer;
+package me.jamiemansfield.lorenz.io.srg;
 
 import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.writer.MappingsWriter;
+import me.jamiemansfield.lorenz.io.writer.TextMappingsWriter;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
@@ -36,23 +38,23 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * An implementation of {@link MappingsWriter} for the CSRG format.
+ * An implementation of {@link MappingsWriter} for the SRG format.
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
-public class CSrgWriter extends TextMappingsWriter {
+public class SrgWriter extends TextMappingsWriter {
 
     private final List<String> classes = Lists.newArrayList();
     private final List<String> fields = Lists.newArrayList();
     private final List<String> methods = Lists.newArrayList();
 
     /**
-     * Creates a new CSRG mappings writer, from the given {@link OutputStream}.
+     * Creates a new SRG mappings writer, from the given {@link OutputStream}.
      *
      * @param stream The output stream, to write to
      */
-    public CSrgWriter(final OutputStream stream) {
+    public SrgWriter(final OutputStream stream) {
         super(stream);
     }
 
@@ -83,7 +85,7 @@ public class CSrgWriter extends TextMappingsWriter {
     protected void writeClassMapping(final ClassMapping<?> mapping) {
         // Check if the mapping should be written, and if so write it
         if (mapping.hasDeobfuscatedName()) {
-            this.classes.add(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
+            this.classes.add(String.format("CL: %s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
 
         // Write inner class mappings
@@ -112,11 +114,7 @@ public class CSrgWriter extends TextMappingsWriter {
      */
     protected void writeFieldMapping(final FieldMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.fields.add(String.format("%s %s %s",
-                mapping.getParentClass().getFullObfuscatedName(),
-                mapping.getObfuscatedName(),
-                mapping.getDeobfuscatedName()
-        ));
+        this.fields.add(String.format("FD: %s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
     }
 
     /**
@@ -126,11 +124,9 @@ public class CSrgWriter extends TextMappingsWriter {
      */
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.methods.add(String.format("%s %s %s %s",
-                mapping.getParentClass().getFullObfuscatedName(),
-                mapping.getObfuscatedName(), mapping.getObfuscatedDescriptor(),
-                mapping.getDeobfuscatedName()
-        ));
+        this.methods.add(String.format("MD: %s %s %s %s",
+                mapping.getFullObfuscatedName(), mapping.getObfuscatedDescriptor(),
+                mapping.getFullDeobfuscatedName(), mapping.getDeobfuscatedDescriptor()));
     }
 
 }
