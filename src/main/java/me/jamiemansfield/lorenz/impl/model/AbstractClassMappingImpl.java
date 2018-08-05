@@ -50,7 +50,8 @@ import java.util.Optional;
  * @since 0.2.0
  */
 public abstract class AbstractClassMappingImpl<M extends ClassMapping>
-        extends AbstractMappingImpl<M> implements ClassMapping<M> {
+        extends AbstractMappingImpl<M>
+        implements ClassMapping<M> {
 
     private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
     private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
@@ -148,12 +149,12 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!super.equals(obj)) return false;
-        if (!(obj instanceof AbstractClassMappingImpl)) return false;
+        if (!(obj instanceof ClassMapping)) return false;
 
-        final AbstractClassMappingImpl that = (AbstractClassMappingImpl) obj;
-        return Objects.equals(this.fields, that.fields) &&
-                Objects.equals(this.methods, that.methods) &&
-                Objects.equals(this.innerClasses, that.innerClasses);
+        final ClassMapping that = (ClassMapping) obj;
+        return Objects.equals(this.getFieldMappings(), that.getFieldMappings()) &&
+                Objects.equals(this.getMethodMappings(), that.getMethodMappings()) &&
+                Objects.equals(this.getInnerClassMappings(), that.getInnerClassMappings());
     }
 
     @Override

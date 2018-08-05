@@ -37,7 +37,9 @@ import java.util.Objects;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class FieldMappingImpl extends AbstractMemberMappingImpl<FieldMapping, ClassMapping> implements FieldMapping {
+public class FieldMappingImpl
+        extends AbstractMemberMappingImpl<FieldMapping, ClassMapping>
+        implements FieldMapping {
 
     private final FieldSignature signature;
 

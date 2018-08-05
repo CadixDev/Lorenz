@@ -44,7 +44,9 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class MethodMappingImpl extends AbstractMemberMappingImpl<MethodMapping, ClassMapping> implements MethodMapping {
+public class MethodMappingImpl
+        extends AbstractMemberMappingImpl<MethodMapping, ClassMapping>
+        implements MethodMapping {
 
     private final MethodSignature signature;
     private final Map<Integer, MethodParameterMapping> parameters = new HashMap<>();

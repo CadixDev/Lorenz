@@ -34,7 +34,9 @@ import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelClassMapping> implements TopLevelClassMapping {
+public class TopLevelClassMappingImpl
+        extends AbstractClassMappingImpl<TopLevelClassMapping>
+        implements TopLevelClassMapping {
 
     /**
      * Creates a new top-level class mapping, from the given parameters.
@@ -49,7 +51,7 @@ public class TopLevelClassMappingImpl extends AbstractClassMappingImpl<TopLevelC
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || super.equals(obj) && obj instanceof TopLevelClassMappingImpl;
+        return this == obj || super.equals(obj) && obj instanceof TopLevelClassMapping;
     }
 
 }

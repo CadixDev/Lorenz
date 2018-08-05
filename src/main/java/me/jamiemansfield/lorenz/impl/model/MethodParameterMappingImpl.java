@@ -67,4 +67,9 @@ public class MethodParameterMappingImpl
         return this.getDeobfuscatedName();
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj || super.equals(obj) && obj instanceof MethodParameterMapping;
+    }
+
 }
