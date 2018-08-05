@@ -72,6 +72,7 @@ public final class TypeTest {
         assertTrue("Type should be an PrimitiveType!", type instanceof PrimitiveType);
         assertEquals(PrimitiveType.BOOLEAN, type);
         assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.getDeobfuscated(LorenzTests.BASIC_MAPPINGS));
         assertEquals(raw, type.toString());
     }
 
@@ -82,6 +83,7 @@ public final class TypeTest {
         assertTrue("Type should be an VoidType!", type instanceof VoidType);
         assertEquals(VoidType.INSTANCE, type);
         assertEquals(raw, type.getObfuscated());
+        assertEquals(raw, type.getDeobfuscated(LorenzTests.BASIC_MAPPINGS));
         assertEquals(raw, type.toString());
     }
 

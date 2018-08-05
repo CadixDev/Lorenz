@@ -30,6 +30,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.reader.MappingsReader;
 import me.jamiemansfield.lorenz.io.reader.SrgReader;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
@@ -40,16 +41,17 @@ import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/**
- * A variety of unit tests pertaining to {@link SrgReader.Processor}.
- */
+import java.util.concurrent.Callable;
+
 @Ignore
-public abstract class ProcessorTest {
+public abstract class AbstractSrgReaderTest {
 
     private final MappingSet mappings;
 
-    public ProcessorTest(final MappingSet mappings) {
-        this.mappings = mappings;
+    protected AbstractSrgReaderTest(final Callable<MappingsReader> readerFunction) throws Exception {
+        final MappingsReader reader = readerFunction.call();
+        this.mappings = reader.parse();
+        reader.close();
     }
 
     @Test

@@ -27,7 +27,7 @@ package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.SrgReader;
 
-public class SrgReaderTest extends AbstractMappingsReaderTest {
+public class SrgReaderTest extends AbstractSrgReaderTest {
 
     public SrgReaderTest() throws Exception {
         super(() -> new SrgReader(SrgReaderTest.class.getResourceAsStream("/test.srg")));

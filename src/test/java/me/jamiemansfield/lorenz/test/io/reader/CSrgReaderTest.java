@@ -27,7 +27,7 @@ package me.jamiemansfield.lorenz.test.io.reader;
 
 import me.jamiemansfield.lorenz.io.reader.CSrgReader;
 
-public class CSrgReaderTest extends AbstractMappingsReaderTest {
+public class CSrgReaderTest extends AbstractSrgReaderTest {
 
     public CSrgReaderTest() throws Exception {
         super(() -> new CSrgReader(CSrgReaderTest.class.getResourceAsStream("/test.csrg")));
