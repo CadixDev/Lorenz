@@ -23,14 +23,28 @@
  * THE SOFTWARE.
  */
 
+package me.jamiemansfield.lorenz.io;
+
+import java.io.DataInputStream;
+import java.io.InputStream;
+
 /**
- * A collection of pre-built readers for common mapping formats.
+ * An implementation of {@link MappingsReader} designed to aid
+ * with the implementation of binary de-obfuscation mapping
+ * formats.
  *
- * <p>There are readers for the following formats:</p>
- * <ul>
- *     <li>SRG</li>
- *     <li>CSRG</li>
- *     <li>TSRG</li>
- * </ul>
+ * @author Jamie Mansfield
+ * @since 0.4.0
  */
-package me.jamiemansfield.lorenz.io.reader;
+public abstract class BinaryMappingsReader extends MappingsReader<DataInputStream> {
+
+    /**
+     * Creates a new mappings reader, for the given {@link InputStream}.
+     *
+     * @param stream The input stream
+     */
+    protected BinaryMappingsReader(final InputStream stream) {
+        super(new DataInputStream(stream));
+    }
+
+}

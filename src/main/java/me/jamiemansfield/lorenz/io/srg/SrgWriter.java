@@ -27,8 +27,8 @@ package me.jamiemansfield.lorenz.io.srg;
 
 import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.writer.MappingsWriter;
-import me.jamiemansfield.lorenz.io.writer.TextMappingsWriter;
+import me.jamiemansfield.lorenz.io.MappingsWriter;
+import me.jamiemansfield.lorenz.io.TextMappingsWriter;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.Mapping;

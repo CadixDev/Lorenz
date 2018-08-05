@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.writer;
+package me.jamiemansfield.lorenz.io;
 
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.Mapping;
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * @see BinaryMappingsWriter
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.4.0
  */
 public abstract class MappingsWriter<S extends OutputStream> implements Closeable {
 

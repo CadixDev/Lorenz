@@ -26,8 +26,8 @@
 package me.jamiemansfield.lorenz.io.srg;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.reader.MappingsReader;
-import me.jamiemansfield.lorenz.io.reader.TextMappingsReader;
+import me.jamiemansfield.lorenz.io.MappingsReader;
+import me.jamiemansfield.lorenz.io.TextMappingsReader;
 
 import java.io.IOException;
 import java.io.InputStream;

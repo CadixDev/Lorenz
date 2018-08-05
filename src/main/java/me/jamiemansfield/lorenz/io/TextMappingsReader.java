@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.io;
 
 import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;

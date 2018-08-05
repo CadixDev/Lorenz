@@ -23,28 +23,44 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.io;
 
-import java.io.DataInputStream;
-import java.io.InputStream;
+import me.jamiemansfield.lorenz.io.srg.csrg.CSrgWriter;
+import me.jamiemansfield.lorenz.io.srg.SrgWriter;
+import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgWriter;
+
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /**
- * An implementation of {@link MappingsReader} designed to aid
- * with the implementation of binary de-obfuscation mapping
- * formats.
+ * An implementation of {@link MappingsWriter} designed to aid
+ * with the implementation of mapping writers for text-based
+ * mapping formats.
+ *
+ * @see SrgWriter
+ * @see CSrgWriter
+ * @see TSrgWriter
  *
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class BinaryMappingsReader extends MappingsReader<DataInputStream> {
+public abstract class TextMappingsWriter extends MappingsWriter {
+
+    protected final PrintWriter writer;
 
     /**
-     * Creates a new mappings reader, for the given {@link InputStream}.
+     * Creates a new mappings writer, from the given {@link OutputStream}.
      *
-     * @param stream The input stream
+     * @param stream The output stream, to write to
      */
-    protected BinaryMappingsReader(final InputStream stream) {
-        super(new DataInputStream(stream));
+    protected TextMappingsWriter(final OutputStream stream) {
+        super(stream);
+        this.writer = new PrintWriter(stream);
+    }
+
+    @Override
+    public void close() {
+        this.writer.close();
     }
 
 }

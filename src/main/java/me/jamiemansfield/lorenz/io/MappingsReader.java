@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package me.jamiemansfield.lorenz.io.reader;
+package me.jamiemansfield.lorenz.io;
 
 import me.jamiemansfield.lorenz.MappingSet;
 
@@ -41,7 +41,7 @@ import java.io.InputStream;
  * @see BinaryMappingsReader
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.4.0
  */
 public abstract class MappingsReader<S extends InputStream> implements Closeable {
 
@@ -61,7 +61,6 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
      * a new {@link MappingSet}.
      *
      * @return The mapping set
-     * @since 0.4.0
      */
     public MappingSet read() {
         return this.read(MappingSet.create());
@@ -73,7 +72,6 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
      *
      * @param mappings The mapping set
      * @return The mapping set, to allow for chaining
-     * @since 0.4.0
      */
     public abstract MappingSet read(final MappingSet mappings);
 

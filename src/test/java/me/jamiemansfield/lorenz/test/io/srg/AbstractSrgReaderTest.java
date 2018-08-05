@@ -30,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.io.reader.MappingsReader;
+import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;

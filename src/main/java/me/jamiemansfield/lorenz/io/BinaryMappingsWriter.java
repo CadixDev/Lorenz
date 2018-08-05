@@ -23,14 +23,28 @@
  * THE SOFTWARE.
  */
 
+package me.jamiemansfield.lorenz.io;
+
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+
 /**
- * A collection of pre-built writers for common mapping formats.
+ * An implementation of {@link MappingsWriter} designed to aid
+ * with the implementation of binary de-obfuscation mapping
+ * formats.
  *
- * <p>There are writers for the following formats:</p>
- * <ul>
- *     <li>SRG</li>
- *     <li>CSRG</li>
- *     <li>TSRG</li>
- * </ul>
+ * @author Jamie Mansfield
+ * @since 0.4.0
  */
-package me.jamiemansfield.lorenz.io.writer;
+public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStream> {
+
+    /**
+     * Creates a new mappings writer, from the given {@link OutputStream}.
+     *
+     * @param stream The output stream, to write to
+     */
+    protected BinaryMappingsWriter(final OutputStream stream) {
+        super(new DataOutputStream(stream));
+    }
+
+}
