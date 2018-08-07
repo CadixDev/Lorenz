@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import me.jamiemansfield.lorenz.model.jar.Type;
 import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
@@ -139,6 +140,19 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
     default FieldMapping getOrCreateFieldMapping(final String obfuscatedName) {
         return this.getFieldMapping(obfuscatedName)
                 .orElseGet(() -> this.createFieldMapping(obfuscatedName));
+    }
+
+    /**
+     * Gets, or creates should it not exist, a field mapping of the
+     * given signature.
+     *
+     * @param obfuscatedName The obfuscated name of the field mapping
+     * @param obfuscatedDescriptor The obfuscated descriptor of the field mapping
+     * @return The field mapping
+     * @since 0.4.0
+     */
+    default FieldMapping getOrCreateFieldMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
+        return this.getOrCreateFieldMapping(new FieldSignature(obfuscatedName, Type.of(obfuscatedDescriptor)));
     }
 
     /**
