@@ -25,9 +25,9 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import me.jamiemansfield.bombe.type.MethodDescriptor;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
-import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -62,10 +62,10 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
      *
      * @return The obfuscated descriptor
      * @see MethodSignature#getDescriptor()
-     * @see MethodDescriptor#getObfuscated()
+     * @see MethodDescriptor#toString()
      */
     default String getObfuscatedDescriptor() {
-        return this.getDescriptor().getObfuscated();
+        return this.getDescriptor().toString();
     }
 
     /**
@@ -73,10 +73,10 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
      *
      * @return The de-obfuscated descriptor
      * @see MethodSignature#getDescriptor()
-     * @see MethodDescriptor#getDeobfuscated(MappingSet)
+     * @see MappingSet#deobfuscate(MethodDescriptor)
      */
     default String getDeobfuscatedDescriptor() {
-        return this.getDescriptor().getDeobfuscated(this.getMappings());
+        return this.getMappings().deobfuscate(this.getDescriptor());
     }
 
     /**

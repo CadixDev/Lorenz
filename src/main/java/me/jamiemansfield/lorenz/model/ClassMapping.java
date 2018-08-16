@@ -25,9 +25,9 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.model.jar.Type;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
+import me.jamiemansfield.bombe.type.FieldType;
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The field mapping, wrapped in an {@link Optional}
      */
     default Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
-        return this.getFieldMapping(new FieldSignature(obfuscatedName, null));
+        return this.getFieldMapping(new FieldSignature(obfuscatedName, (FieldType) null));
     }
 
     /**
@@ -91,7 +91,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The field mapping
      */
     default FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.createFieldMapping(new FieldSignature(obfuscatedName, null), deobfuscatedName);
+        return this.createFieldMapping(new FieldSignature(obfuscatedName, (FieldType) null), deobfuscatedName);
     }
 
     /**
@@ -152,7 +152,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @since 0.4.0
      */
     default FieldMapping getOrCreateFieldMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.getOrCreateFieldMapping(new FieldSignature(obfuscatedName, Type.of(obfuscatedDescriptor)));
+        return this.getOrCreateFieldMapping(new FieldSignature(obfuscatedName, FieldType.of(obfuscatedDescriptor)));
     }
 
     /**
@@ -177,7 +177,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      *         {@code false} otherwise
      */
     default boolean hasFieldMapping(final String obfuscatedName) {
-        return this.hasFieldMapping(new FieldSignature(obfuscatedName, null));
+        return this.hasFieldMapping(new FieldSignature(obfuscatedName, (FieldType) null));
     }
 
     /**

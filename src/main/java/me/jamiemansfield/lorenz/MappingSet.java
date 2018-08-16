@@ -25,9 +25,15 @@
 
 package me.jamiemansfield.lorenz;
 
+import com.google.common.base.Strings;
+import me.jamiemansfield.bombe.type.ArrayType;
+import me.jamiemansfield.bombe.type.MethodDescriptor;
+import me.jamiemansfield.bombe.type.ObjectType;
+import me.jamiemansfield.bombe.type.Type;
 import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
+import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
@@ -201,6 +207,42 @@ public interface MappingSet {
     default MappingSet removeFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
         this.getFieldTypeProvider().remove(fieldTypeProvider);
         return this;
+    }
+
+    /**
+     * Gets the de-obfuscated raw view of the type.
+     *
+     * @param type The type to de-obfuscate
+     * @return The de-obfuscated raw view
+     * @since 0.4.0
+     */
+    default String deobfuscate(final Type type) {
+        if (type instanceof ArrayType) {
+            final ArrayType arr = (ArrayType) type;
+            return Strings.repeat("[", arr.getDimCount()) + this.deobfuscate(arr.getComponent());
+        }
+        else if (type instanceof ObjectType) {
+            final ObjectType obj = (ObjectType) type;
+            final Optional<ClassMapping<?>> typeMapping = this.getClassMapping(obj.getClassName());
+            return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(obj.getClassName()) + ";";
+        }
+        return type.toString();
+    }
+
+    /**
+     * Gets the de-obfuscated descriptor of the method.
+     *
+     * @param descriptor The descriptor to de-obfuscate
+     * @return The de-obfuscated descriptor
+     * @since 0.4.0
+     */
+    default String deobfuscate(final MethodDescriptor descriptor) {
+        final StringBuilder typeBuilder = new StringBuilder();
+        typeBuilder.append("(");
+        descriptor.getParamTypes().forEach(type -> typeBuilder.append(this.deobfuscate(type)));
+        typeBuilder.append(")");
+        typeBuilder.append(this.deobfuscate(descriptor.getReturnType()));
+        return typeBuilder.toString();
     }
 
 }

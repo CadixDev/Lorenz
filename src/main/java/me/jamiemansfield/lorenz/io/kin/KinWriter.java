@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.io.kin;
 import static me.jamiemansfield.lorenz.io.kin.KinConstants.MAGIC;
 import static me.jamiemansfield.lorenz.io.kin.KinConstants.VERSION_ONE;
 
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.BinaryMappingsWriter;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
@@ -36,7 +37,6 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.jar.Type;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -78,9 +78,9 @@ public class KinWriter extends BinaryMappingsWriter {
         this.stream.writeInt(mapping.getFieldMappings().size());
         for (final FieldMapping field : mapping.getFieldMappings()) {
             this.stream.writeUTF(field.getObfuscatedName());
-            final Optional<Type> type = field.getType();
+            final Optional<FieldType> type = field.getType();
             this.stream.writeBoolean(type.isPresent());
-            if (type.isPresent()) this.stream.writeUTF(type.get().getObfuscated());
+            if (type.isPresent()) this.stream.writeUTF(mapping.getMappings().deobfuscate(type.get()));
             this.stream.writeUTF(field.getDeobfuscatedName());
         }
 

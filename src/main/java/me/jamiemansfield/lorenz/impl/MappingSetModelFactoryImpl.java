@@ -25,6 +25,8 @@
 
 package me.jamiemansfield.lorenz.impl;
 
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.MappingSetModelFactory;
 import me.jamiemansfield.lorenz.impl.model.FieldMappingImpl;
@@ -38,8 +40,6 @@ import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 /**
  * A basic implementation of {@link MappingSetModelFactory}.

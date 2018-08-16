@@ -29,6 +29,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import me.jamiemansfield.bombe.type.MethodDescriptor;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
@@ -36,8 +38,6 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.jar.MethodDescriptor;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 import org.junit.Ignore;
 import org.junit.Test;
 

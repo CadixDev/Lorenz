@@ -25,14 +25,14 @@
 
 package me.jamiemansfield.lorenz;
 
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 /**
  * A factory intended to facilitate the creating of the many models in Lorenz.

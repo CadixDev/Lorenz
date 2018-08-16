@@ -26,10 +26,10 @@
 package me.jamiemansfield.lorenz.impl.model;
 
 import com.google.common.base.MoreObjects;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
-import me.jamiemansfield.lorenz.model.jar.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Collections;

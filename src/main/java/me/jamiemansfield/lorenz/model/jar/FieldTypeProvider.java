@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.model.jar;
 
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 
 import java.util.Optional;
@@ -45,13 +46,13 @@ import java.util.Optional;
 public interface FieldTypeProvider {
 
     /**
-     * Provides a {@link Type} for the given {@link FieldMapping},
+     * Provides a {@link FieldType} for the given {@link FieldMapping},
      * if possible.
      *
      * @param mapping The field mapping
      * @return The type for the field, wrapped in an {@link Optional}
      * @since 0.4.0
      */
-    Optional<Type> provide(final FieldMapping mapping);
+    Optional<FieldType> provide(final FieldMapping mapping);
 
 }

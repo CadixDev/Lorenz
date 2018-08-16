@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.model.jar;
 
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 
 import java.util.ArrayList;
@@ -65,9 +66,9 @@ public class CascadingFieldTypeProvider implements FieldTypeProvider {
     }
 
     @Override
-    public Optional<Type> provide(final FieldMapping mapping) {
+    public Optional<FieldType> provide(final FieldMapping mapping) {
         for (final FieldTypeProvider provider : this.providers) {
-            final Optional<Type> type = provider.provide(mapping);
+            final Optional<FieldType> type = provider.provide(mapping);
             if (type.isPresent()) return type;
         }
         return Optional.empty();

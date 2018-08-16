@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz.io.jam;
 
 import com.google.common.collect.Lists;
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
 import me.jamiemansfield.lorenz.io.TextMappingsWriter;
@@ -34,7 +35,6 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
-import me.jamiemansfield.lorenz.model.jar.Type;
 
 import java.io.OutputStream;
 import java.util.List;
@@ -112,12 +112,12 @@ public class JamWriter extends TextMappingsWriter {
      */
     protected void writeFieldMapping(final FieldMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        final Optional<Type> fieldType = mapping.getType();
+        final Optional<FieldType> fieldType = mapping.getType();
         fieldType.ifPresent(type -> {
             this.fields.add(String.format("FD %s %s %s %s",
                     mapping.getParent().getFullObfuscatedName(),
                     mapping.getObfuscatedName(),
-                    type.getObfuscated(),
+                    mapping.getMappings().deobfuscate(type),
                     mapping.getDeobfuscatedName()
             ));
         });

@@ -25,8 +25,8 @@
 
 package me.jamiemansfield.lorenz.model;
 
-import me.jamiemansfield.lorenz.model.jar.Type;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
+import me.jamiemansfield.bombe.type.FieldType;
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
 
 import java.util.Optional;
 
@@ -52,12 +52,12 @@ public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> 
     }
 
     /**
-     * Gets the {@link Type} of the field, if at all available.
+     * Gets the {@link FieldType} of the field, if at all available.
      *
-     * @return The {@link Type}, wrapped in an {@link Optional}
+     * @return The type, wrapped in an {@link Optional}
      * @since 0.4.0
      */
-    default Optional<Type> getType() {
+    default Optional<FieldType> getType() {
         // First check the signature
         if (this.getSignature().getType().isPresent()) return this.getSignature().getType();
         // Check the FieldTypeProvider

@@ -25,9 +25,9 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 
 import java.util.Objects;
 

@@ -29,13 +29,13 @@ import static me.jamiemansfield.lorenz.io.kin.KinConstants.MAGIC;
 import static me.jamiemansfield.lorenz.io.kin.KinConstants.VERSION_ONE;
 import static me.jamiemansfield.lorenz.io.kin.KinConstants.toHexString;
 
+import me.jamiemansfield.bombe.type.FieldType;
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.BinaryMappingsReader;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.FieldMapping;
-import me.jamiemansfield.lorenz.model.jar.Type;
-import me.jamiemansfield.lorenz.model.jar.signature.FieldSignature;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,7 +95,7 @@ public class KinReader extends BinaryMappingsReader {
             // has type info
             // todo: clean this up (introduce more convenience methods to ClassMapping)
             if (this.stream.readBoolean()) {
-                field = mapping.getOrCreateFieldMapping(new FieldSignature(obf, Type.of(this.stream.readUTF())));
+                field = mapping.getOrCreateFieldMapping(new FieldSignature(obf, FieldType.of(this.stream.readUTF())));
             }
             else {
                 field = mapping.getOrCreateFieldMapping(obf);

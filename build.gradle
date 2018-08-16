@@ -33,6 +33,7 @@ repositories {
 dependencies {
     // Common
     compile 'com.google.guava:guava:22.0'
+    compile 'me.jamiemansfield:bombe-core:0.1.0'
 
     // Testing
     testCompile 'junit:junit:4.12'
