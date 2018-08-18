@@ -80,7 +80,7 @@ public class TSrgReader extends TextMappingsReader {
 
         @Override
         public boolean processLine(final String rawLine) throws IOException {
-            final String line = SrgConstants.removeComments(rawLine).trim();
+            final String line = SrgConstants.removeComments(rawLine);
             if (line.isEmpty()) return true;
 
             if (line.length() < 4) {

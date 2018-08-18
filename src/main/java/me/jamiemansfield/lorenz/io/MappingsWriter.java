@@ -98,6 +98,7 @@ public abstract class MappingsWriter<S extends OutputStream> implements Closeabl
      * Writes the given mappings to the previously given {@link PrintWriter}.
      *
      * @param mappings The mapping set
+     * @throws IOException Should an IO issue occur
      */
     public abstract void write(final MappingSet mappings) throws IOException;
 
