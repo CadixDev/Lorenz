@@ -133,6 +133,19 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
      */
     boolean hasParameterMapping(final int index);
 
+    /**
+     * Establishes whether the method mapping has a de-obfuscation mapping, or
+     * has some mappings within it.
+     *
+     * @return {@code true} if the method mappings has mappings;
+     *         {@code false} otherwise
+     * @since 0.4.0
+     */
+    default boolean hasMappings() {
+        return this.hasDeobfuscatedName() ||
+                this.getParameterMappings().stream().anyMatch(Mapping::hasDeobfuscatedName);
+    }
+
     @Override
     default String getFullObfuscatedName() {
         return String.format("%s/%s", this.getParent().getFullObfuscatedName(), this.getObfuscatedName());

@@ -100,7 +100,7 @@ public class JamWriter extends TextMappingsWriter {
 
         // Write method mappings
         mapping.getMethodMappings().stream()
-                .filter(Mapping::hasDeobfuscatedName)
+                .filter(MethodMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeMethodMapping);
     }
@@ -131,12 +131,14 @@ public class JamWriter extends TextMappingsWriter {
      */
     protected void writeMethodMapping(final MethodMapping mapping) {
         // The SHOULD_WRITE test should have already have been performed, so we're good
-        this.methods.add(String.format("MD %s %s %s %s",
-                mapping.getParent().getFullObfuscatedName(),
-                mapping.getObfuscatedName(),
-                mapping.getObfuscatedDescriptor(),
-                mapping.getDeobfuscatedName()
-        ));
+        if (mapping.hasDeobfuscatedName()) {
+            this.methods.add(String.format("MD %s %s %s %s",
+                    mapping.getParent().getFullObfuscatedName(),
+                    mapping.getObfuscatedName(),
+                    mapping.getObfuscatedDescriptor(),
+                    mapping.getDeobfuscatedName()
+            ));
+        }
         for (final MethodParameterMapping parameterMapping : mapping.getParameterMappings()) {
             this.methods.add(String.format("MP %s %s %s %s %s",
                     parameterMapping.getParent().getParent().getFullObfuscatedName(),

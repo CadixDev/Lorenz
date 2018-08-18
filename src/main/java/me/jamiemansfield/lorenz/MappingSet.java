@@ -160,7 +160,7 @@ public interface MappingSet {
      * @param obfuscatedName The obfuscated name of the class mapping
      * @return The class mapping
      */
-    default ClassMapping getOrCreateClassMapping(final String obfuscatedName) {
+    default ClassMapping<?> getOrCreateClassMapping(final String obfuscatedName) {
         if (!obfuscatedName.contains("$")) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
