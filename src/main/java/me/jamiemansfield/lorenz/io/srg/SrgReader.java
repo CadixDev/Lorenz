@@ -31,8 +31,6 @@ import me.jamiemansfield.lorenz.io.TextMappingsReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An implementation of {@link MappingsReader} for the SRG format.
@@ -84,69 +82,63 @@ public class SrgReader extends TextMappingsReader {
 
         @Override
         public boolean processLine(final String rawLine) throws IOException {
-            // We use a for-each loop here so that exceptions can be thrown.
-            for (final String line : Stream.of(rawLine)
-                    // Handle comments, by removing them.
-                    // This implementation will allow comments to be placed anywhere
-                    .map(SrgConstants::removeComments)
-                    // Trim the line
-                    .map(String::trim)
-                    // Filter out empty lines
-                    .filter(line -> !line.isEmpty())
-                    .collect(Collectors.toSet())) {
-                if (line.length() < 4) {
-                    throw new IllegalArgumentException("Faulty SRG mapping encountered: `" + line + "`!");
-                }
-                // Split up the line, for further processing
-                final String[] split = SPACE.split(line);
-                final int len = split.length;
+            final String line = SrgConstants.removeComments(rawLine).trim();
+            if (line.isEmpty()) return true;
 
-                // Establish the type of mapping
-                final String key = split[0];
-                if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_COUNT) {
-                    final String obfuscatedName = split[1];
-                    final String deobfuscatedName = split[2];
-
-                    // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(obfuscatedName)
-                            .setDeobfuscatedName(deobfuscatedName);
-                }
-                else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
-                    final String fullObfuscatedName = split[1];
-                    final String fullDeobfuscatedName = split[2];
-                    final int lastIndex = fullObfuscatedName.lastIndexOf('/');
-                    final String owningClass = fullObfuscatedName.substring(0, lastIndex);
-                    final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
-                    final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
-
-                    // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(owningClass)
-                            .getOrCreateFieldMapping(obfuscatedName)
-                            .setDeobfuscatedName(deobfuscatedName);
-                }
-                else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_COUNT) {
-                    final String fullObfuscatedName = split[1];
-                    final String obfuscatedSignature = split[2];
-                    final String fullDeobfuscatedName = split[3];
-                    final String deobfuscatedSignature = split[4];
-                    final int lastIndex = fullObfuscatedName.lastIndexOf('/');
-                    final String owningClass = fullObfuscatedName.substring(0, lastIndex);
-                    final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
-                    final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
-
-                    // Get mapping, and set de-obfuscated name
-                    this.mappings.getOrCreateClassMapping(owningClass)
-                            .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
-                            .setDeobfuscatedName(deobfuscatedName);
-                }
-                else if (key.equals(PACKAGE_MAPPING_KEY) && len == PACKAGE_MAPPING_ELEMENT_COUNT) {
-                    // Lorenz doesn't currently support package mappings, though they are an SRG feature.
-                    // For now, Lorenz will just silently ignore those mappings.
-                }
-                else {
-                    throw new IllegalArgumentException("Found unrecognised key: `" + key + "`!");
-                }
+            if (line.length() < 4) {
+                throw new IllegalArgumentException("Faulty SRG mapping encountered: `" + line + "`!");
             }
+
+            // Split up the line, for further processing
+            final String[] split = SPACE.split(line);
+            final int len = split.length;
+
+            // Establish the type of mapping
+            final String key = split[0];
+            if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_COUNT) {
+                final String obfuscatedName = split[1];
+                final String deobfuscatedName = split[2];
+
+                // Get mapping, and set de-obfuscated name
+                this.mappings.getOrCreateClassMapping(obfuscatedName)
+                        .setDeobfuscatedName(deobfuscatedName);
+            }
+            else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
+                final String fullObfuscatedName = split[1];
+                final String fullDeobfuscatedName = split[2];
+                final int lastIndex = fullObfuscatedName.lastIndexOf('/');
+                final String owningClass = fullObfuscatedName.substring(0, lastIndex);
+                final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
+                final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
+
+                // Get mapping, and set de-obfuscated name
+                this.mappings.getOrCreateClassMapping(owningClass)
+                        .getOrCreateFieldMapping(obfuscatedName)
+                        .setDeobfuscatedName(deobfuscatedName);
+            }
+            else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_COUNT) {
+                final String fullObfuscatedName = split[1];
+                final String obfuscatedSignature = split[2];
+                final String fullDeobfuscatedName = split[3];
+                final String deobfuscatedSignature = split[4];
+                final int lastIndex = fullObfuscatedName.lastIndexOf('/');
+                final String owningClass = fullObfuscatedName.substring(0, lastIndex);
+                final String obfuscatedName = fullObfuscatedName.substring(lastIndex + 1);
+                final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
+
+                // Get mapping, and set de-obfuscated name
+                this.mappings.getOrCreateClassMapping(owningClass)
+                        .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                        .setDeobfuscatedName(deobfuscatedName);
+            }
+            else if (key.equals(PACKAGE_MAPPING_KEY) && len == PACKAGE_MAPPING_ELEMENT_COUNT) {
+                // Lorenz doesn't currently support package mappings, though they are an SRG feature.
+                // For now, Lorenz will just silently ignore those mappings.
+            }
+            else {
+                throw new IllegalArgumentException("Found unrecognised key: `" + key + "`!");
+            }
+
             return true;
         }
 

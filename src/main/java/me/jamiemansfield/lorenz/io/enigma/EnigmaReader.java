@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * An implementation of {@link MappingsReader} for the Enigma format.
@@ -138,56 +137,49 @@ public class EnigmaReader extends TextMappingsReader {
                 }
             }
 
-            for (final String line : Stream.of(rawLine)
-                    // Handle comments, by removing them.
-                    // This implementation will allow comments to be placed anywhere
-                    .map(EnigmaConstants::removeComments)
-                    // Trim the line
-                    .map(String::trim)
-                    // Filter out empty lines
-                    .filter(line -> !line.isEmpty())
-                    .collect(Collectors.toSet())) {
-                // Split up the line, for further processing
-                final String[] split = SPACE.split(line);
-                final int len = split.length;
+            final String line = EnigmaConstants.removeComments(rawLine).trim();
+            if (line.isEmpty()) return true;
 
-                // Establish the type of mapping
-                final String key = split[0];
-                if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
-                    final String obfName = handleNonePrefix(split[1]);
-                    this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
-                }
-                else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
-                    final String obfName = handleNonePrefix(split[1]);
-                    final String deobfName = handleNonePrefix(split[2]);
-                    this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
-                            .setDeobfuscatedName(deobfName));
-                }
-                else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
-                    final String obfName = split[1];
-                    final String deobfName = split[2];
-                    final String type = handleNonePrefix(FieldType.of(split[3])).toString();
-                    this.stack.peek().getOrCreateFieldMapping(obfName, type)
-                            .setDeobfuscatedName(deobfName);
-                }
-                else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
-                    final String obfName = split[1];
-                    final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[2])).toString();
-                    this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor);
-                }
-                else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
-                    final String obfName = split[1];
-                    final String deobfName = split[2];
-                    final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[3])).toString();
-                    this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor)
-                            .setDeobfuscatedName(deobfName);
-                }
-                else if (key.equals(PARAM_MAPPING_KEY) && len == PARAM_MAPPING_ELEMENT_COUNT) {
-                    final int index = Integer.parseInt(split[1]);
-                    final String deobfName = split[2];
-                    this.currentMethod.getOrCreateParameterMapping(index)
-                            .setDeobfuscatedName(deobfName);
-                }
+            // Split up the line, for further processing
+            final String[] split = SPACE.split(line);
+            final int len = split.length;
+
+            // Establish the type of mapping
+            final String key = split[0];
+            if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
+                final String obfName = handleNonePrefix(split[1]);
+                this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
+            }
+            else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
+                final String obfName = handleNonePrefix(split[1]);
+                final String deobfName = handleNonePrefix(split[2]);
+                this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
+                        .setDeobfuscatedName(deobfName));
+            }
+            else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
+                final String obfName = split[1];
+                final String deobfName = split[2];
+                final String type = handleNonePrefix(FieldType.of(split[3])).toString();
+                this.stack.peek().getOrCreateFieldMapping(obfName, type)
+                        .setDeobfuscatedName(deobfName);
+            }
+            else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
+                final String obfName = split[1];
+                final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[2])).toString();
+                this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor);
+            }
+            else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
+                final String obfName = split[1];
+                final String deobfName = split[2];
+                final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[3])).toString();
+                this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor)
+                        .setDeobfuscatedName(deobfName);
+            }
+            else if (key.equals(PARAM_MAPPING_KEY) && len == PARAM_MAPPING_ELEMENT_COUNT) {
+                final int index = Integer.parseInt(split[1]);
+                final String deobfName = split[2];
+                this.currentMethod.getOrCreateParameterMapping(index)
+                        .setDeobfuscatedName(deobfName);
             }
 
             this.lastIndentLevel = indentLevel;
