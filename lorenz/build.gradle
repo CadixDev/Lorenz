@@ -1,0 +1,13 @@
+dependencies {
+    compile 'com.google.guava:guava:22.0'
+    compile 'me.jamiemansfield:bombe-core:0.1.0'
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.links(
+            'https://google.github.io/guava/releases/22.0/api/docs/',
+            'https://docs.oracle.com/javase/8/docs/api/'
+    )
+}
