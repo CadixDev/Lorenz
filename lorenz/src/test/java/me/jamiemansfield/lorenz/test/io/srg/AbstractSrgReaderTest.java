@@ -25,9 +25,9 @@
 
 package me.jamiemansfield.lorenz.test.io.srg;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
@@ -38,12 +38,12 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.Callable;
 
-@Ignore
+@Disabled
 public abstract class AbstractSrgReaderTest {
 
     private final MappingSet mappings;

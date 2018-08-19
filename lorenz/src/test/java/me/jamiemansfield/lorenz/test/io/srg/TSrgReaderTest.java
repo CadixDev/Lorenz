@@ -25,8 +25,10 @@
 
 package me.jamiemansfield.lorenz.test.io.srg;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgReader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -36,20 +38,24 @@ public class TSrgReaderTest extends AbstractSrgReaderTest {
         super(() -> new TSrgReader(TSrgReaderTest.class.getResourceAsStream("/test.tsrg")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void tooLongInput() throws IOException {
         // This test should set off the first case where IllegalArgumentException
         // is thrown
         final TSrgReader.Processor parser = new TSrgReader.Processor();
-        parser.processLine("this is a faulty mapping because it is too long");
+        assertThrows(IllegalArgumentException.class, () -> {
+            parser.processLine("this is a faulty mapping because it is too long");
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidInput() throws IOException {
         // This test should set off the first case where IllegalArgumentException
         // is thrown
         final TSrgReader.Processor parser = new TSrgReader.Processor();
-        parser.processLine("\t Hi");
+        assertThrows(IllegalArgumentException.class, () -> {
+            parser.processLine("\t Hi");
+        });
     }
 
 }

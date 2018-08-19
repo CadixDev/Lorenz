@@ -25,9 +25,9 @@
 
 package me.jamiemansfield.lorenz.test.io.enigma;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
@@ -41,7 +41,7 @@ import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 

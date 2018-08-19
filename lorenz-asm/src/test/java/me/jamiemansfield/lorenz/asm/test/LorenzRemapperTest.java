@@ -25,7 +25,7 @@
 
 package me.jamiemansfield.lorenz.asm.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import me.jamiemansfield.bombe.analysis.CascadingInheritanceProvider;
 import me.jamiemansfield.bombe.analysis.InheritanceProvider;
@@ -33,7 +33,7 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.asm.LorenzRemapper;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.tree.ClassNode;

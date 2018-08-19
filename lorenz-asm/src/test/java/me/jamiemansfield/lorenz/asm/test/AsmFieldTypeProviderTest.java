@@ -25,8 +25,8 @@
 
 package me.jamiemansfield.lorenz.asm.test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import me.jamiemansfield.bombe.asm.jar.SourceSet;
 import me.jamiemansfield.bombe.type.FieldType;
@@ -34,7 +34,7 @@ import me.jamiemansfield.bombe.type.ObjectType;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.asm.AsmFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.FieldMapping;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 

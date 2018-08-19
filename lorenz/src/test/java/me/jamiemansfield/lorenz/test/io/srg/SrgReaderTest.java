@@ -25,8 +25,10 @@
 
 package me.jamiemansfield.lorenz.test.io.srg;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import me.jamiemansfield.lorenz.io.srg.SrgReader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -44,20 +46,24 @@ public class SrgReaderTest extends AbstractSrgReaderTest {
         parser.processLine("PK: abc uk/jamierocks/Example");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void tooLongInput() throws IOException {
         // This test should set off the first case where IllegalArgumentException
         // is thrown
         final SrgReader.Processor parser = new SrgReader.Processor();
-        parser.processLine("this is a faulty mapping because it is too long");
+        assertThrows(IllegalArgumentException.class, () -> {
+            parser.processLine("this is a faulty mapping because it is too long");
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidInput() throws IOException {
         // This test should set off the first case where IllegalArgumentException
         // is thrown
         final SrgReader.Processor parser = new SrgReader.Processor();
-        parser.processLine("PK: TooShort");
+        assertThrows(IllegalArgumentException.class, () -> {
+            parser.processLine("PK: TooShort");
+        });
     }
 
 }
