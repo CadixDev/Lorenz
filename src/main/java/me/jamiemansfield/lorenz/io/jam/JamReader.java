@@ -54,7 +54,7 @@ public class JamReader extends TextMappingsReader {
         private static final int CLASS_MAPPING_ELEMENT_COUNT = 3;
         private static final int FIELD_MAPPING_ELEMENT_COUNT = 5;
         private static final int METHOD_MAPPING_ELEMENT_COUNT = 5;
-        private static final int PARAM_MAPPING_ELEMENT_COUNT = 7;
+        private static final int PARAM_MAPPING_ELEMENT_COUNT = 6;
 
         public Processor(final MappingSet mappings) {
             super(mappings);

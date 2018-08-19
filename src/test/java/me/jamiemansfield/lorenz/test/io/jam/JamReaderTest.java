@@ -29,11 +29,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import me.jamiemansfield.bombe.type.MethodDescriptor;
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
+import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.jam.JamConstants;
 import me.jamiemansfield.lorenz.io.jam.JamReader;
+import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
+import me.jamiemansfield.lorenz.model.MethodMapping;
+import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import org.junit.Test;
 
@@ -100,6 +106,90 @@ public class JamReaderTest {
         assertEquals("Inner", innerClassMapping.getDeobfuscatedName());
         assertEquals("ght$ds$bg", innerClassMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test$Example$Inner", innerClassMapping.getFullDeobfuscatedName());
+    }
+
+    @Test
+    public void field() {
+        // 1. Check the /parent/ class has been added to the mapping set
+        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+
+        // 2. Get the class mapping, and check the field mapping has been added to it
+        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final FieldSignature rftSignature = new FieldSignature("rft", "Ljava/util/logging/Logger;");
+        assertTrue(parentMapping.hasFieldMapping(rftSignature));
+
+        // 3. Get the field mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
+        final FieldMapping fieldMapping = parentMapping.getOrCreateFieldMapping(rftSignature);
+        assertEquals("rft", fieldMapping.getObfuscatedName());
+        assertEquals("log", fieldMapping.getDeobfuscatedName());
+        assertEquals("ght/rft", fieldMapping.getFullObfuscatedName());
+        assertEquals("uk/jamierocks/Test/log", fieldMapping.getFullDeobfuscatedName());
+
+        // 4. Check the /inner/ class mapping has been added to the class mapping
+        assertTrue(parentMapping.hasInnerClassMapping("ds"));
+
+        // 5. Get the inner class mapping, and check the field mapping has been added to it
+        final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
+        final FieldSignature juhSignature = new FieldSignature("juh", "Luk/jamierocks/Server;");
+        assertTrue(classMapping.hasFieldMapping(juhSignature));
+
+        // 6. Get the field mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
+        final FieldMapping innerFieldMapping = classMapping.getOrCreateFieldMapping(juhSignature);
+        assertEquals("juh", innerFieldMapping.getObfuscatedName());
+        assertEquals("server", innerFieldMapping.getDeobfuscatedName());
+        assertEquals("ght$ds/juh", innerFieldMapping.getFullObfuscatedName());
+        assertEquals("uk/jamierocks/Test$Example/server", innerFieldMapping.getFullDeobfuscatedName());
+    }
+
+    @Test
+    public void method() {
+        // 1. Check the /parent/ class has been added to the mapping set
+        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+
+        // 2. Get the class mapping, and check the method mapping has been added to it
+        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final MethodDescriptor isEvenSignature = MethodDescriptor.compile("(I)Z");
+        final MethodSignature isEvenDescriptor = new MethodSignature("hyuip", isEvenSignature);
+        assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
+
+        // 3. Get the method mapping, and verify it
+        final MethodMapping methodMapping = parentMapping.getOrCreateMethodMapping(isEvenDescriptor);
+        assertEquals("hyuip", methodMapping.getObfuscatedName());
+        assertEquals("isEven", methodMapping.getDeobfuscatedName());
+        assertEquals("(I)Z", methodMapping.getObfuscatedDescriptor());
+        assertEquals("(I)Z", methodMapping.getDeobfuscatedDescriptor());
+        assertEquals("ght/hyuip", methodMapping.getFullObfuscatedName());
+        assertEquals("uk/jamierocks/Test/isEven", methodMapping.getFullDeobfuscatedName());
+
+        // 4. Check the parameter mapping is there
+        assertTrue(methodMapping.hasParameterMapping(0));
+
+        // 5. Verify the parameter mapping
+        final MethodParameterMapping parameterMapping = methodMapping.getOrCreateParameterMapping(0);
+        assertEquals("num", parameterMapping.getDeobfuscatedName());
+
+        // 6. Check the /inner/ class mapping has been added to the class mapping
+        assertTrue(parentMapping.hasInnerClassMapping("ds"));
+
+        // 7. Get the inner class mapping, and check the field mapping has been added to it
+        final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
+        assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
+
+        // 8. Get the method mapping, and verify it
+        final MethodMapping innerMethodMapping = classMapping.getOrCreateMethodMapping(isEvenDescriptor);
+        assertEquals("hyuip", innerMethodMapping.getObfuscatedName());
+        assertEquals("isOdd", innerMethodMapping.getDeobfuscatedName());
+        assertEquals("(I)Z", innerMethodMapping.getObfuscatedDescriptor());
+        assertEquals("(I)Z", innerMethodMapping.getDeobfuscatedDescriptor());
+        assertEquals("ght$ds/hyuip", innerMethodMapping.getFullObfuscatedName());
+        assertEquals("uk/jamierocks/Test$Example/isOdd", innerMethodMapping.getFullDeobfuscatedName());
+
+        // 9. Check the parameter mapping is there
+        assertTrue(innerMethodMapping.hasParameterMapping(0));
+
+        // 10. Verify the parameter mapping
+        final MethodParameterMapping innerParameterMapping = innerMethodMapping.getOrCreateParameterMapping(0);
+        assertEquals("num", innerParameterMapping.getDeobfuscatedName());
     }
 
 }
