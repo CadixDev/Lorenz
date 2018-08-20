@@ -25,6 +25,8 @@
 
 package me.jamiemansfield.lorenz.io;
 
+import me.jamiemansfield.lorenz.io.enigma.EnigmaWriter;
+import me.jamiemansfield.lorenz.io.jam.JamWriter;
 import me.jamiemansfield.lorenz.io.srg.csrg.CSrgWriter;
 import me.jamiemansfield.lorenz.io.srg.SrgWriter;
 import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgWriter;
@@ -37,6 +39,8 @@ import java.io.PrintWriter;
  * with the implementation of mapping writers for text-based
  * mapping formats.
  *
+ * @see EnigmaWriter
+ * @see JamWriter
  * @see SrgWriter
  * @see CSrgWriter
  * @see TSrgWriter

@@ -42,7 +42,7 @@ public final class EnigmaConstants {
     private static final Pattern HASH_COMMENT = Pattern.compile("#.+");
 
     /**
-     * The standard file extension used with the SRG format.
+     * The standard file extension used with the Enigma format.
      */
     public static final String STANDARD_EXTENSION = "enigma";
 

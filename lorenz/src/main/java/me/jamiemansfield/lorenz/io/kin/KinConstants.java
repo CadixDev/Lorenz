@@ -34,11 +34,28 @@ package me.jamiemansfield.lorenz.io.kin;
  */
 public final class KinConstants {
 
+    /**
+     * The magic marker for Kin files.
+     */
     public static final int MAGIC = 0x5e8f046;
+
+    /**
+     * The marker for version 1 of the Kin format.
+     */
     public static final byte VERSION_ONE = (byte) 1;
+
+    /**
+     * The standard file extension used with the Kin format.
+     */
     public static final String STANDARD_EXTENSION = "kin";
 
-    // The kashike toHexString impl :p
+    /**
+     * Coverts the given integer to a Kin-compatible hexadecimal
+     * format.
+     *
+     * @param integer The integer to convert
+     * @return The hexadecimal string
+     */
     public static String toHexString(final int integer) {
         return "0x" + Integer.toHexString(integer);
     }

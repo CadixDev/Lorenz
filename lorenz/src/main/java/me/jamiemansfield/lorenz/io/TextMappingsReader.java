@@ -27,6 +27,8 @@ package me.jamiemansfield.lorenz.io;
 
 import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.enigma.EnigmaReader;
+import me.jamiemansfield.lorenz.io.jam.JamReader;
 import me.jamiemansfield.lorenz.io.srg.csrg.CSrgReader;
 import me.jamiemansfield.lorenz.io.srg.SrgReader;
 import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgReader;
@@ -43,6 +45,8 @@ import java.util.regex.Pattern;
  * with the implementation of mapping readers for text-based
  * mapping formats.
  *
+ * @see EnigmaReader
+ * @see JamReader
  * @see SrgReader
  * @see CSrgReader
  * @see TSrgReader
