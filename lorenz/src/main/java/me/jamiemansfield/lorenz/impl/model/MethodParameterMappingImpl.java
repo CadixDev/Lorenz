@@ -48,7 +48,7 @@ public class MethodParameterMappingImpl
      * @param deobfuscatedName The de-obfuscated name
      */
     public MethodParameterMappingImpl(final MethodMapping parent, final int index, String deobfuscatedName) {
-        super(parent, "" + index, deobfuscatedName);
+        super(parent, String.valueOf(index), deobfuscatedName);
         this.index = index;
     }
 

@@ -31,7 +31,6 @@ import me.jamiemansfield.bombe.type.ObjectType;
 import me.jamiemansfield.bombe.type.Type;
 import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
@@ -135,21 +134,18 @@ public interface MappingSet {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    default Optional<ClassMapping<?>> getClassMapping(final String obfuscatedName) {
-        if (!obfuscatedName.contains("$")) return Optional.ofNullable(this.getTopLevelClassMapping(obfuscatedName).orElse(null));
+    default Optional<? extends ClassMapping<?>> getClassMapping(final String obfuscatedName) {
+        final int lastIndex = obfuscatedName.lastIndexOf('$');
+        if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final int lastIndex = obfuscatedName.lastIndexOf('$');
         final String parentClassName = obfuscatedName.substring(0, lastIndex);
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
-        final Optional<ClassMapping<?>> parentClassMapping = this.getClassMapping(parentClassName);
-        if (!parentClassMapping.isPresent()) return Optional.empty();
-
-        // Get and return the inner class
-        final Optional<InnerClassMapping> innerClassMapping = parentClassMapping.get().getInnerClassMapping(innerClassName);
-        return Optional.ofNullable(innerClassMapping.orElse(null));
+        return this.getClassMapping(parentClassName)
+                // Get and return the inner class
+                .flatMap(parentClassMapping -> parentClassMapping.getInnerClassMapping(innerClassName));
     }
 
     /**
@@ -160,10 +156,10 @@ public interface MappingSet {
      * @return The class mapping
      */
     default ClassMapping<?> getOrCreateClassMapping(final String obfuscatedName) {
-        if (!obfuscatedName.contains("$")) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
+        final int lastIndex = obfuscatedName.lastIndexOf('$');
+        if (lastIndex == -1) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final int lastIndex = obfuscatedName.lastIndexOf('$');
         final String parentClassName = obfuscatedName.substring(0, lastIndex);
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
@@ -222,7 +218,7 @@ public interface MappingSet {
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
-            final Optional<ClassMapping<?>> typeMapping = this.getClassMapping(obj.getClassName());
+            final Optional<? extends ClassMapping<?>> typeMapping = this.getClassMapping(obj.getClassName());
             return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(obj.getClassName()) + ";";
         }
         return type.toString();

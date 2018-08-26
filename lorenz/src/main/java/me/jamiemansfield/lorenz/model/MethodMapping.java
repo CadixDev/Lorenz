@@ -119,7 +119,7 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
      */
     default MethodParameterMapping getOrCreateParameterMapping(final int index) {
         return this.getParameterMapping(index)
-                .orElseGet(() -> this.createParameterMapping(index, "" + index));
+                .orElseGet(() -> this.createParameterMapping(index, String.valueOf(index)));
     }
 
     /**
