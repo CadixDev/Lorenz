@@ -43,7 +43,7 @@ public interface MethodParameterMapping extends MemberMapping<MethodParameterMap
 
     @Override
     default String getObfuscatedName() {
-        return "" + this.getIndex();
+        return String.valueOf(this.getIndex());
     }
 
 }

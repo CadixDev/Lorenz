@@ -59,12 +59,12 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
 
     @Override
     public InnerClassMapping setDeobfuscatedName(final String deobfuscatedName) {
-        if (!deobfuscatedName.contains("$")) {
+        final int lastIndex = deobfuscatedName.lastIndexOf('$');
+        if (lastIndex == -1) {
             return super.setDeobfuscatedName(deobfuscatedName);
         }
 
         // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final int lastIndex = deobfuscatedName.lastIndexOf('$');
         final String innerClassName = deobfuscatedName.substring(lastIndex + 1);
 
         // Set the correct class name!
