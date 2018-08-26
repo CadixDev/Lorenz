@@ -34,6 +34,20 @@ package me.jamiemansfield.lorenz.model;
 public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping> {
 
     @Override
+    default String getSimpleObfuscatedName() {
+        String name = this.getObfuscatedName();
+        int classIndex = name.lastIndexOf('/');
+        return classIndex >= 0 ? name.substring(classIndex + 1) : name;
+    }
+
+    @Override
+    default String getSimpleDeobfuscatedName() {
+        String name = this.getDeobfuscatedName();
+        int classIndex = name.lastIndexOf('/');
+        return classIndex >= 0 ? name.substring(classIndex + 1) : name;
+    }
+
+    @Override
     default String getFullObfuscatedName() {
         return this.getObfuscatedName();
     }
