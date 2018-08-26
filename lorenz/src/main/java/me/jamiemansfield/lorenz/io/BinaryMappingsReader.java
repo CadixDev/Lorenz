@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.io;
 import me.jamiemansfield.lorenz.io.kin.KinReader;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -40,7 +41,9 @@ import java.io.InputStream;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class BinaryMappingsReader extends MappingsReader<DataInputStream> {
+public abstract class BinaryMappingsReader extends MappingsReader {
+
+    protected final DataInputStream stream;
 
     /**
      * Creates a new mappings reader, for the given {@link InputStream}.
@@ -48,7 +51,12 @@ public abstract class BinaryMappingsReader extends MappingsReader<DataInputStrea
      * @param stream The input stream
      */
     protected BinaryMappingsReader(final InputStream stream) {
-        super(new DataInputStream(stream));
+        this.stream = new DataInputStream(stream);
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.stream.close();
     }
 
 }

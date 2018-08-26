@@ -33,9 +33,9 @@ import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.MappingFormats;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.enigma.EnigmaConstants;
-import me.jamiemansfield.lorenz.io.enigma.EnigmaReader;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
@@ -50,9 +50,9 @@ public class EnigmaReaderTest {
     private final MappingSet mappings;
 
     public EnigmaReaderTest() throws IOException {
-        final MappingsReader reader = new EnigmaReader(EnigmaReaderTest.class.getResourceAsStream("/test.enigma"));
-        this.mappings = reader.read();
-        reader.close();
+        try (MappingsReader reader = MappingFormats.ENIGMA.createReader(EnigmaReaderTest.class.getResourceAsStream("/test.enigma"))) {
+            this.mappings = reader.read();
+        }
     }
 
     @Test

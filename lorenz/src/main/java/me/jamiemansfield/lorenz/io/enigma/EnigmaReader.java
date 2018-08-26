@@ -36,7 +36,7 @@ import me.jamiemansfield.lorenz.io.TextMappingsReader;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -48,8 +48,8 @@ import java.util.stream.Collectors;
  */
 public class EnigmaReader extends TextMappingsReader {
 
-    public EnigmaReader(final InputStream stream) {
-        super(stream, Processor::new);
+    public EnigmaReader(final Reader reader) {
+        super(reader, Processor::new);
     }
 
     public static class Processor extends TextMappingsReader.Processor {

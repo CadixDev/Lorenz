@@ -28,11 +28,14 @@ package me.jamiemansfield.lorenz.io.srg.tsrg;
 import me.jamiemansfield.lorenz.io.MappingFormat;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
+import me.jamiemansfield.lorenz.io.TextMappingFormat;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Optional;
 
 /**
@@ -41,16 +44,16 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public class TSrgMappingFormat implements MappingFormat {
+public class TSrgMappingFormat implements TextMappingFormat {
 
     @Override
-    public MappingsReader createReader(final InputStream stream) throws IOException {
-        return new TSrgReader(stream);
+    public MappingsReader createReader(final Reader reader) {
+        return new TSrgReader(reader);
     }
 
     @Override
-    public MappingsWriter createWriter(final OutputStream stream) throws IOException {
-        return new TSrgWriter(stream);
+    public MappingsWriter createWriter(final Writer writer) {
+        return new TSrgWriter(writer);
     }
 
     @Override

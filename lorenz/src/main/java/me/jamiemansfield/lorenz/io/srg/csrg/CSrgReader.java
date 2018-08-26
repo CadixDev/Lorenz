@@ -30,8 +30,7 @@ import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.TextMappingsReader;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * An implementation of {@link MappingsReader} for the CSRG format.
@@ -42,12 +41,12 @@ import java.io.InputStream;
 public class CSrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new CSRG mappings reader, for the given {@link InputStream}.
+     * Creates a new CSRG mappings reader, for the given {@link Reader}.
      *
-     * @param stream The input stream
+     * @param reader The reader
      */
-    public CSrgReader(final InputStream stream) {
-        super(stream, Processor::new);
+    public CSrgReader(final Reader reader) {
+        super(reader, Processor::new);
     }
 
     /**

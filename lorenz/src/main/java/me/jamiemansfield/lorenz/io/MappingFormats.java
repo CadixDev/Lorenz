@@ -43,17 +43,17 @@ public final class MappingFormats {
     /**
      * The SRG mapping format.
      */
-    public static final MappingFormat SRG = new SrgMappingFormat();
+    public static final TextMappingFormat SRG = new SrgMappingFormat();
 
     /**
      * The CSRG (compact SRG) mapping format.
      */
-    public static final MappingFormat CSRG = new CSrgMappingFormat();
+    public static final TextMappingFormat CSRG = new CSrgMappingFormat();
 
     /**
      * The TSRG (tiny SRG) mapping format.
      */
-    public static final MappingFormat TSRG = new TSrgMappingFormat();
+    public static final TextMappingFormat TSRG = new TSrgMappingFormat();
 
     /**
      * The Kin (/k/ashike b/in/ary) mapping format.
@@ -63,12 +63,12 @@ public final class MappingFormats {
     /**
      * The JAM (Java Associated Mappings) mapping format.
      */
-    public static final MappingFormat JAM = new JamMappingFormat();
+    public static final TextMappingFormat JAM = new JamMappingFormat();
 
     /**
      * The Enigma mapping format.
      */
-    public static final MappingFormat ENIGMA = new EnigmaMappingFormat();
+    public static final TextMappingFormat ENIGMA = new EnigmaMappingFormat();
 
     private MappingFormats() {
     }

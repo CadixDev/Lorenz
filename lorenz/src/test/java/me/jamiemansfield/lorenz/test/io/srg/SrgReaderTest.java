@@ -27,6 +27,7 @@ package me.jamiemansfield.lorenz.test.io.srg;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import me.jamiemansfield.lorenz.io.MappingFormats;
 import me.jamiemansfield.lorenz.io.srg.SrgReader;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ import java.io.IOException;
 public class SrgReaderTest extends AbstractSrgReaderTest {
 
     public SrgReaderTest() throws Exception {
-        super(() -> new SrgReader(SrgReaderTest.class.getResourceAsStream("/test.srg")));
+        super(MappingFormats.SRG, "/test.srg");
     }
 
     @Test
