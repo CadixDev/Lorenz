@@ -165,13 +165,13 @@ public class EnigmaReader extends TextMappingsReader {
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = split[1];
-                final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[2])).toString();
+                final String descriptor = handleNonePrefix(MethodDescriptor.of(split[2])).toString();
                 this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor);
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
-                final String descriptor = handleNonePrefix(MethodDescriptor.compile(split[3])).toString();
+                final String descriptor = handleNonePrefix(MethodDescriptor.of(split[3])).toString();
                 this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor)
                         .setDeobfuscatedName(deobfName);
             }

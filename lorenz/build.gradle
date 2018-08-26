@@ -1,6 +1,6 @@
 dependencies {
     compile 'com.google.guava:guava:22.0'
-    compile 'me.jamiemansfield:bombe-core:0.1.0'
+    compile 'me.jamiemansfield:bombe-core:0.2.0-SNAPSHOT'
 }
 
 javadoc {

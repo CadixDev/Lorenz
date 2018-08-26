@@ -64,7 +64,7 @@ public class EnigmaWriter extends TextMappingsWriter {
         return descriptor;
     }
 
-    private static Type handleNonePrefix(final Type type) {
+    private static FieldType handleNonePrefix(final FieldType type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
             return new ArrayType(arr.getDimCount(), handleNonePrefix(arr.getComponent()));
@@ -72,6 +72,13 @@ public class EnigmaWriter extends TextMappingsWriter {
         if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
             return new ObjectType(handleNonePrefix(obj.getClassName()));
+        }
+        return type;
+    }
+
+    private static Type handleNonePrefix(final Type type) {
+        if (type instanceof FieldType) {
+            return handleNonePrefix((FieldType) type);
         }
         return type;
     }

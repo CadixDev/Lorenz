@@ -1,4 +1,4 @@
 dependencies {
     compile project(':lorenz')
-    compile 'me.jamiemansfield:bombe-asm:0.1.0'
+    compile 'me.jamiemansfield:bombe-asm:0.2.0-SNAPSHOT'
 }
