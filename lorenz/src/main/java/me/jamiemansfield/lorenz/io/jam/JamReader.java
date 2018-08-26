@@ -68,9 +68,9 @@ public class JamReader extends TextMappingsReader {
         }
 
         @Override
-        public boolean processLine(final String rawLine) throws IOException {
+        public void accept(final String rawLine) {
             final String line = JamConstants.removeComments(rawLine).trim();
-            if (line.isEmpty()) return true;
+            if (line.isEmpty()) return;
 
             if (line.length() < 4) {
                 throw new IllegalArgumentException("Faulty JAM mapping encountered: `" + line + "`!");
@@ -127,8 +127,6 @@ public class JamReader extends TextMappingsReader {
                         .getOrCreateParameterMapping(index)
                         .setDeobfuscatedName(deobfName);
             }
-
-            return false;
         }
 
     }

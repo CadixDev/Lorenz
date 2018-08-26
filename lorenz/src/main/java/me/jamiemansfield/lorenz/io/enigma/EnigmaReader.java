@@ -36,7 +36,6 @@ import me.jamiemansfield.lorenz.io.TextMappingsReader;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -124,7 +123,7 @@ public class EnigmaReader extends TextMappingsReader {
         }
 
         @Override
-        public boolean processLine(final String rawLine) throws IOException {
+        public void accept(final String rawLine) {
             final int indentLevel = getIndentLevel(rawLine);
 
             if (indentLevel < this.lastIndentLevel) {
@@ -138,7 +137,7 @@ public class EnigmaReader extends TextMappingsReader {
             }
 
             final String line = EnigmaConstants.removeComments(rawLine).trim();
-            if (line.isEmpty()) return true;
+            if (line.isEmpty()) return;
 
             // Split up the line, for further processing
             final String[] split = SPACE.split(line);
@@ -183,7 +182,6 @@ public class EnigmaReader extends TextMappingsReader {
             }
 
             this.lastIndentLevel = indentLevel;
-            return true;
         }
 
     }

@@ -25,11 +25,11 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
-import com.google.common.base.MoreObjects;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.model.Mapping;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * An abstract basic implementation of {@link Mapping}.
@@ -85,10 +85,10 @@ public abstract class AbstractMappingImpl<M extends Mapping> implements Mapping<
         return this.mappings;
     }
 
-    protected MoreObjects.ToStringHelper buildToString() {
-        return MoreObjects.toStringHelper(this)
-                .add("obfuscatedName", this.obfuscatedName)
-                .add("deobfuscatedName", this.deobfuscatedName);
+    protected StringJoiner buildToString() {
+        return new StringJoiner(", ", getClass().getSimpleName() + "{", "}")
+                .add("obfuscatedName=" + this.obfuscatedName)
+                .add("deobfuscatedName=" + this.deobfuscatedName);
     }
 
     @Override

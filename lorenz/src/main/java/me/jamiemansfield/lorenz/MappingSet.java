@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz;
 
-import com.google.common.base.Strings;
 import me.jamiemansfield.bombe.type.ArrayType;
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.ObjectType;
@@ -219,7 +218,7 @@ public interface MappingSet {
     default String deobfuscate(final Type type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
-            return Strings.repeat("[", arr.getDimCount()) + this.deobfuscate(arr.getComponent());
+            return arr.getDims() + this.deobfuscate(arr.getComponent());
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;

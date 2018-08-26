@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.io.enigma;
 
-import com.google.common.base.Strings;
 import me.jamiemansfield.bombe.type.ArrayType;
 import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.bombe.type.MethodDescriptor;
@@ -52,10 +51,6 @@ import java.util.Optional;
  * @since 0.4.0
  */
 public class EnigmaWriter extends TextMappingsWriter {
-
-    private static String getIndentForDepth(final int depth) {
-        return Strings.repeat("\t", depth);
-    }
 
     private static String handleNonePrefix(final String descriptor) {
         if (!descriptor.contains("/")) {
@@ -172,7 +167,10 @@ public class EnigmaWriter extends TextMappingsWriter {
     }
 
     private void printIndentedLine(final int indent, final String line) {
-        this.writer.println(getIndentForDepth(indent) + line);
+        for (int i = 0; i < indent; i++) {
+            this.writer.println('\t');
+        }
+        this.writer.println(line);
     }
 
 }

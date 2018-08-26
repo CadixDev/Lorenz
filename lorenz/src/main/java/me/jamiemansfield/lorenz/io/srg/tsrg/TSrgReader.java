@@ -79,9 +79,9 @@ public class TSrgReader extends TextMappingsReader {
         }
 
         @Override
-        public boolean processLine(final String rawLine) throws IOException {
+        public void accept(final String rawLine) {
             final String line = SrgConstants.removeComments(rawLine);
-            if (line.isEmpty()) return true;
+            if (line.isEmpty()) return;
 
             if (line.length() < 4) {
                 throw new IllegalArgumentException("Faulty TSRG mapping encountered: `" + line + "`!");
@@ -125,8 +125,6 @@ public class TSrgReader extends TextMappingsReader {
             } else {
                 throw new IllegalArgumentException("Failed to process line: `" + line + "`!");
             }
-
-            return true;
         }
 
     }

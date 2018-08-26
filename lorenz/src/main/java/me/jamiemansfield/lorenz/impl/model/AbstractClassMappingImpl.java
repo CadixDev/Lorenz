@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
-import com.google.common.base.MoreObjects;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
@@ -40,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 /**
  * A basic implementation of {@link ClassMapping}.
@@ -138,11 +138,11 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
-    protected MoreObjects.ToStringHelper buildToString() {
+    protected StringJoiner buildToString() {
         return super.buildToString()
-                .add("fields", this.getFieldMappings())
-                .add("methods", this.getMethodMappings())
-                .add("innerClasses", this.getInnerClassMappings());
+                .add("fields=" + this.getFieldMappings())
+                .add("methods=" + this.getMethodMappings())
+                .add("innerClasses=" + this.getInnerClassMappings());
     }
 
     @Override
