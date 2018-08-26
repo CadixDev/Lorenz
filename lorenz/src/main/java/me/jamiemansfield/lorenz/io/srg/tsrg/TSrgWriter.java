@@ -33,7 +33,7 @@ import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
-import java.io.OutputStream;
+import java.io.Writer;
 
 /**
  * An implementation of {@link MappingsWriter} for the TSRG format.
@@ -44,12 +44,12 @@ import java.io.OutputStream;
 public class TSrgWriter extends TextMappingsWriter {
 
     /**
-     * Creates a new TSRG mappings writer, from the given {@link OutputStream}.
+     * Creates a new TSRG mappings writer, from the given {@link Writer}.
      *
-     * @param stream The output stream, to write to
+     * @param writer The writer
      */
-    public TSrgWriter(final OutputStream stream) {
-        super(stream);
+    public TSrgWriter(final Writer writer) {
+        super(writer);
     }
 
     @Override

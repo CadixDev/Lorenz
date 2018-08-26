@@ -33,9 +33,9 @@ import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.MappingFormats;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.jam.JamConstants;
-import me.jamiemansfield.lorenz.io.jam.JamReader;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.InnerClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
@@ -50,9 +50,9 @@ public class JamReaderTest {
     private final MappingSet mappings;
 
     public JamReaderTest() throws IOException {
-        final MappingsReader reader = new JamReader(JamReaderTest.class.getResourceAsStream("/test.jam"));
-        this.mappings = reader.read();
-        reader.close();
+        try (MappingsReader reader = MappingFormats.JAM.createReader(JamReaderTest.class.getResourceAsStream("/test.jam"))) {
+            this.mappings = reader.read();
+        }
     }
 
     @Test

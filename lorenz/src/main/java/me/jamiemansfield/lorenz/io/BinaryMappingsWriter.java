@@ -28,6 +28,7 @@ package me.jamiemansfield.lorenz.io;
 import me.jamiemansfield.lorenz.io.kin.KinWriter;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -40,7 +41,9 @@ import java.io.OutputStream;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStream> {
+public abstract class BinaryMappingsWriter extends MappingsWriter {
+
+    protected final DataOutputStream stream;
 
     /**
      * Creates a new mappings writer, from the given {@link OutputStream}.
@@ -48,7 +51,12 @@ public abstract class BinaryMappingsWriter extends MappingsWriter<DataOutputStre
      * @param stream The output stream, to write to
      */
     protected BinaryMappingsWriter(final OutputStream stream) {
-        super(new DataOutputStream(stream));
+        this.stream = new DataOutputStream(stream);
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.stream.close();
     }
 
 }

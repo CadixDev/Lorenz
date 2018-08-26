@@ -29,8 +29,7 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.TextMappingsReader;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * An implementation of {@link MappingsReader} for the JAM format.
@@ -40,8 +39,8 @@ import java.io.InputStream;
  */
 public class JamReader extends TextMappingsReader {
 
-    public JamReader(final InputStream stream) {
-        super(stream, Processor::new);
+    public JamReader(final Reader reader) {
+        super(reader, Processor::new);
     }
 
     public static class Processor extends TextMappingsReader.Processor {

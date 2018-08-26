@@ -31,8 +31,7 @@ import me.jamiemansfield.lorenz.io.TextMappingsReader;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * An implementation of {@link MappingsReader} for the TSRG format.
@@ -43,12 +42,12 @@ import java.io.InputStream;
 public class TSrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new TSRG mappings reader, for the given {@link InputStream}.
+     * Creates a new TSRG mappings reader, for the given {@link Reader}.
      *
-     * @param stream The input stream
+     * @param reader The reader
      */
-    public TSrgReader(final InputStream stream) {
-        super(stream, TSrgReader.Processor::new);
+    public TSrgReader(final Reader reader) {
+        super(reader, TSrgReader.Processor::new);
     }
 
     /**

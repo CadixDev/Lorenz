@@ -30,20 +30,16 @@ import me.jamiemansfield.lorenz.model.Mapping;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
  * Represents a writer, that is capable of writing de-obfuscation
- * mappings to an {@link OutputStream}.
+ * mapping.
  *
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
- *
- * @param <S> The type of the stream
  *
  * @see TextMappingsWriter
  * @see BinaryMappingsWriter
@@ -51,7 +47,7 @@ import java.util.stream.Collectors;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class MappingsWriter<S extends OutputStream> implements Closeable {
+public abstract class MappingsWriter implements Closeable {
 
     /**
      * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
@@ -83,28 +79,11 @@ public abstract class MappingsWriter<S extends OutputStream> implements Closeabl
                 .collect(Collectors.joining());
     }
 
-    protected final S stream;
-
     /**
-     * Creates a new mappings writer, from the given {@link OutputStream}.
-     *
-     * @param stream The output stream, to write to
-     */
-    protected MappingsWriter(final S stream) {
-        this.stream = stream;
-    }
-
-    /**
-     * Writes the given mappings to the previously given {@link PrintWriter}.
+     * Writes the given mappings to the previously given output.
      *
      * @param mappings The mapping set
      * @throws IOException Should an IO issue occur
      */
     public abstract void write(final MappingSet mappings) throws IOException;
-
-    @Override
-    public void close() throws IOException {
-        this.stream.close();
-    }
-
 }

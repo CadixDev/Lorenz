@@ -25,16 +25,12 @@
 
 package me.jamiemansfield.lorenz.io.enigma;
 
-import me.jamiemansfield.lorenz.io.MappingFormat;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
-import me.jamiemansfield.lorenz.io.jam.JamConstants;
-import me.jamiemansfield.lorenz.io.jam.JamReader;
-import me.jamiemansfield.lorenz.io.jam.JamWriter;
+import me.jamiemansfield.lorenz.io.TextMappingFormat;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Optional;
 
 /**
@@ -43,16 +39,16 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public class EnigmaMappingFormat implements MappingFormat {
+public class EnigmaMappingFormat implements TextMappingFormat {
 
     @Override
-    public MappingsReader createReader(final InputStream stream) throws IOException {
-        return new EnigmaReader(stream);
+    public MappingsReader createReader(final Reader reader) {
+        return new EnigmaReader(reader);
     }
 
     @Override
-    public MappingsWriter createWriter(final OutputStream stream) throws IOException {
-        return new EnigmaWriter(stream);
+    public MappingsWriter createWriter(final Writer writer) {
+        return new EnigmaWriter(writer);
     }
 
     @Override
