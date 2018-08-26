@@ -62,6 +62,26 @@ public interface Mapping<M extends Mapping> {
     M setDeobfuscatedName(final String deobfuscatedName);
 
     /**
+     * Gets the unqualified ("simple") obfuscated name of the member.
+     *
+     * @return The simple obfuscated name
+     * @since 0.4.0
+     */
+    default String getSimpleObfuscatedName() {
+        return this.getObfuscatedName();
+    }
+
+    /**
+     * Gets the unqualified ("simple") de-obfuscated name of the member.
+     *
+     * @return The simple de-obfuscated name
+     * @since 0.4.0
+     */
+    default String getSimpleDeobfuscatedName() {
+        return this.getDeobfuscatedName();
+    }
+
+    /**
      * Gets the fully-qualified obfuscated name of the member.
      *
      * @return The fully-qualified obfuscated name
