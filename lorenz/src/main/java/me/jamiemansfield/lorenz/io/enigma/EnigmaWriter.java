@@ -62,7 +62,7 @@ public class EnigmaWriter extends TextMappingsWriter {
     private static FieldType handleNonePrefix(final FieldType type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
-            return new ArrayType(arr.getDimCount(), handleNonePrefix(arr.getComponent()));
+            return new ArrayType(arr.getDimCount(), (FieldType) handleNonePrefix(arr.getComponent()));
         }
         if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
