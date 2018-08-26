@@ -46,7 +46,12 @@ public class TopLevelClassMappingImpl
      * @param deobfuscatedName The de-obfuscated name
      */
     public TopLevelClassMappingImpl(final MappingSet mappings, final String obfuscatedName, final String deobfuscatedName) {
-        super(mappings, obfuscatedName, deobfuscatedName);
+        super(mappings, obfuscatedName.replace('.', '/'), deobfuscatedName.replace('.', '/'));
+    }
+
+    @Override
+    public TopLevelClassMapping setDeobfuscatedName(String deobfuscatedName) {
+        return super.setDeobfuscatedName(deobfuscatedName.replace('.', '/'));
     }
 
     @Override

@@ -68,20 +68,20 @@ public class MappingSetImpl implements MappingSet {
 
     @Override
     public TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.topLevelClasses.compute(obfuscatedName, (name, existingMapping) -> {
+        return this.topLevelClasses.compute(obfuscatedName.replace('.', '/'), (name, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getModelFactory().createTopLevelClassMapping(this, obfuscatedName, deobfuscatedName);
+            return this.getModelFactory().createTopLevelClassMapping(this, name, deobfuscatedName);
         });
     }
 
     @Override
     public Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName));
+        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName.replace('.', '/')));
     }
 
     @Override
     public boolean hasTopLevelClassMapping(final String obfuscatedName) {
-        return this.topLevelClasses.containsKey(obfuscatedName);
+        return this.topLevelClasses.containsKey(obfuscatedName.replace('.', '/'));
     }
 
     @Override
