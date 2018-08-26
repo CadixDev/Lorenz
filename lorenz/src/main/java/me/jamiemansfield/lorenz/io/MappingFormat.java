@@ -54,6 +54,19 @@ public interface MappingFormat {
     MappingsReader createReader(final InputStream stream) throws IOException;
 
     /**
+     * Creates a {@link MappingsReader} for the given mappings file {@link Path}
+     * for the mapping format.
+     *
+     * @param path The path to the mappings file
+     * @return The mapping reader
+     * @throws IOException Should an I/O issue occur
+     * @throws UnsupportedOperationException If the format does not support reading
+     */
+    default MappingsReader createReader(final Path path) throws IOException {
+        return this.createReader(Files.newInputStream(path));
+    }
+
+    /**
      * Reads a mappings file into the given {@link MappingSet}.
      *
      * @param mappings The mapping set to read in to
@@ -62,7 +75,7 @@ public interface MappingFormat {
      * @throws IOException Should an I/O issue occur
      */
     default MappingSet read(final MappingSet mappings, final Path path) throws IOException {
-        try (final MappingsReader reader = this.createReader(Files.newInputStream(path))) {
+        try (final MappingsReader reader = this.createReader(path)) {
             reader.read(mappings);
         }
         return mappings;
@@ -86,9 +99,22 @@ public interface MappingFormat {
      * @param stream The output stream
      * @return The mapping writer
      * @throws IOException Should an I/O issue occur
-     * @throws UnsupportedOperationException If the format does not support reading
+     * @throws UnsupportedOperationException If the format does not support writing
      */
     MappingsWriter createWriter(final OutputStream stream) throws IOException;
+
+    /**
+     * Creates a {@link MappingsWriter} for the given mappings file {@link Path}
+     * for the mapping format.
+     *
+     * @param path The path to the mappings file
+     * @return The mapping writer
+     * @throws IOException Should an I/O issue occur
+     * @throws UnsupportedOperationException If the format does not support writing
+     */
+    default MappingsWriter createWriter(final Path path) throws IOException {
+        return this.createWriter(Files.newOutputStream(path));
+    }
 
     /**
      * Writes a mapping set to file.
@@ -98,7 +124,7 @@ public interface MappingFormat {
      * @throws IOException Should an I/O issue occur
      */
     default void write(final MappingSet mappings, final Path path) throws IOException {
-        try (final MappingsWriter writer = this.createWriter(Files.newOutputStream(path))) {
+        try (final MappingsWriter writer = this.createWriter(path)) {
             writer.write(mappings);
         }
     }

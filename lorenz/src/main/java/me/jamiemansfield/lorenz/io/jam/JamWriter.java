@@ -35,7 +35,7 @@ import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,8 +52,8 @@ public class JamWriter extends TextMappingsWriter {
     private final List<String> fields = new ArrayList<>();
     private final List<String> methods = new ArrayList<>();
 
-    public JamWriter(final OutputStream stream) {
-        super(stream);
+    public JamWriter(final Writer writer) {
+        super(writer);
     }
 
     @Override

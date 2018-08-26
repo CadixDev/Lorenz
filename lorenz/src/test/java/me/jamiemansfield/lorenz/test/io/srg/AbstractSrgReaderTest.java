@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.io.MappingFormat;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.srg.SrgConstants;
 import me.jamiemansfield.lorenz.model.FieldMapping;
@@ -41,17 +42,15 @@ import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.Callable;
-
 @Disabled
 public abstract class AbstractSrgReaderTest {
 
     private final MappingSet mappings;
 
-    protected AbstractSrgReaderTest(final Callable<MappingsReader> readerFunction) throws Exception {
-        final MappingsReader reader = readerFunction.call();
-        this.mappings = reader.read();
-        reader.close();
+    protected AbstractSrgReaderTest(final MappingFormat format, String path) throws Exception {
+        try (MappingsReader reader = format.createReader(getClass().getResourceAsStream(path))) {
+            this.mappings = reader.read();
+        }
     }
 
     @Test

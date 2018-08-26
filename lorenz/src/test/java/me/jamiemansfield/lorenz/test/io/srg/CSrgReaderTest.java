@@ -27,6 +27,7 @@ package me.jamiemansfield.lorenz.test.io.srg;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import me.jamiemansfield.lorenz.io.MappingFormats;
 import me.jamiemansfield.lorenz.io.srg.csrg.CSrgReader;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ import java.io.IOException;
 public class CSrgReaderTest extends AbstractSrgReaderTest {
 
     public CSrgReaderTest() throws Exception {
-        super(() -> new CSrgReader(CSrgReaderTest.class.getResourceAsStream("/test.csrg")));
+        super(MappingFormats.CSRG, "/test.csrg");
     }
 
     @Test

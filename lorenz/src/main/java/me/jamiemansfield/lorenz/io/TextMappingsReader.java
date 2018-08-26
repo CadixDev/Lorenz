@@ -34,8 +34,7 @@ import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -60,14 +59,13 @@ public abstract class TextMappingsReader extends MappingsReader {
     protected final Function<MappingSet, Processor> processor;
 
     /**
-     * Creates a new mappings reader, for the given {@link InputStream}.
+     * Creates a new mappings reader, for the given {@link Reader}.
      *
-     * @param stream The input stream
+     * @param reader The reader
      * @param processor The line processor to use for reading the lines
      */
-    protected TextMappingsReader(final InputStream stream, final Function<MappingSet, Processor> processor) {
-        super(stream);
-        this.reader = new BufferedReader(new InputStreamReader(stream));
+    protected TextMappingsReader(Reader reader, final Function<MappingSet, Processor> processor) {
+        this.reader = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
         this.processor = processor;
     }
 

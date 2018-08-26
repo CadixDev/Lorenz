@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Represents a reader that reads de-obfuscation mappings from a
- * given {@link InputStream}.
- *
- * @param <S> The type of the stream
+ * Represents a reader that reads de-obfuscation mappings.
  *
  * @see TextMappingsReader
  * @see BinaryMappingsReader
@@ -43,18 +40,7 @@ import java.io.InputStream;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public abstract class MappingsReader<S extends InputStream> implements Closeable {
-
-    protected final S stream;
-
-    /**
-     * Creates a new mappings reader, for the given {@link InputStream}.
-     *
-     * @param stream The input stream
-     */
-    protected MappingsReader(final S stream) {
-        this.stream = stream;
-    }
+public abstract class MappingsReader implements Closeable {
 
     /**
      * Reads mappings from the previously given {@link InputStream}, to
@@ -76,10 +62,5 @@ public abstract class MappingsReader<S extends InputStream> implements Closeable
      * @throws IOException Should an I/O issue occur
      */
     public abstract MappingSet read(final MappingSet mappings) throws IOException;
-
-    @Override
-    public void close() throws IOException {
-        this.stream.close();
-    }
 
 }

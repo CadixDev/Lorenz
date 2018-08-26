@@ -29,8 +29,7 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.TextMappingsReader;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * An implementation of {@link MappingsReader} for the SRG format.
@@ -41,12 +40,12 @@ import java.io.InputStream;
 public class SrgReader extends TextMappingsReader {
 
     /**
-     * Creates a new SRG mappings reader, for the given {@link InputStream}.
+     * Creates a new SRG mappings reader, for the given {@link Reader}.
      *
-     * @param stream The input stream
+     * @param reader The reader
      */
-    public SrgReader(final InputStream stream) {
-        super(stream, SrgReader.Processor::new);
+    public SrgReader(final Reader reader) {
+        super(reader, SrgReader.Processor::new);
     }
 
     /**

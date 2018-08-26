@@ -41,7 +41,7 @@ import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Optional;
 
 /**
@@ -87,8 +87,8 @@ public class EnigmaWriter extends TextMappingsWriter {
         return typeBuilder.toString();
     }
 
-    public EnigmaWriter(final OutputStream stream) {
-        super(stream);
+    public EnigmaWriter(final Writer writer) {
+        super(writer);
     }
 
     @Override

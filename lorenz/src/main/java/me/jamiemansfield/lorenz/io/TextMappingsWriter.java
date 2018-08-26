@@ -31,8 +31,10 @@ import me.jamiemansfield.lorenz.io.srg.csrg.CSrgWriter;
 import me.jamiemansfield.lorenz.io.srg.SrgWriter;
 import me.jamiemansfield.lorenz.io.srg.tsrg.TSrgWriter;
 
-import java.io.OutputStream;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 /**
  * An implementation of {@link MappingsWriter} designed to aid
@@ -53,17 +55,21 @@ public abstract class TextMappingsWriter extends MappingsWriter {
     protected final PrintWriter writer;
 
     /**
-     * Creates a new mappings writer, from the given {@link OutputStream}.
+     * Creates a new mappings writer, from the given {@link Writer}.
      *
-     * @param stream The output stream, to write to
+     * @param writer The output writer, to write to
      */
-    protected TextMappingsWriter(final OutputStream stream) {
-        super(stream);
-        this.writer = new PrintWriter(stream);
+    protected TextMappingsWriter(final Writer writer) {
+        if (writer instanceof PrintWriter) {
+            this.writer = (PrintWriter) writer;
+        } else {
+            BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
+            this.writer = new PrintWriter(bufferedWriter);
+        }
     }
 
     @Override
-    public void close() {
+    public void close() throws IOException {
         this.writer.close();
     }
 
