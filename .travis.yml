@@ -1,12 +1,10 @@
 # The Basics
 language: java
-
 jdk:
 - oraclejdk8
 
-# Coveralls
-after_success:
-- ./gradlew jacocoTestReport coveralls
+script: ./gradlew build
+after_success: '[[ "$TRAVIS_BRANCH" = "develop" ]] && ./gradlew uploadArchives'
 
 # Ugh.
 notifications:
