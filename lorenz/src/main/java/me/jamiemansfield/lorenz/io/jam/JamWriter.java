@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.io.jam;
 
-import com.google.common.collect.Lists;
 import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
@@ -37,6 +36,7 @@ import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,9 +48,9 @@ import java.util.Optional;
  */
 public class JamWriter extends TextMappingsWriter {
 
-    private final List<String> classes = Lists.newArrayList();
-    private final List<String> fields = Lists.newArrayList();
-    private final List<String> methods = Lists.newArrayList();
+    private final List<String> classes = new ArrayList<>();
+    private final List<String> fields = new ArrayList<>();
+    private final List<String> methods = new ArrayList<>();
 
     public JamWriter(final OutputStream stream) {
         super(stream);

@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
-import com.google.common.base.MoreObjects;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
@@ -37,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 /**
  * A basic implementation of {@link MethodMapping}.
@@ -93,10 +93,10 @@ public class MethodMappingImpl
     }
 
     @Override
-    protected MoreObjects.ToStringHelper buildToString() {
+    protected StringJoiner buildToString() {
         return super.buildToString()
-                .add("obfuscatedSignature", this.getObfuscatedDescriptor())
-                .add("deobfuscatedSignature", this.getDeobfuscatedDescriptor());
+                .add("obfuscatedSignature=" + this.getObfuscatedDescriptor())
+                .add("deobfuscatedSignature=" + this.getDeobfuscatedDescriptor());
     }
 
     @Override

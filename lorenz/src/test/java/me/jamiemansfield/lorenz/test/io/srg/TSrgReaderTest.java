@@ -44,7 +44,7 @@ public class TSrgReaderTest extends AbstractSrgReaderTest {
         // is thrown
         final TSrgReader.Processor parser = new TSrgReader.Processor();
         assertThrows(IllegalArgumentException.class, () -> {
-            parser.processLine("this is a faulty mapping because it is too long");
+            parser.accept("this is a faulty mapping because it is too long");
         });
     }
 
@@ -54,7 +54,7 @@ public class TSrgReaderTest extends AbstractSrgReaderTest {
         // is thrown
         final TSrgReader.Processor parser = new TSrgReader.Processor();
         assertThrows(IllegalArgumentException.class, () -> {
-            parser.processLine("\t Hi");
+            parser.accept("\t Hi");
         });
     }
 

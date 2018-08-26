@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.io;
 
-import com.google.common.io.LineProcessor;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.enigma.EnigmaReader;
 import me.jamiemansfield.lorenz.io.jam.JamReader;
@@ -37,6 +36,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -76,13 +76,8 @@ public abstract class TextMappingsReader extends MappingsReader {
         final Processor processor = this.processor.apply(mappings);
         this.reader.lines()
                 // Process line
-                .forEach(line -> {
-                    try {
-                        processor.processLine(line);
-                    } catch (final IOException ignored) {
-                    }
-                });
-        return processor.getResult();
+                .forEach(processor);
+        return mappings;
     }
 
     @Override
@@ -91,8 +86,7 @@ public abstract class TextMappingsReader extends MappingsReader {
     }
 
     /**
-     * A parser for a given mappings format, that is built upon
-     * Guava's {@link LineProcessor}.
+     * A parser for a given mappings format.
      *
      * @see SrgReader.Processor
      * @see CSrgReader.Processor
@@ -100,7 +94,7 @@ public abstract class TextMappingsReader extends MappingsReader {
      *
      * @since 0.4.0
      */
-    public static abstract class Processor implements LineProcessor<MappingSet> {
+    public static abstract class Processor implements Consumer<String> {
 
         /**
          * A regular expression used to split {@link String}s at spaces.
@@ -117,11 +111,6 @@ public abstract class TextMappingsReader extends MappingsReader {
          */
         protected Processor(final MappingSet mappings) {
             this.mappings = mappings;
-        }
-
-        @Override
-        public MappingSet getResult() {
-            return this.mappings;
         }
 
     }

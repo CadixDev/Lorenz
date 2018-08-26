@@ -25,7 +25,6 @@
 
 package me.jamiemansfield.lorenz.io.srg;
 
-import com.google.common.collect.Lists;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsWriter;
 import me.jamiemansfield.lorenz.io.TextMappingsWriter;
@@ -35,6 +34,7 @@ import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,9 +45,9 @@ import java.util.List;
  */
 public class SrgWriter extends TextMappingsWriter {
 
-    private final List<String> classes = Lists.newArrayList();
-    private final List<String> fields = Lists.newArrayList();
-    private final List<String> methods = Lists.newArrayList();
+    private final List<String> classes = new ArrayList<>();
+    private final List<String> fields = new ArrayList<>();
+    private final List<String> methods = new ArrayList<>();
 
     /**
      * Creates a new SRG mappings writer, from the given {@link OutputStream}.

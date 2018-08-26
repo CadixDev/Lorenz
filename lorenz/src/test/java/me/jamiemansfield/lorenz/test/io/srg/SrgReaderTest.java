@@ -43,7 +43,7 @@ public class SrgReaderTest extends AbstractSrgReaderTest {
         // This test ensures that package mappings won't set off any exceptions
         // as they are valid input - even though Lorenz won't parse them :p
         final SrgReader.Processor parser = new SrgReader.Processor();
-        parser.processLine("PK: abc uk/jamierocks/Example");
+        parser.accept("PK: abc uk/jamierocks/Example");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SrgReaderTest extends AbstractSrgReaderTest {
         // is thrown
         final SrgReader.Processor parser = new SrgReader.Processor();
         assertThrows(IllegalArgumentException.class, () -> {
-            parser.processLine("this is a faulty mapping because it is too long");
+            parser.accept("this is a faulty mapping because it is too long");
         });
     }
 
@@ -62,7 +62,7 @@ public class SrgReaderTest extends AbstractSrgReaderTest {
         // is thrown
         final SrgReader.Processor parser = new SrgReader.Processor();
         assertThrows(IllegalArgumentException.class, () -> {
-            parser.processLine("PK: TooShort");
+            parser.accept("PK: TooShort");
         });
     }
 

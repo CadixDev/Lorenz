@@ -148,7 +148,7 @@ public class EnigmaReaderTest {
 
         // 2. Get the class mapping, and check the method mapping has been added to it
         final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
-        final MethodDescriptor isEvenSignature = MethodDescriptor.compile("(I)Z");
+        final MethodDescriptor isEvenSignature = MethodDescriptor.of("(I)Z");
         final MethodSignature isEvenDescriptor = new MethodSignature("hyuip", isEvenSignature);
         assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
 
