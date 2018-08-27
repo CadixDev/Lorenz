@@ -58,6 +58,29 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
     }
 
     @Override
+    public String getSimpleObfuscatedName() {
+        return stripAsciiDigits(this.getObfuscatedName());
+    }
+
+    @Override
+    public String getSimpleDeobfuscatedName() {
+        return stripAsciiDigits(this.getDeobfuscatedName());
+    }
+
+    private static String stripAsciiDigits(final String name) {
+        for (int pos = 0; pos < name.length(); pos++) {
+            if (!isAsciiDigit(name.charAt(pos))) {
+                return name.substring(pos);
+            }
+        }
+        return "";
+    }
+
+    private static boolean isAsciiDigit(final char c) {
+        return '0' <= c && c <= '9';
+    }
+
+    @Override
     public InnerClassMapping setDeobfuscatedName(final String deobfuscatedName) {
         final int lastIndex = deobfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) {

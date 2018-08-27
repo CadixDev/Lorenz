@@ -45,6 +45,24 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
     @Override
     InnerClassMapping setDeobfuscatedName(final String deobfuscatedName);
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p><strong>Note:</strong> The simple name is empty for anonymous classes.
+     * For local classes, the leading digits are stripped.</p>
+     */
+    @Override
+    String getSimpleObfuscatedName();
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p><strong>Note:</strong> The simple name is empty for anonymous classes.
+     * For local classes, the leading digits are stripped.</p>
+     */
+    @Override
+    String getSimpleDeobfuscatedName();
+
     @Override
     default String getFullObfuscatedName() {
         return String.format("%s$%s", this.getParent().getFullObfuscatedName(), this.getObfuscatedName());
