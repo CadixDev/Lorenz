@@ -43,6 +43,22 @@ import java.util.Optional;
 public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
 
     /**
+     * {@inheritDoc}
+     * @see Class#getSimpleName()
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se10/html/jls-13.html#jls-13.1">Specification</a>
+     */
+    @Override
+    String getSimpleObfuscatedName();
+
+    /**
+     * {@inheritDoc}
+     * @see Class#getSimpleName()
+     * @see <a href="https://docs.oracle.com/javase/specs/jls/se10/html/jls-13.html#jls-13.1">Specification</a>
+     */
+    @Override
+    String getSimpleDeobfuscatedName();
+
+    /**
      * Gets an immutable collection of all of the field mappings
      * of the class mapping.
      *
