@@ -54,6 +54,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
         implements ClassMapping<M> {
 
     private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
+    private final Map<String, FieldMapping> fieldsByName = new HashMap<>();
     private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
 
@@ -75,20 +76,40 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
 
     @Override
     public Optional<FieldMapping> getFieldMapping(final FieldSignature signature) {
-        return Optional.ofNullable(this.fields.get(signature));
+        // If the field type is not provided, lookup up only the field name
+        if (!signature.getType().isPresent()) {
+            return this.getFieldMapping(signature.getName());
+        }
+
+        // Otherwise, look up the signature as-is, but attempt falling back to a signature without type
+        // Note: We cannot use fieldsByName here, because we'd eventually return FieldMappings with the wrong type
+        return Optional.ofNullable(this.fields.computeIfAbsent(signature,
+                (sig) -> this.fields.get(new FieldSignature(sig.getName()))));
+    }
+
+    @Override
+    public Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
+        return Optional.ofNullable(this.fieldsByName.get(obfuscatedName));
     }
 
     @Override
     public FieldMapping createFieldMapping(final FieldSignature signature, final String deobfuscatedName) {
-        return this.fields.compute(signature, (name, existingMapping) -> {
+        return this.fields.compute(signature, (sig, existingMapping) -> {
             if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getMappings().getModelFactory().createFieldMapping(this, signature, deobfuscatedName);
+            final FieldMapping mapping = this.getMappings().getModelFactory().createFieldMapping(this, sig, deobfuscatedName);
+            this.fieldsByName.put(sig.getName(), mapping);
+            return mapping;
         });
     }
 
     @Override
     public boolean hasFieldMapping(final FieldSignature signature) {
-        return this.fields.containsKey(signature);
+        return this.getFieldMapping(signature).isPresent();
+    }
+
+    @Override
+    public boolean hasFieldMapping(final String obfuscatedName) {
+        return this.fieldsByName.containsKey(obfuscatedName);
     }
 
     @Override
