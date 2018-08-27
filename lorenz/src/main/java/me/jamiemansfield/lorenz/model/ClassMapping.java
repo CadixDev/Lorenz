@@ -30,6 +30,7 @@ import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,6 +50,14 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The field mappings
      */
     Collection<FieldMapping> getFieldMappings();
+
+    /**
+     * Gets an immutable map of all of the field mappings
+     * of the class mapping, by the field name.
+     *
+     * @return The field mappings by name
+     */
+    Map<String, FieldMapping> getFieldsByName();
 
     /**
      * Gets the field mapping of the given signature of the

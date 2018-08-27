@@ -95,7 +95,7 @@ public class SrgWriter extends TextMappingsWriter {
                 .forEach(this::writeClassMapping);
 
         // Write field mappings
-        mapping.getFieldMappings().stream()
+        mapping.getFieldsByName().values().stream()
                 .filter(Mapping::hasDeobfuscatedName)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeFieldMapping);
