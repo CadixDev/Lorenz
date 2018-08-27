@@ -83,8 +83,11 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
 
         // Otherwise, look up the signature as-is, but attempt falling back to a signature without type
         // Note: We cannot use fieldsByName here, because we'd eventually return FieldMappings with the wrong type
-        return Optional.ofNullable(this.fields.computeIfAbsent(signature,
-                (sig) -> this.fields.get(new FieldSignature(sig.getName()))));
+        return Optional.ofNullable(this.fields.computeIfAbsent(signature, (sig) -> {
+            final FieldMapping mapping = this.fields.get(new FieldSignature(sig.getName()));
+            return mapping != null ?
+                    this.getMappings().getModelFactory().createFieldMapping(mapping.getParent(), sig, mapping.getDeobfuscatedName()) : null;
+        }));
     }
 
     @Override
