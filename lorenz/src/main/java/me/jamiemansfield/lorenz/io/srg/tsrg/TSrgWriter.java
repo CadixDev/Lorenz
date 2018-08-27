@@ -70,7 +70,7 @@ public class TSrgWriter extends TextMappingsWriter {
         this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
 
         // Write field mappings
-        mapping.getFieldMappings().stream()
+        mapping.getFieldsByName().values().stream()
                 .filter(Mapping::hasDeobfuscatedName)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeFieldMapping);
