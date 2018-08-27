@@ -75,6 +75,11 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     }
 
     @Override
+    public Map<String, FieldMapping> getFieldsByName() {
+        return Collections.unmodifiableMap(this.fieldsByName);
+    }
+
+    @Override
     public Optional<FieldMapping> getFieldMapping(final FieldSignature signature) {
         // If the field type is not provided, lookup up only the field name
         if (!signature.getType().isPresent()) {
