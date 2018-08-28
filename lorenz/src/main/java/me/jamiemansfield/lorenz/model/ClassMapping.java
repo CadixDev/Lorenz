@@ -60,6 +60,26 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
     String getSimpleDeobfuscatedName();
 
     /**
+     * Gets the obfuscated package name of this class mapping.
+     *
+     * <p>Default package is represented using an empty string.</p>
+     *
+     * @return The obfuscated package name
+     * @since 0.4.0
+     */
+    String getObfuscatedPackage();
+
+    /**
+     * Gets the de-obfuscated package name of this class mapping.
+     *
+     * <p>Default package is represented using an empty string.</p>
+     *
+     * @return The de-obfuscated package name
+     * @since 0.4.0
+     */
+    String getDeobfuscatedPackage();
+
+    /**
      * Gets an immutable collection of all of the field mappings
      * of the class mapping.
      *
