@@ -73,4 +73,14 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
         return String.format("%s$%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
+    @Override
+    default String getObfuscatedPackage() {
+        return getParent().getObfuscatedPackage();
+    }
+
+    @Override
+    default String getDeobfuscatedPackage() {
+        return getParent().getDeobfuscatedPackage();
+    }
+
 }

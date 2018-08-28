@@ -57,4 +57,16 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping>
         return this.getDeobfuscatedName();
     }
 
+    default String getObfuscatedPackage() {
+        final String name = this.getObfuscatedName();
+        final int classIndex = name.lastIndexOf('/');
+        return classIndex >= 0 ? name.substring(0, classIndex) : "";
+    }
+
+    default String getDeobfuscatedPackage() {
+        final String name = this.getDeobfuscatedName();
+        final int classIndex = name.lastIndexOf('/');
+        return classIndex >= 0 ? name.substring(0, classIndex) : "";
+    }
+
 }
