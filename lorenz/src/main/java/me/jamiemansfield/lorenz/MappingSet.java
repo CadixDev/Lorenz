@@ -26,18 +26,19 @@
 package me.jamiemansfield.lorenz;
 
 import me.jamiemansfield.bombe.type.ArrayType;
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.ObjectType;
 import me.jamiemansfield.bombe.type.Type;
 import me.jamiemansfield.lorenz.impl.MappingSetImpl;
 import me.jamiemansfield.lorenz.model.ClassMapping;
-import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The container for {@link TopLevelClassMapping}s, allowing for their creating and
@@ -232,23 +233,41 @@ public interface MappingSet {
     }
 
     /**
-     * Gets the de-obfuscated raw view of the type.
+     * Gets the de-obfuscated view of the given type.
      *
      * @param type The type to de-obfuscate
-     * @return The de-obfuscated raw view
-     * @since 0.4.0
+     * @return The de-obfuscated type
+     * @since 0.5.0
      */
-    default String deobfuscate(final Type type) {
+    default Type deobfuscate(final Type type) {
+        if (type instanceof FieldType) {
+            return this.deobfuscate((FieldType) this.deobfuscate(type));
+        }
+        return type;
+    }
+
+    /**
+     * Gets the de-obfuscated view of the given field type.
+     *
+     * @param type The type to de-obfuscate
+     * @return The de-obfuscated type
+     * @since 0.5.0
+     */
+    default FieldType deobfuscate(final FieldType type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
-            return arr.getDims() + this.deobfuscate(arr.getComponent());
+            final FieldType component = this.deobfuscate(arr.getComponent());
+            return component == arr.getComponent() ?
+                    arr :
+                    new ArrayType(arr.getDimCount(), component);
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
-            final Optional<? extends ClassMapping<?>> typeMapping = this.getClassMapping(obj.getClassName());
-            return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(obj.getClassName()) + ";";
+            return this.getClassMapping(obj.getClassName())
+                    .map(m -> new ObjectType(m.getFullDeobfuscatedName()))
+                    .orElse(obj);
         }
-        return type.toString();
+        return type;
     }
 
     /**
@@ -256,15 +275,15 @@ public interface MappingSet {
      *
      * @param descriptor The descriptor to de-obfuscate
      * @return The de-obfuscated descriptor
-     * @since 0.4.0
+     * @since 0.5.0
      */
-    default String deobfuscate(final MethodDescriptor descriptor) {
-        final StringBuilder typeBuilder = new StringBuilder();
-        typeBuilder.append("(");
-        descriptor.getParamTypes().forEach(type -> typeBuilder.append(this.deobfuscate(type)));
-        typeBuilder.append(")");
-        typeBuilder.append(this.deobfuscate(descriptor.getReturnType()));
-        return typeBuilder.toString();
+    default MethodDescriptor deobfuscate(final MethodDescriptor descriptor) {
+        return new MethodDescriptor(
+                descriptor.getParamTypes().stream()
+                        .map(this::deobfuscate)
+                        .collect(Collectors.toList()),
+                this.deobfuscate(descriptor.getReturnType())
+        );
     }
 
 }
