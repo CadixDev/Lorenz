@@ -149,6 +149,33 @@ public interface MappingSet {
     }
 
     /**
+     * Attempts to locate a class mapping for the given obfuscated name.
+     *
+     * <p>This is equivalent to calling {@link #getClassMapping(String)},
+     * except that it will insert a new inner class mapping in case a
+     * class mapping for the outer class exists.</p>
+     *
+     * <p>This method exists to simplify remapping, where it is important
+     * to keep inner classes a part of the outer class.</p>
+     *
+     * @param obfuscatedName The obfuscated name
+     * @return The class mapping, wrapped in an {@link Optional}
+     */
+    default Optional<? extends ClassMapping<?>> computeClassMapping(final String obfuscatedName) {
+        final int lastIndex = obfuscatedName.lastIndexOf('$');
+        if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
+
+        // Split the obfuscated name, to fetch the parent class name, and inner class name
+        final String parentClassName = obfuscatedName.substring(0, lastIndex);
+        final String innerClassName = obfuscatedName.substring(lastIndex + 1);
+
+        // Get the parent class
+        return this.getClassMapping(parentClassName)
+                // Get and return the inner class
+                .map(parentClassMapping -> parentClassMapping.getOrCreateInnerClassMapping(innerClassName));
+    }
+
+    /**
      * Gets, or creates should it not exist, a class mapping, of the given
      * obfuscated name.
      *

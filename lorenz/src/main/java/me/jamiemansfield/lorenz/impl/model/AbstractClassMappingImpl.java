@@ -81,6 +81,16 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
 
     @Override
     public Optional<FieldMapping> getFieldMapping(final FieldSignature signature) {
+        return Optional.ofNullable(this.fields.get(signature));
+    }
+
+    @Override
+    public Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
+        return Optional.ofNullable(this.fieldsByName.get(obfuscatedName));
+    }
+
+    @Override
+    public Optional<FieldMapping> computeFieldMapping(FieldSignature signature) {
         // If the field type is not provided, lookup up only the field name
         if (!signature.getType().isPresent()) {
             return this.getFieldMapping(signature.getName());
@@ -93,11 +103,6 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
             return mapping != null ?
                     this.getMappings().getModelFactory().createFieldMapping(mapping.getParent(), sig, mapping.getDeobfuscatedName()) : null;
         }));
-    }
-
-    @Override
-    public Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.fieldsByName.get(obfuscatedName));
     }
 
     @Override

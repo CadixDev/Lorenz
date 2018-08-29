@@ -80,22 +80,54 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * Gets the field mapping of the given signature of the
      * class mapping, should it exist.
      *
+     * <p><strong>Note:</strong> The field signature is looked up as-is,
+     * so if the loaded mappings use field types, looking up a signature
+     * without type will fail. Consider using {@link #getFieldMapping(String)}
+     * or {@link #computeFieldMapping(FieldSignature)}.</p>
+     *
      * @param signature The signature of the field
      * @return The field mapping, wrapped in an {@link Optional}
      * @since 0.4.0
+     * @see #getFieldMapping(String)
+     * @see #computeFieldMapping(FieldSignature)
      */
     Optional<FieldMapping> getFieldMapping(final FieldSignature signature);
 
     /**
-     * Gets the field mapping of the given obfuscated name of the
-     * class mapping, should it exist.
+     * Gets a field mapping of the given obfuscated name of the
+     * class mapping, should it exist. If multiple fields mappings with
+     * the same name (but different types) exist, only one of them will
+     * be returned.
+     *
+     * <p><strong>Note:</strong> This is <strong>not</strong> equivalent
+     * to calling {@link #getFieldMapping(FieldSignature)} with a
+     * {@code null} field type. Use {@link #computeFieldMapping(FieldSignature)}
+     * to flexibly lookup field signatures with or without type.</p>
      *
      * @param obfuscatedName The obfuscated name of the field mapping
      * @return The field mapping, wrapped in an {@link Optional}
+     * @see #getFieldMapping(FieldSignature)
+     * @see #computeFieldMapping(FieldSignature)
      */
-    default Optional<FieldMapping> getFieldMapping(final String obfuscatedName) {
-        return this.getFieldMapping(new FieldSignature(obfuscatedName, (FieldType) null));
-    }
+    Optional<FieldMapping> getFieldMapping(final String obfuscatedName);
+
+    /**
+     * Attempts to locate a field mapping for the given obfuscated field
+     * signature. Unlike {@link #getFieldMapping(FieldSignature)} this method
+     * will attempt to match the field signature with or without type:
+     *
+     * <p>If {@link FieldSignature#getType()} is empty,
+     * {@link #getFieldMapping(String)} is returned.
+     * Otherwise, the signature is looked up with type. If that fails, the
+     * signature is looked up again without type. Note that it will insert
+     * a new {@link FieldMapping} with the specified type for caching purposes.</p>
+     *
+     * @param signature The (obfuscated) signature of the field
+     * @return The field mapping, wrapped in an {@link Optional}
+     * @see #getFieldMapping(FieldSignature)
+     * @see #getFieldMapping(String)
+     */
+    Optional<FieldMapping> computeFieldMapping(final FieldSignature signature);
 
     /**
      * Creates a new field mapping, attached to this class mapping, using
