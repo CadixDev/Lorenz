@@ -115,7 +115,7 @@ public class EnigmaReaderTest {
 
         // 2. Get the class mapping, and check the field mapping has been added to it
         final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
-        final FieldSignature rftSignature = new FieldSignature("rft", "Ljava/util/logging/Logger;");
+        final FieldSignature rftSignature = FieldSignature.of("rft", "Ljava/util/logging/Logger;");
         assertTrue(parentMapping.hasFieldMapping(rftSignature));
 
         // 3. Get the field mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
@@ -130,7 +130,7 @@ public class EnigmaReaderTest {
 
         // 5. Get the inner class mapping, and check the field mapping has been added to it
         final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
-        final FieldSignature juhSignature = new FieldSignature("juh", "Luk/jamierocks/Server;");
+        final FieldSignature juhSignature = FieldSignature.of("juh", "Luk/jamierocks/Server;");
         assertTrue(classMapping.hasFieldMapping(juhSignature));
 
         // 6. Get the field mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name

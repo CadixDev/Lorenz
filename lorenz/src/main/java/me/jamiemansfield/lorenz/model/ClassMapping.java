@@ -273,7 +273,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The method mapping
      */
     default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
+        return this.createMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
     }
 
     /**
@@ -297,7 +297,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
      * @return The method mapping
      */
     default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
+        return this.getOrCreateMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
     }
 
     /**

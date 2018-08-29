@@ -146,7 +146,7 @@ public class LorenzRemapper extends Remapper {
 
     @Override
     public String mapMethodName(final String owner, final String name, final String desc) {
-        return this.getMethodMapping(owner, new MethodSignature(name, desc)).orElse(name);
+        return this.getMethodMapping(owner, MethodSignature.of(name, desc)).orElse(name);
     }
 
 }
