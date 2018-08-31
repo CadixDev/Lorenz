@@ -1,0 +1,11 @@
+# CL yu uk/jamierocks/Comment
+CL uih uk/jamierocks/CommentTest # CL op uk/jr/Operator
+CL ght uk/jamierocks/Test
+CL ght$ds uk/jamierocks/Test$Example
+CL ght$ds$bg uk/jamierocks/Test$Example$Inner
+FD ght rft Ljava/util/logging/Logger; log
+FD ght$ds juh Luk/jamierocks/Server; server
+MD ght hyuip (I)Z isEven
+MD ght$ds hyuip (I)Z isOdd
+MP ght hyuip (I)Z 0 num
+MP ght$ds hyuip (I)Z 0 num

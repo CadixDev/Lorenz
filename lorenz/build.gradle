@@ -1,0 +1,11 @@
+dependencies {
+    compile "me.jamiemansfield:bombe-core:${rootProject.bombeVersion}"
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.links(
+            'https://docs.oracle.com/javase/8/docs/api/'
+    )
+}

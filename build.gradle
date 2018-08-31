@@ -6,131 +6,126 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.net.minecrell:licenser:0.3'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-    apply plugin: 'signing'
-}
-apply plugin: 'net.minecrell.licenser'
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'net.minecrell.licenser'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
-group = 'me.jamiemansfield'
-archivesBaseName = project.name.toLowerCase()
-version = '0.3.2'
+    group = 'me.jamiemansfield'
+    archivesBaseName = project.name.toLowerCase()
+    version = '0.4.0'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    // Common
-    compile 'com.google.guava:guava:22.0'
-
-    // Testing
-    testCompile 'junit:junit:4.12'
-}
-
-license {
-    header = project.file('HEADER.txt')
-}
-
-processResources {
-    from 'LICENSE.txt'
-}
-
-javadoc {
-    options.encoding = 'UTF-8'
-    options.charSet = 'UTF-8'
-    options.links(
-            'https://google.github.io/guava/releases/22.0/api/docs/',
-            'https://docs.oracle.com/javase/8/docs/api/'
-    )
-}
-
-task javadocJar(type: Jar, dependsOn: 'javadoc') {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-task sourcesJar(type: Jar, dependsOn: 'classes') {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-    signing {
-        sign configurations.archives
-    }
-}
-
-uploadArchives {
     repositories {
-        mavenDeployer {
-            // repo.jamiemansfield.me
-            if (System.getenv('MAVEN_RELEASES') != null && System.getenv('MAVEN_SNAPSHOTS') != null) {
-                repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
-                snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
+        mavenCentral()
+        if (bombeVersion.endsWith("-SNAPSHOT")) {
+            maven {
+                url 'https://oss.sonatype.org/content/groups/public/'
             }
+        }
+    }
 
-            // Maven Central
-            if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    dependencies {
+        testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+    }
 
-                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+    license {
+        header = rootProject.file('HEADER.txt')
+    }
+
+    processResources {
+        from 'LICENSE.txt'
+    }
+
+    task javadocJar(type: Jar, dependsOn: 'javadoc') {
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
+
+    task sourcesJar(type: Jar, dependsOn: 'classes') {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
+
+    if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+        apply plugin: 'signing'
+        signing {
+            required { !version.endsWith('-SNAPSHOT') && gradle.taskGraph.hasTask(tasks.uploadArchives) }
+            sign configurations.archives
+        }
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                // repo.jamiemansfield.me
+                if (System.getenv('MAVEN_RELEASES') != null && System.getenv('MAVEN_SNAPSHOTS') != null) {
+                    repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
+                    snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
                 }
 
-                snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                // Maven Central
+                if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                    repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
+
+                    snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
                 }
-            }
 
-            pom {
-                artifactId = project.archivesBaseName
+                pom {
+                    artifactId = project.archivesBaseName
 
-                project {
-                    name = project.name
-                    description = project.description
-                    packaging = 'jar'
-                    url = project.url
-                    inceptionYear = project.inceptionYear
+                    project {
+                        name = project.name
+                        description = project.description
+                        packaging = 'jar'
+                        url = project.url
+                        inceptionYear = project.inceptionYear
 
-                    scm {
-                        url = 'https://github.com/jamiemansfield/Lorenz'
-                        connection = 'scm:git:https://github.com/jamiemansfield/Lorenz.git'
-                        developerConnection = 'scm:git:git@github.com:jamiemansfield/Lorenz.git'
-                    }
-
-                    issueManagement {
-                        system = 'GitHub'
-                        url = 'https://github.com/jamiemansfield/Lorenz/issues'
-                    }
-
-                    licenses {
-                        license {
-                            name = 'MIT License'
-                            url = 'https://opensource.org/licenses/MIT'
-                            distribution = 'repo'
+                        scm {
+                            url = 'https://github.com/jamiemansfield/Lorenz'
+                            connection = 'scm:git:https://github.com/jamiemansfield/Lorenz.git'
+                            developerConnection = 'scm:git:git@github.com:jamiemansfield/Lorenz.git'
                         }
-                    }
 
-                    developers {
-                        developer {
-                            id = 'jamierocks'
-                            name = 'Jamie Mansfield'
-                            email = 'dev@jamierocks.uk'
-                            url = 'https://www.jamiemansfield.me/'
-                            timezone = 'Europe/London'
+                        issueManagement {
+                            system = 'GitHub'
+                            url = 'https://github.com/jamiemansfield/Lorenz/issues'
+                        }
+
+                        licenses {
+                            license {
+                                name = 'MIT License'
+                                url = 'https://opensource.org/licenses/MIT'
+                                distribution = 'repo'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id = 'jamierocks'
+                                name = 'Jamie Mansfield'
+                                email = 'dev@jamierocks.uk'
+                                url = 'https://www.jamiemansfield.me/'
+                                timezone = 'Europe/London'
+                            }
                         }
                     }
                 }
