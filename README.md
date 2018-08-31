@@ -8,12 +8,9 @@ supports a variety of mapping formats itself:
 - SRG
 - CSRG
 - TSRG
-
-There are also plans to support the following mapping formats for the (eventual) 1.0.0
-release:
-
-- Engima
+- Enigma
 - JAM
+- Kin
 
 ## Branches
 
@@ -38,18 +35,18 @@ Lorenz releases can be obtained through Maven Central:
 <dependency>
     <groupId>me.jamiemansfield</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-compile 'me.jamiemansfield:lorenz:0.3.0'
+compile 'me.jamiemansfield:lorenz:0.4.0'
 ```
 
-Lorenz snapshots are also available through my own Maven repository
-(repo.jamiemansfield.me), under the same group/artifact id.
+You may also find snapshot artifacts on [Sonatype's OSS repository], and for older
+versions on my own Maven repository (`repo.jamiemansfield.me`).
 
 ## License
 
@@ -82,3 +79,4 @@ THE SOFTWARE.
 ```
 
 [git-flow]: https://nvie.com/posts/a-successful-git-branching-model/
+[Sonatype's OSS repository]: https://oss.sonatype.org/content/repositories/snapshots/
