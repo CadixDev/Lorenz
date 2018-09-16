@@ -26,6 +26,7 @@
 package me.jamiemansfield.lorenz;
 
 import me.jamiemansfield.bombe.type.ArrayType;
+import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.bombe.type.MethodDescriptor;
 import me.jamiemansfield.bombe.type.ObjectType;
 import me.jamiemansfield.bombe.type.Type;
@@ -36,7 +37,9 @@ import me.jamiemansfield.lorenz.model.TopLevelClassMapping;
 import me.jamiemansfield.lorenz.model.jar.CascadingFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -238,17 +241,17 @@ public interface MappingSet {
      * @return The de-obfuscated raw view
      * @since 0.4.0
      */
-    default String deobfuscate(final Type type) {
+    default Type deobfuscate(final Type type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
-            return arr.getDims() + this.deobfuscate(arr.getComponent());
+            Type deobfuscated = this.deobfuscate(arr.getComponent());
+            return deobfuscated == arr.getComponent() ? arr : new ArrayType(arr.getDimCount(), (FieldType) deobfuscated);
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
-            final Optional<? extends ClassMapping<?>> typeMapping = this.getClassMapping(obj.getClassName());
-            return "L" + typeMapping.map(Mapping::getFullDeobfuscatedName).orElse(obj.getClassName()) + ";";
+            return this.getClassMapping(obj.getClassName()).map(m -> new ObjectType(m.getFullDeobfuscatedName())).orElse(obj);
         }
-        return type.toString();
+        return type;
     }
 
     /**
@@ -258,13 +261,33 @@ public interface MappingSet {
      * @return The de-obfuscated descriptor
      * @since 0.4.0
      */
-    default String deobfuscate(final MethodDescriptor descriptor) {
-        final StringBuilder typeBuilder = new StringBuilder();
-        typeBuilder.append("(");
-        descriptor.getParamTypes().forEach(type -> typeBuilder.append(this.deobfuscate(type)));
-        typeBuilder.append(")");
-        typeBuilder.append(this.deobfuscate(descriptor.getReturnType()));
-        return typeBuilder.toString();
+    default MethodDescriptor deobfuscate(final MethodDescriptor descriptor) {
+        List<FieldType> originalParamTypes = descriptor.getParamTypes();
+
+        // Lazily initialize list if any of the parameter types change
+        List<FieldType> paramTypes = null;
+        for (int i = 0; i < originalParamTypes.size(); i++) {
+            Type original = originalParamTypes.get(i);
+            FieldType deobfuscated = (FieldType) deobfuscate(original);
+            if (original == deobfuscated) {
+                continue;
+            } else if (paramTypes == null) {
+                paramTypes = new ArrayList<>(originalParamTypes);
+            }
+
+            paramTypes.set(i, deobfuscated);
+        }
+
+        Type returnType = deobfuscate(descriptor.getReturnType());
+        if (paramTypes == null) {
+            if (returnType == descriptor.getReturnType()) {
+                return descriptor;
+            }
+
+            paramTypes = originalParamTypes;
+        }
+
+        return new MethodDescriptor(paramTypes, returnType);
     }
 
 }

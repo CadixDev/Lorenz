@@ -80,7 +80,7 @@ public class KinWriter extends BinaryMappingsWriter {
             this.stream.writeUTF(field.getObfuscatedName());
             final Optional<FieldType> type = field.getType();
             this.stream.writeBoolean(type.isPresent());
-            if (type.isPresent()) this.stream.writeUTF(mapping.getMappings().deobfuscate(type.get()));
+            if (type.isPresent()) this.stream.writeUTF(mapping.getMappings().deobfuscate(type.get()).toString());
             this.stream.writeUTF(field.getDeobfuscatedName());
         }
 
