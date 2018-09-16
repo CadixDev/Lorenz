@@ -1,5 +1,5 @@
 dependencies {
-    compile "me.jamiemansfield:bombe-core:${rootProject.bombeVersion}"
+    compile "me.jamiemansfield:bombe:${rootProject.bombeVersion}"
 }
 
 javadoc {
