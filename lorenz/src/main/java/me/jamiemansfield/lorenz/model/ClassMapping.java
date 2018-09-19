@@ -25,6 +25,8 @@
 
 package me.jamiemansfield.lorenz.model;
 
+import me.jamiemansfield.bombe.analysis.InheritanceCompletable;
+import me.jamiemansfield.bombe.analysis.InheritanceProvider;
 import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
@@ -41,7 +43,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
+public interface ClassMapping<M extends ClassMapping> extends Mapping<M>, InheritanceCompletable {
 
     /**
      * {@inheritDoc}
@@ -417,6 +419,11 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
                 this.getFieldMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
                 this.getMethodMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
                 this.getInnerClassMappings().stream().anyMatch(ClassMapping::hasMappings);
+    }
+
+    @Override
+    default Optional<InheritanceProvider.ClassInfo> provideInheritance(InheritanceProvider provider, Object context) {
+        return provider.provide(getFullObfuscatedName(), context);
     }
 
 }
