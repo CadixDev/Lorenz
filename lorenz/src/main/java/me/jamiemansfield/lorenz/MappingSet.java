@@ -241,7 +241,7 @@ public interface MappingSet {
      */
     default Type deobfuscate(final Type type) {
         if (type instanceof FieldType) {
-            return this.deobfuscate((FieldType) this.deobfuscate(type));
+            return this.deobfuscate(this.deobfuscate((FieldType) type));
         }
         return type;
     }
