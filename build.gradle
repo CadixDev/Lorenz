@@ -74,12 +74,6 @@ subprojects {
     uploadArchives {
         repositories {
             mavenDeployer {
-                // repo.jamiemansfield.me
-                if (System.getenv('MAVEN_RELEASES') != null && System.getenv('MAVEN_SNAPSHOTS') != null) {
-                    repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
-                    snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
-                }
-
                 // Maven Central
                 if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
                     beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
@@ -104,14 +98,14 @@ subprojects {
                         inceptionYear = project.inceptionYear
 
                         scm {
-                            url = 'https://github.com/jamiemansfield/Lorenz'
-                            connection = 'scm:git:https://github.com/jamiemansfield/Lorenz.git'
-                            developerConnection = 'scm:git:git@github.com:jamiemansfield/Lorenz.git'
+                            url = 'https://github.com/CadixDev/Lorenz'
+                            connection = 'scm:git:https://github.com/CadixDev/Lorenz.git'
+                            developerConnection = 'scm:git:git@github.com:CadixDev/Lorenz.git'
                         }
 
                         issueManagement {
                             system = 'GitHub'
-                            url = 'https://github.com/jamiemansfield/Lorenz/issues'
+                            url = 'https://github.com/CadixDev/Lorenz/issues'
                         }
 
                         licenses {
