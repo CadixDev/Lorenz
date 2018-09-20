@@ -25,6 +25,7 @@
 
 package me.jamiemansfield.lorenz.impl.model;
 
+import me.jamiemansfield.bombe.analysis.InheritanceProvider;
 import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
@@ -57,6 +58,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     private final Map<String, FieldMapping> fieldsByName = new HashMap<>();
     private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
     private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
+    private boolean complete;
 
     /**
      * Creates a new class mapping, from the given parameters.
@@ -194,6 +196,37 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), this.fields, this.methods, this.innerClasses);
+    }
+
+    @Override
+    public boolean isComplete() {
+        return this.complete;
+    }
+
+    @Override
+    public void complete(InheritanceProvider provider, InheritanceProvider.ClassInfo info) {
+        if (this.complete) {
+            return;
+        }
+
+        for (InheritanceProvider.ClassInfo parent : info.provideParents(provider)) {
+            ClassMapping<?> parentMappings = getMappings().getOrCreateClassMapping(parent.getName());
+            parentMappings.complete(provider, parent);
+
+            for (FieldMapping mapping : parentMappings.getFieldMappings()) {
+                if (parent.canInherit(info, mapping.getSignature())) {
+                    this.fields.putIfAbsent(mapping.getSignature(), mapping);
+                }
+            }
+
+            for (MethodMapping mapping : parentMappings.getMethodMappings()) {
+                if (parent.canInherit(info, mapping.getSignature())) {
+                    this.methods.putIfAbsent(mapping.getSignature(), mapping);
+                }
+            }
+        }
+
+        this.complete = true;
     }
 
 }

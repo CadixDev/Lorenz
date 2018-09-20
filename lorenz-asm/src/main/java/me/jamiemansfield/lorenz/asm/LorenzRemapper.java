@@ -26,18 +26,20 @@
 package me.jamiemansfield.lorenz.asm;
 
 import me.jamiemansfield.bombe.analysis.InheritanceProvider;
+import me.jamiemansfield.bombe.type.signature.FieldSignature;
 import me.jamiemansfield.bombe.type.signature.MethodSignature;
 import me.jamiemansfield.lorenz.MappingSet;
+import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.Mapping;
 import org.objectweb.asm.commons.Remapper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * A simple implementation of {@link Remapper} to remap based
  * on a {@link MappingSet}.
+ *
+ * <p>Note: The implementation modifies the given {@link MappingSet}
+ * on demand to complete the mappings with missing mappings inherited
+ * from parent classes.</p>
  *
  * @author Jamie Mansfield
  * @since 0.4.0
@@ -45,108 +47,40 @@ import java.util.Optional;
 public class LorenzRemapper extends Remapper {
 
     private final MappingSet mappings;
-    private final InheritanceProvider inheritance;
+    private final InheritanceProvider inheritanceProvider;
 
-    public LorenzRemapper(final MappingSet mappings, final InheritanceProvider inheritance) {
+    public LorenzRemapper(final MappingSet mappings, final InheritanceProvider inheritanceProvider) {
         this.mappings = mappings;
-        this.inheritance = inheritance;
+        this.inheritanceProvider = inheritanceProvider;
     }
 
     @Override
     public String map(final String typeName) {
-        return this.mappings.getClassMapping(typeName)
+        return this.mappings.computeClassMapping(typeName)
                 .map(Mapping::getFullDeobfuscatedName)
                 .orElse(typeName);
     }
 
-    /**
-     * Gets a de-obfuscated field name, wrapped in an {@link Optional}, with respect to inheritance.
-     *
-     * @param owner The owner of the field
-     * @param name The name of the field
-     * @return The de-obfuscated field name, wrapped in an {@link Optional}
-     */
-    private Optional<String> getFieldMapping(final String owner, final String name) {
-        // First, check the current class
-        final Optional<String> fieldName = this.mappings.getClassMapping(owner)
-                .flatMap(mapping -> mapping.getFieldMapping(name)
-                        .map(Mapping::getDeobfuscatedName));
-        if (fieldName.isPresent()) {
-            return fieldName;
-        }
-
-        // Now, check parent classes and interfaces
-        final Optional<InheritanceProvider.ClassInfo> info = this.inheritance.provide(owner);
-        if (info.isPresent()) {
-            final List<String> parents = new ArrayList<String>() {
-                {
-                    if (info.get().getSuperName() != null) {
-                        this.add(info.get().getSuperName());
-                    }
-                    this.addAll(info.get().getInterfaces());
-                }
-            };
-
-            for (final String parent : parents) {
-                final Optional<String> mapping = this.getFieldMapping(parent, name);
-                if (mapping.isPresent()) {
-                    return mapping;
-                }
-            }
-        }
-
-        // The field seemingly has no mapping
-        return Optional.empty();
+    private ClassMapping<?> getCompletedClassMapping(String owner) {
+        ClassMapping<?> mapping = this.mappings.getOrCreateClassMapping(owner);
+        mapping.complete(this.inheritanceProvider);
+        return mapping;
     }
 
     @Override
     public String mapFieldName(final String owner, final String name, final String desc) {
-        return this.getFieldMapping(owner, name).orElse(name);
-    }
-
-    /**
-     * Gets a de-obfuscated method name, wrapped in an {@link Optional}, with respect to inheritance.
-     *
-     * @param owner The owner of the method
-     * @param signature The signature of the method
-     * @return The de-obfuscated method name, wrapped in an {@link Optional}
-     */
-    private Optional<String> getMethodMapping(final String owner, final MethodSignature signature) {
-        // First, check the current class
-        final Optional<String> methodName = this.mappings.getClassMapping(owner)
-                .flatMap(mapping -> mapping.getMethodMapping(signature)
-                        .map(Mapping::getDeobfuscatedName));
-        if (methodName.isPresent()) {
-            return methodName;
-        }
-
-        // Now, check the parent classes
-        final Optional<InheritanceProvider.ClassInfo> info = this.inheritance.provide(owner);
-        if (info.isPresent()) {
-            final List<String> parents = new ArrayList<String>() {
-                {
-                    if (info.get().getSuperName() != null) {
-                        this.add(info.get().getSuperName());
-                    }
-                    this.addAll(info.get().getInterfaces());
-                }
-            };
-
-            for (final String parent : parents) {
-                final Optional<String> name = this.getMethodMapping(parent, signature);
-                if (name.isPresent()) {
-                    return name;
-                }
-            }
-        }
-
-        // The method seemingly has no mapping
-        return Optional.empty();
+        return this.getCompletedClassMapping(owner)
+                .computeFieldMapping(FieldSignature.of(name, desc))
+                .map(Mapping::getDeobfuscatedName)
+                .orElse(name);
     }
 
     @Override
     public String mapMethodName(final String owner, final String name, final String desc) {
-        return this.getMethodMapping(owner, MethodSignature.of(name, desc)).orElse(name);
+        return this.getCompletedClassMapping(owner)
+                .getMethodMapping(MethodSignature.of(name, desc))
+                .map(Mapping::getDeobfuscatedName)
+                .orElse(name);
     }
 
 }
