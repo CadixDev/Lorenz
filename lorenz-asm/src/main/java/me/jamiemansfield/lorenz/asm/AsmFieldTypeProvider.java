@@ -25,7 +25,7 @@
 
 package me.jamiemansfield.lorenz.asm;
 
-import me.jamiemansfield.bombe.asm.jar.SourceSet;
+import me.jamiemansfield.bombe.asm.jar.ClassProvider;
 import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import me.jamiemansfield.lorenz.model.jar.FieldTypeProvider;
@@ -37,32 +37,34 @@ import java.util.Optional;
 
 /**
  * An implementation of {@link FieldTypeProvider} backed by a
- * {@link SourceSet}.
+ * {@link ClassProvider}.
  *
  * @author Jamie Mansfield
  * @since 0.4.0
  */
 public class AsmFieldTypeProvider implements FieldTypeProvider {
 
-    private final SourceSet sources;
+    private final ClassProvider classProvider;
 
-    public AsmFieldTypeProvider(final SourceSet sources) {
-        this.sources = sources;
+    public AsmFieldTypeProvider(final ClassProvider classProvider) {
+        this.classProvider = classProvider;
     }
 
     @Override
     public Optional<FieldType> provide(final FieldMapping mapping) {
         final String owner = mapping.getParent().getFullObfuscatedName();
-        if (this.sources.has(owner)) {
-            final ClassNode node = this.sources.get(owner);
-            final Optional<FieldNode> fieldNode = node.fields.stream()
-                    .filter(field -> Objects.equals(field.name, mapping.getObfuscatedName()))
-                    .findAny();
-            if (fieldNode.isPresent()) {
-                final FieldType type = FieldType.of(fieldNode.get().desc);
-                return Optional.of(type);
-            }
+
+        final ClassNode node = this.classProvider.getAsNode(owner);
+        if (node == null) return Optional.empty();
+
+        final Optional<FieldNode> fieldNode = node.fields.stream()
+                .filter(field -> Objects.equals(field.name, mapping.getObfuscatedName()))
+                .findAny();
+        if (fieldNode.isPresent()) {
+            final FieldType type = FieldType.of(fieldNode.get().desc);
+            return Optional.of(type);
         }
+
         return Optional.empty();
     }
 

@@ -25,20 +25,20 @@
 
 package me.jamiemansfield.lorenz.asm.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import me.jamiemansfield.bombe.asm.jar.SourceSet;
 import me.jamiemansfield.bombe.type.FieldType;
 import me.jamiemansfield.bombe.type.ObjectType;
 import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.asm.AsmFieldTypeProvider;
 import me.jamiemansfield.lorenz.model.FieldMapping;
 import org.junit.jupiter.api.Test;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
 
+import java.util.Objects;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class AsmFieldTypeProviderTest {
 
@@ -48,13 +48,14 @@ public final class AsmFieldTypeProviderTest {
         final FieldMapping field = mappings.getOrCreateTopLevelClassMapping("ght")
                 .getOrCreateFieldMapping("op");
 
-        final ClassNode node = new ClassNode();
-        node.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght", null, "java/lang/Object", null);
-        node.visitField(Opcodes.ACC_PUBLIC, "op", "Ljava/util/logging/Logger;", null, null);
+        final ClassWriter writer = new ClassWriter(0);
+        writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght", null, "java/lang/Object", null);
+        writer.visitField(Opcodes.ACC_PUBLIC, "op", "Ljava/util/logging/Logger;", null, null);
 
-        final SourceSet sources = new SourceSet();
-        sources.add(node);
-        mappings.addFieldTypeProvider(new AsmFieldTypeProvider(sources));
+        mappings.addFieldTypeProvider(new AsmFieldTypeProvider(klass -> {
+            if (Objects.equals("ght", klass)) return writer.toByteArray();
+            return null;
+        }));
 
         final Optional<FieldType> type = field.getType();
         assertTrue(type.isPresent());
