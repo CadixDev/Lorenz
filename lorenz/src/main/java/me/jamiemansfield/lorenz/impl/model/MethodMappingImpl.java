@@ -30,13 +30,13 @@ import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 import me.jamiemansfield.lorenz.model.MethodParameterMapping;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * A basic implementation of {@link MethodMapping}.
@@ -49,7 +49,7 @@ public class MethodMappingImpl
         implements MethodMapping {
 
     private final MethodSignature signature;
-    private final Map<Integer, MethodParameterMapping> parameters = new HashMap<>();
+    private final MethodParameterMapping[] parameters;
 
     /**
      * Creates a new method mapping, from the given parameters.
@@ -62,6 +62,7 @@ public class MethodMappingImpl
             final String deobfuscatedName) {
         super(parentClass, signature.getName(), deobfuscatedName);
         this.signature = signature;
+        this.parameters = new MethodParameterMapping[signature.getDescriptor().getParamTypes().size()];
     }
 
     @Override
@@ -71,25 +72,38 @@ public class MethodMappingImpl
 
     @Override
     public Collection<MethodParameterMapping> getParameterMappings() {
-        return Collections.unmodifiableCollection(this.parameters.values());
+        return Collections.unmodifiableList(Arrays.stream(this.parameters)
+                .filter(Objects::nonNull).collect(Collectors.toList()));
+    }
+
+    private void checkIndex(final int index) {
+        if (index < 0 || index >= this.parameters.length) {
+            throw new IndexOutOfBoundsException(String.valueOf(index));
+        }
     }
 
     @Override
     public MethodParameterMapping createParameterMapping(final int index, final String deobfuscatedName) {
-        return this.parameters.compute(index, (i, existingMapping) -> {
-            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getMappings().getModelFactory().createMethodParameterMapping(this, index, deobfuscatedName);
-        });
+        this.checkIndex(index);
+        final MethodParameterMapping mapping = this.parameters[index];
+        if (mapping != null) {
+            return mapping.setDeobfuscatedName(deobfuscatedName);
+        }
+        else {
+            return this.parameters[index] = this.getMappings().getModelFactory().createMethodParameterMapping(this, index, deobfuscatedName);
+        }
     }
 
     @Override
     public Optional<MethodParameterMapping> getParameterMapping(final int index) {
-        return Optional.ofNullable(this.parameters.get(index));
+        this.checkIndex(index);
+        return Optional.ofNullable(this.parameters[index]);
     }
 
     @Override
     public boolean hasParameterMapping(final int index) {
-        return this.parameters.containsKey(index);
+        this.checkIndex(index);
+        return this.parameters[index] != null;
     }
 
     @Override
