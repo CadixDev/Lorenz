@@ -1,4 +1,4 @@
 dependencies {
     compile project(':lorenz')
-    compile "me.jamiemansfield:bombe-asm:${rootProject.bombeVersion}"
+    compile "org.cadixdev:bombe-asm:${rootProject.bombeVersion}"
 }

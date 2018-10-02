@@ -48,6 +48,8 @@ compile 'me.jamiemansfield:lorenz:0.4.0'
 You may also find snapshot artifacts on [Sonatype's OSS repository], and for older
 versions on my own Maven repository (`repo.jamiemansfield.me`).
 
+**Future releases of Lorenz will be made under the `org.cadixdev` group**.
+
 ## License
 
 Lorenz is licensed under the MIT License, this was chosen for its permissive nature -
