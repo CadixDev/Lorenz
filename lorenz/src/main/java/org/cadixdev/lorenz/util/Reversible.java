@@ -23,32 +23,25 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
+package org.cadixdev.lorenz.util;
 
 /**
- * Represents a de-obfuscation mapping for a method parameter,
- * identified by index.
+ * Interface for describing an object that can be reversed.
+ *
+ * @param <T> The type of the reversible object
+ * @param <P> The type of the parent object
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.5.0
  */
-public interface MethodParameterMapping extends MemberMapping<MethodParameterMapping, MethodMapping> {
+public interface Reversible<T, P> {
 
     /**
-     * Gets the index of the method parameter being mapped.
+     * Produces a new object that is a reverse copy of the original.
      *
-     * @return The index
+     * @param parent The parent object
+     * @return The reversed object
      */
-    int getIndex();
-
-    @Override
-    default String getObfuscatedName() {
-        return String.valueOf(this.getIndex());
-    }
-
-    @Override
-    default MethodParameterMapping reverse(final MethodMapping parent) {
-        return parent.createParameterMapping(this.getIndex(), this.getDeobfuscatedName());
-    }
+    T reverse(final P parent);
 
 }

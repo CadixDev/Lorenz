@@ -25,13 +25,15 @@
 
 package org.cadixdev.lorenz.model;
 
+import org.cadixdev.lorenz.MappingSet;
+
 /**
  * Represents a de-obfuscation mapping for a top-level class.
  *
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping> {
+public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping, MappingSet> {
 
     @Override
     default String getSimpleObfuscatedName() {
@@ -69,6 +71,15 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping>
         final String name = this.getDeobfuscatedName();
         final int classIndex = name.lastIndexOf('/');
         return classIndex >= 0 ? name.substring(0, classIndex) : "";
+    }
+
+    @Override
+    default TopLevelClassMapping reverse(final MappingSet parent) {
+        final TopLevelClassMapping mapping = parent.createTopLevelClassMapping(this.getDeobfuscatedName(), this.getObfuscatedName());
+        this.getFieldMappings().forEach(field -> field.reverse(mapping));
+        this.getMethodMappings().forEach(method -> method.reverse(mapping));
+        this.getInnerClassMappings().forEach(klass -> klass.reverse(mapping));
+        return mapping;
     }
 
 }

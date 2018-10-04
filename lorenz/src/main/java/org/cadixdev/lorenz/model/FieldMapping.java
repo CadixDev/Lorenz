@@ -85,4 +85,9 @@ public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> 
         return String.format("%s/%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
+    @Override
+    default FieldMapping reverse(final ClassMapping parent) {
+        return parent.createFieldMapping(this.getDeobfuscatedSignature(), this.getObfuscatedName());
+    }
+
 }

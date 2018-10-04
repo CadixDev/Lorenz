@@ -35,11 +35,12 @@ import java.util.StringJoiner;
  * An abstract basic implementation of {@link Mapping}.
  *
  * @param <M> The type of the mapping
+ * @param <P> The type of the parent
  *
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractMappingImpl<M extends Mapping> implements Mapping<M> {
+public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mapping<M, P> {
 
     private final MappingSet mappings;
     private final String obfuscatedName;

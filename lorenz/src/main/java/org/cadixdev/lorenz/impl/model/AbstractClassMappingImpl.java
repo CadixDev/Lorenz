@@ -46,13 +46,14 @@ import java.util.StringJoiner;
  * A basic implementation of {@link ClassMapping}.
  *
  * @param <M> The type of the class mapping
+ * @param <P> The type of the parent
  *
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractClassMappingImpl<M extends ClassMapping>
-        extends AbstractMappingImpl<M>
-        implements ClassMapping<M> {
+public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
+        extends AbstractMappingImpl<M, P>
+        implements ClassMapping<M, P> {
 
     private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
     private final Map<String, FieldMapping> fieldsByName = new HashMap<>();
@@ -210,7 +211,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping>
         }
 
         for (final InheritanceProvider.ClassInfo parent : info.provideParents(provider)) {
-            final ClassMapping<?> parentMappings = this.getMappings().getOrCreateClassMapping(parent.getName());
+            final ClassMapping<?, ?> parentMappings = this.getMappings().getOrCreateClassMapping(parent.getName());
             parentMappings.complete(provider, parent);
 
             for (final FieldMapping mapping : parentMappings.getFieldMappings()) {

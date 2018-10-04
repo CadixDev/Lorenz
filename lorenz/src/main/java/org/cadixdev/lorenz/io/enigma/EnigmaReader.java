@@ -110,7 +110,7 @@ public class EnigmaReader extends TextMappingsReader {
             );
         }
 
-        private final Stack<ClassMapping<?>> stack = new Stack<>();
+        private final Stack<ClassMapping<?, ?>> stack = new Stack<>();
         private MethodMapping currentMethod = null;
         private int lastIndentLevel = 0;
 

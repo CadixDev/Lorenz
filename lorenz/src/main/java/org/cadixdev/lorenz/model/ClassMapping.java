@@ -39,11 +39,12 @@ import java.util.Optional;
  * Represents a de-obfuscation mapping for classes.
  *
  * @param <M> The type of the mapping
+ * @param <P> The type of the parent
  *
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface ClassMapping<M extends ClassMapping> extends Mapping<M>, InheritanceCompletable {
+public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, InheritanceCompletable {
 
     /**
      * {@inheritDoc}

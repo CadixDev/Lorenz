@@ -166,4 +166,11 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
         return String.format("%s/%s", this.getParent().getFullDeobfuscatedName(), this.getDeobfuscatedName());
     }
 
+    @Override
+    default MethodMapping reverse(final ClassMapping parent) {
+        final MethodMapping mapping = parent.createMethodMapping(this.getDeobfuscatedSignature(), this.getObfuscatedName());
+        this.getParameterMappings().forEach(param -> param.reverse(mapping));
+        return mapping;
+    }
+
 }

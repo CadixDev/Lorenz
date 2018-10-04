@@ -35,7 +35,7 @@ import org.cadixdev.lorenz.model.TopLevelClassMapping;
  * @since 0.2.0
  */
 public class TopLevelClassMappingImpl
-        extends AbstractClassMappingImpl<TopLevelClassMapping>
+        extends AbstractClassMappingImpl<TopLevelClassMapping, MappingSet>
         implements TopLevelClassMapping {
 
     /**

@@ -35,6 +35,7 @@ import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
+import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MappingSet {
+public interface MappingSet extends Reversible<MappingSet, MappingSet> {
 
     /**
      * Creates a mapping set, using the default Lorenz model implementation.
@@ -135,7 +136,7 @@ public interface MappingSet {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    default Optional<? extends ClassMapping<?>> getClassMapping(final String obfuscatedName) {
+    default Optional<? extends ClassMapping<?, ?>> getClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
 
@@ -162,7 +163,7 @@ public interface MappingSet {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    default Optional<? extends ClassMapping<?>> computeClassMapping(final String obfuscatedName) {
+    default Optional<? extends ClassMapping<?, ?>> computeClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
 
@@ -183,7 +184,7 @@ public interface MappingSet {
      * @param obfuscatedName The obfuscated name of the class mapping
      * @return The class mapping
      */
-    default ClassMapping<?> getOrCreateClassMapping(final String obfuscatedName) {
+    default ClassMapping<?, ?> getOrCreateClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
@@ -284,6 +285,22 @@ public interface MappingSet {
                         .collect(Collectors.toList()),
                 this.deobfuscate(descriptor.getReturnType())
         );
+    }
+
+    /**
+     * Produces a new object that is a reverse copy of the original.
+     *
+     * @return The reversed object
+     * @since 0.5.0
+     */
+    default MappingSet reverse() {
+        return this.reverse(MappingSet.create());
+    }
+
+    @Override
+    default MappingSet reverse(final MappingSet parent) {
+        this.getTopLevelClassMappings().forEach(klass -> klass.reverse(parent));
+        return parent;
     }
 
 }

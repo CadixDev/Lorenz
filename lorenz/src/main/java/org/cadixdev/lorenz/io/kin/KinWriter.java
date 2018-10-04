@@ -67,7 +67,7 @@ public class KinWriter extends BinaryMappingsWriter {
         }
     }
 
-    private void writeClass(final ClassMapping<?> mapping) throws IOException {
+    private void writeClass(final ClassMapping<?, ?> mapping) throws IOException {
         this.stream.writeUTF(mapping.getObfuscatedName());
         this.stream.writeUTF(mapping.getDeobfuscatedName());
 

@@ -99,7 +99,7 @@ public class EnigmaWriter extends TextMappingsWriter {
                 .forEach(klass -> this.writeClassMapping(klass, 0));
     }
 
-    private void writeClassMapping(final ClassMapping<?> klass, final int indent) {
+    private void writeClassMapping(final ClassMapping<?, ?> klass, final int indent) {
         final String obfName = handleNonePrefix(klass.getFullObfuscatedName());
         if (klass.hasDeobfuscatedName()) {
             final String deobfName = klass instanceof InnerClassMapping ?

@@ -61,8 +61,8 @@ public class LorenzRemapper extends Remapper {
                 .orElse(typeName);
     }
 
-    private ClassMapping<?> getCompletedClassMapping(final String owner) {
-        final ClassMapping<?> mapping = this.mappings.getOrCreateClassMapping(owner);
+    private ClassMapping<?, ?> getCompletedClassMapping(final String owner) {
+        final ClassMapping<?, ?> mapping = this.mappings.getOrCreateClassMapping(owner);
         mapping.complete(this.inheritanceProvider);
         return mapping;
     }

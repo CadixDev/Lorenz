@@ -66,7 +66,7 @@ public class TSrgWriter extends TextMappingsWriter {
      *
      * @param mapping The class mapping
      */
-    protected void writeClassMapping(final ClassMapping<?> mapping) {
+    protected void writeClassMapping(final ClassMapping<?, ?> mapping) {
         this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
 
         // Write field mappings

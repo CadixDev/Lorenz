@@ -26,17 +26,19 @@
 package org.cadixdev.lorenz.model;
 
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.util.Reversible;
 
 /**
  * Represents a de-obfuscation mapping for mappable constructs of the Java
  * class format - e.g. classes, fields, and methods.
  *
  * @param <M> The type of the mapping, used for chaining
+ * @param <P> The type of the parent object
  *
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface Mapping<M extends Mapping> {
+public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
 
     /**
      * Gets the obfuscated name of the member being represented.

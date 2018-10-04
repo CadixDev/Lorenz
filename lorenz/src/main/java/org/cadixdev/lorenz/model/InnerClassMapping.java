@@ -31,7 +31,7 @@ package org.cadixdev.lorenz.model;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, MemberMapping<InnerClassMapping, ClassMapping> {
+public interface InnerClassMapping extends ClassMapping<InnerClassMapping, ClassMapping>, MemberMapping<InnerClassMapping, ClassMapping> {
 
     /**
      * Sets the de-obfuscated name of this inner class mapping.
@@ -81,6 +81,15 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping>, Memb
     @Override
     default String getDeobfuscatedPackage() {
         return this.getParent().getDeobfuscatedPackage();
+    }
+
+    @Override
+    default InnerClassMapping reverse(final ClassMapping parent) {
+        final InnerClassMapping mapping = parent.createInnerClassMapping(this.getDeobfuscatedName(), this.getObfuscatedName());
+        this.getFieldMappings().forEach(field -> field.reverse(mapping));
+        this.getMethodMappings().forEach(method -> method.reverse(mapping));
+        this.getInnerClassMappings().forEach(klass -> klass.reverse(mapping));
+        return mapping;
     }
 
 }
