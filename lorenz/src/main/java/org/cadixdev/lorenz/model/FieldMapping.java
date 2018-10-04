@@ -46,6 +46,17 @@ public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> 
      */
     FieldSignature getSignature();
 
+    /**
+     * Gets the de-obfuscated signature of this field mapping.
+     *
+     * @return The signature
+     * @since 0.5.0
+     */
+    default FieldSignature getDeobfuscatedSignature() {
+        return this.getType().map(fieldType -> new FieldSignature(this.getDeobfuscatedName(), this.getMappings().deobfuscate(fieldType)))
+                .orElseGet(() -> new FieldSignature(this.getDeobfuscatedName()));
+    }
+
     @Override
     default String getObfuscatedName() {
         return this.getSignature().getName();
