@@ -279,6 +279,19 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     Optional<MethodMapping> getMethodMapping(final MethodSignature signature);
 
     /**
+     * Gets the method mapping of the given method signature of the
+     * class mapping, should it exist.
+     *
+     * @param obfuscatedName The obfuscated name of the method mapping
+     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
+     * @return The method mapping, wrapped in an {@link Optional}
+     * @since 0.5.0
+     */
+    default Optional<MethodMapping> getMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
+        return this.getMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
+    }
+
+    /**
      * Creates a new method mapping, attached to this class mapping, using
      * the given method signature and de-obfuscated name.
      *

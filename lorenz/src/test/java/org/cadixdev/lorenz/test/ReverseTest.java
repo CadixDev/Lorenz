@@ -28,7 +28,6 @@ package org.cadixdev.lorenz.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
@@ -77,7 +76,7 @@ public final class ReverseTest {
         assertEquals("ui", log.get().getDeobfuscatedName(), "log has the wrong de-obf name!");
 
         // method
-        final Optional<MethodMapping> main = demo.get().getMethodMapping(MethodSignature.of("main", "()V"));
+        final Optional<MethodMapping> main = demo.get().getMethodMapping("main", "()V");
         assertTrue(main.isPresent(), "main not present!");
         assertEquals("hhyg", main.get().getDeobfuscatedName(), "main has the wrong de-obf name!");
     }
