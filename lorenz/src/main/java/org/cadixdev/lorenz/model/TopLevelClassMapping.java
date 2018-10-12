@@ -82,4 +82,27 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping,
         return mapping;
     }
 
+    @Override
+    default TopLevelClassMapping merge(final TopLevelClassMapping with, final MappingSet parent) {
+        // create the container mapping
+        final TopLevelClassMapping newMapping = parent.getOrCreateTopLevelClassMapping(this.getObfuscatedName())
+                .setDeobfuscatedName(with.getDeobfuscatedName());
+
+        // fill with child data
+        this.getFieldMappings().forEach(field -> {
+            final FieldMapping fieldWith = with.getOrCreateFieldMapping(field.getDeobfuscatedSignature());
+            field.merge(fieldWith, newMapping);
+        });
+        this.getMethodMappings().forEach(method -> {
+            final MethodMapping methodWith = with.getOrCreateMethodMapping(method.getDeobfuscatedSignature());
+            method.merge(methodWith, newMapping);
+        });
+        this.getInnerClassMappings().forEach(klass -> {
+            final InnerClassMapping klassWith = with.getOrCreateInnerClassMapping(klass.getDeobfuscatedName());
+            klass.merge(klassWith, newMapping);
+        });
+
+        // A -> [B / C] -> D
+        return newMapping;
+    }
 }

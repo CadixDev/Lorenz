@@ -111,4 +111,13 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      */
     MappingSet getMappings();
 
+    /**
+     * Merges this mapping with another, to a given parent.
+     *
+     * @param with The mapping to merge with
+     * @param parent The parent
+     * @return The new mapping
+     */
+    M merge(final M with, final P parent);
+
 }

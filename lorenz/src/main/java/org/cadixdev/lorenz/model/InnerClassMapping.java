@@ -92,4 +92,28 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
         return mapping;
     }
 
+    @Override
+    default InnerClassMapping merge(final InnerClassMapping with, final ClassMapping parent) {
+        // create the container mapping
+        final InnerClassMapping newMapping = parent.getOrCreateInnerClassMapping(this.getObfuscatedName())
+                .setDeobfuscatedName(with.getDeobfuscatedName());
+
+        // fill with child data
+        this.getFieldMappings().forEach(field -> {
+            final FieldMapping fieldWith = with.getOrCreateFieldMapping(field.getDeobfuscatedSignature());
+            field.merge(fieldWith, newMapping);
+        });
+        this.getMethodMappings().forEach(method -> {
+            final MethodMapping methodWith = with.getOrCreateMethodMapping(method.getDeobfuscatedSignature());
+            method.merge(methodWith, newMapping);
+        });
+        this.getInnerClassMappings().forEach(klass -> {
+            final InnerClassMapping klassWith = with.getOrCreateInnerClassMapping(klass.getDeobfuscatedName());
+            klass.merge(klassWith, newMapping);
+        });
+
+        // A -> [B / C] -> D
+        return newMapping;
+    }
+
 }

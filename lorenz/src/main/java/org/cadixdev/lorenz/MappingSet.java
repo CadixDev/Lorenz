@@ -288,9 +288,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
     }
 
     /**
-     * Produces a new object that is a reverse copy of the original.
+     * Produces a new mapping set that is a reverse copy of the original.
      *
-     * @return The reversed object
+     * @return The reversed set
      * @since 0.5.0
      */
     default MappingSet reverse() {
@@ -300,6 +300,35 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
     @Override
     default MappingSet reverse(final MappingSet parent) {
         this.getTopLevelClassMappings().forEach(klass -> klass.reverse(parent));
+        return parent;
+    }
+
+    /**
+     * Produces a new mapping set, that is a merged copy with the provided
+     * mappings.
+     *
+     * @param with The set to merge with
+     * @return The merged set
+     * @since 0.5.0
+     */
+    default MappingSet merge(final MappingSet with) {
+        return this.merge(with, MappingSet.create());
+    }
+
+    /**
+     * Produces a new mapping set, that is a merged copy with the provided
+     * mappings.
+     *
+     * @param with The set to merge with
+     * @param parent The set to create entries
+     * @return The merged set
+     * @since 0.5.0
+     */
+    default MappingSet merge(final MappingSet with, final MappingSet parent) {
+        with.getTopLevelClassMappings().forEach(klass -> {
+            final TopLevelClassMapping klassWith = with.getOrCreateTopLevelClassMapping(klass.getDeobfuscatedName());
+            klass.merge(klassWith, parent);
+        });
         return parent;
     }
 
