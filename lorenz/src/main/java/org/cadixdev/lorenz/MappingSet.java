@@ -325,7 +325,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @since 0.5.0
      */
     default MappingSet merge(final MappingSet with, final MappingSet parent) {
-        with.getTopLevelClassMappings().forEach(klass -> {
+        this.getTopLevelClassMappings().forEach(klass -> {
             final TopLevelClassMapping klassWith = with.getOrCreateTopLevelClassMapping(klass.getDeobfuscatedName());
             klass.merge(klassWith, parent);
         });
