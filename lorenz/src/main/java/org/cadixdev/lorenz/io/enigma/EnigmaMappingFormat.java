@@ -41,14 +41,20 @@ import java.util.Optional;
  */
 public class EnigmaMappingFormat implements TextMappingFormat {
 
+    private final boolean handleNone;
+
+    public EnigmaMappingFormat(final boolean handleNone) {
+        this.handleNone = handleNone;
+    }
+
     @Override
     public MappingsReader createReader(final Reader reader) {
-        return new EnigmaReader(reader);
+        return new EnigmaReader(reader, this.handleNone);
     }
 
     @Override
     public MappingsWriter createWriter(final Writer writer) {
-        return new EnigmaWriter(writer);
+        return new EnigmaWriter(writer, this.handleNone);
     }
 
     @Override

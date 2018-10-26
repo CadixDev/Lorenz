@@ -66,9 +66,14 @@ public final class MappingFormats {
     public static final TextMappingFormat JAM = new JamMappingFormat();
 
     /**
-     * The Enigma mapping format.
+     * The standard Enigma mapping format.
      */
-    public static final TextMappingFormat ENIGMA = new EnigmaMappingFormat();
+    public static final TextMappingFormat ENIGMA = new EnigmaMappingFormat(true);
+
+    /**
+     * The Fabric Enigma mapping format.
+     */
+    public static final TextMappingFormat FABRIC_ENIGMA = new EnigmaMappingFormat(false);
 
     private MappingFormats() {
     }

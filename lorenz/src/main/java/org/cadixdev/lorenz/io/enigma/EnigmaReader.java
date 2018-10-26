@@ -50,8 +50,8 @@ import java.util.stream.Collectors;
  */
 public class EnigmaReader extends TextMappingsReader {
 
-    public EnigmaReader(final Reader reader) {
-        super(reader, Processor::new);
+    public EnigmaReader(final Reader reader, final boolean handleNone) {
+        super(reader, mappings -> new Processor(mappings, handleNone));
     }
 
     public static class Processor extends TextMappingsReader.Processor {
@@ -77,49 +77,16 @@ public class EnigmaReader extends TextMappingsReader {
             return indentLevel;
         }
 
-        private static String handleNonePrefix(final String descriptor) {
-            if (descriptor.startsWith("none/")) {
-                return descriptor.substring("none/".length());
-            }
-            return descriptor;
-        }
-
-        private static Type handleNonePrefix(final Type type) {
-            if (type instanceof FieldType) {
-                return handleNonePrefix((FieldType) type);
-            }
-            return type;
-        }
-
-        private static FieldType handleNonePrefix(final FieldType type) {
-            if (type instanceof ArrayType) {
-                final ArrayType arr = (ArrayType) type;
-                return new ArrayType(arr.getDimCount(), handleNonePrefix(arr.getComponent()));
-            }
-            if (type instanceof ObjectType) {
-                final ObjectType obj = (ObjectType) type;
-                return new ObjectType(handleNonePrefix(obj.getClassName()));
-            }
-            return type;
-        }
-
-        private static MethodDescriptor handleNonePrefix(final MethodDescriptor descriptor) {
-            return new MethodDescriptor(
-                    descriptor.getParamTypes().stream()
-                            .map(Processor::handleNonePrefix)
-                            .collect(Collectors.toList()),
-                    handleNonePrefix(descriptor.getReturnType())
-            );
-        }
-
         private final Deque<Mapping<?, ?>> stack = new ArrayDeque<>();
+        private final boolean handleNone;
 
-        public Processor(final MappingSet mappings) {
+        public Processor(final MappingSet mappings, final boolean handleNone) {
             super(mappings);
+            this.handleNone = handleNone;
         }
 
-        public Processor() {
-            this(MappingSet.create());
+        public Processor(final boolean handleNone) {
+            this(MappingSet.create(), handleNone);
         }
 
         @Override
@@ -142,31 +109,31 @@ public class EnigmaReader extends TextMappingsReader {
             // Establish the type of mapping
             final String key = split[0];
             if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
-                final String obfName = handleNonePrefix(split[1]);
+                final String obfName = this.handleNonePrefix(split[1]);
                 this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
             }
             else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
-                final String obfName = handleNonePrefix(split[1]);
-                final String deobfName = handleNonePrefix(split[2]);
+                final String obfName = this.handleNonePrefix(split[1]);
+                final String deobfName = this.handleNonePrefix(split[2]);
                 this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
                         .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
-                final String type = handleNonePrefix(FieldType.of(split[3])).toString();
+                final String type = this.handleNonePrefix(FieldType.of(split[3])).toString();
                 this.peekClass().getOrCreateFieldMapping(obfName, type)
                         .setDeobfuscatedName(deobfName);
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = split[1];
-                final String descriptor = handleNonePrefix(MethodDescriptor.of(split[2])).toString();
+                final String descriptor = this.handleNonePrefix(MethodDescriptor.of(split[2])).toString();
                 this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor));
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
-                final String descriptor = handleNonePrefix(MethodDescriptor.of(split[3])).toString();
+                final String descriptor = this.handleNonePrefix(MethodDescriptor.of(split[3])).toString();
                 this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor)
                         .setDeobfuscatedName(deobfName));
             }
@@ -186,6 +153,49 @@ public class EnigmaReader extends TextMappingsReader {
         protected MethodMapping peekMethod() {
             if (!(this.stack.peek() instanceof MethodMapping)) throw new UnsupportedOperationException("Not a method on the stack!");
             return (MethodMapping) this.stack.peek();
+        }
+
+        private String handleNonePrefix(final String descriptor) {
+            if (!this.handleNone) return descriptor;
+
+            if (descriptor.startsWith("none/")) {
+                return descriptor.substring("none/".length());
+            }
+            return descriptor;
+        }
+
+        private Type handleNonePrefix(final Type type) {
+            if (!this.handleNone) return type;
+
+            if (type instanceof FieldType) {
+                return this.handleNonePrefix((FieldType) type);
+            }
+            return type;
+        }
+
+        private FieldType handleNonePrefix(final FieldType type) {
+            if (!this.handleNone) return type;
+
+            if (type instanceof ArrayType) {
+                final ArrayType arr = (ArrayType) type;
+                return new ArrayType(arr.getDimCount(), this.handleNonePrefix(arr.getComponent()));
+            }
+            if (type instanceof ObjectType) {
+                final ObjectType obj = (ObjectType) type;
+                return new ObjectType(this.handleNonePrefix(obj.getClassName()));
+            }
+            return type;
+        }
+
+        private MethodDescriptor handleNonePrefix(final MethodDescriptor descriptor) {
+            if (!this.handleNone) return descriptor;
+
+            return new MethodDescriptor(
+                    descriptor.getParamTypes().stream()
+                            .map(this::handleNonePrefix)
+                            .collect(Collectors.toList()),
+                    this.handleNonePrefix(descriptor.getReturnType())
+            );
         }
 
     }
