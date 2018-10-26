@@ -1,11 +1,11 @@
 # CLASS yu uk/jamierocks/Comment
 CLASS uih uk/jamierocks/CommentTest # CLASS op uk/jr/Operator
 CLASS ght uk/jamierocks/Test
-	FIELD rft log Ljava/util/logging/Logger;
-	METHOD hyuip isEven (I)Z
-		ARG 0 num
 	CLASS ght$ds Example
 		FIELD juh server Luk/jamierocks/Server;
 		METHOD hyuip isOdd (I)Z
 			ARG 0 num
 		CLASS ght$ds$bg Inner
+	FIELD rft log Ljava/util/logging/Logger;
+	METHOD hyuip isEven (I)Z
+		ARG 0 num

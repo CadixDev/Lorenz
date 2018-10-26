@@ -126,14 +126,23 @@ public class EnigmaReader extends TextMappingsReader {
         public void accept(final String rawLine) {
             final int indentLevel = getIndentLevel(rawLine);
 
-            if (indentLevel < this.lastIndentLevel) {
-                if (this.currentMethod != null && indentLevel == this.lastIndentLevel - 1) {
-                    // new method / field mapping
-                    this.currentMethod = null;
+            // If there is a change in the indentation level, we will need to alter the
+            // state as need be.
+            final int classLevel = indentLevel - (this.currentMethod == null ? 0 : 1);
+            if (classLevel < this.stack.size()) {
+                final int difference = this.stack.size() - classLevel;
+                final int indentDifference = this.lastIndentLevel - indentLevel;
+
+                // as the stack is exclusive to classes, don't pop anything when a method
+                // is the container
+                if (!(this.currentMethod != null && indentDifference == 1)) {
+                    for (int i = 0; i < difference; i++) {
+                        this.stack.pop();
+                    }
                 }
-                else {
-                    this.stack.pop();
-                }
+
+                // wipe the current method
+                this.currentMethod = null;
             }
 
             final String line = EnigmaConstants.removeComments(rawLine).trim();
