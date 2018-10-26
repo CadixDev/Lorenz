@@ -168,7 +168,7 @@ public class EnigmaWriter extends TextMappingsWriter {
 
     private void printIndentedLine(final int indent, final String line) {
         for (int i = 0; i < indent; i++) {
-            this.writer.println('\t');
+            this.writer.print('\t');
         }
         this.writer.println(line);
     }
