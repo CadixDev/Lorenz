@@ -120,4 +120,13 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      */
     M merge(final M with, final P parent);
 
+    /**
+     * Clones this mapping, to a given parent.
+     *
+     * @param parent The parent
+     * @return The cloned mapping
+     * @since 0.5.0
+     */
+    M copy(final P parent);
+
 }

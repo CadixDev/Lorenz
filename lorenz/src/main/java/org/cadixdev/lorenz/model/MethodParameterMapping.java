@@ -56,4 +56,9 @@ public interface MethodParameterMapping extends MemberMapping<MethodParameterMap
         return parent.createParameterMapping(this.getIndex(), with.getDeobfuscatedName());
     }
 
+    @Override
+    default MethodParameterMapping copy(final MethodMapping parent) {
+        return parent.createParameterMapping(this.getIndex(), this.getDeobfuscatedName());
+    }
+
 }

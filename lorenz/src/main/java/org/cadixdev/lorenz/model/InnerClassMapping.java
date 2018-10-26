@@ -116,4 +116,13 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
         return newMapping;
     }
 
+    @Override
+    default InnerClassMapping copy(final ClassMapping parent) {
+        final InnerClassMapping mapping = parent.createInnerClassMapping(this.getObfuscatedName(), this.getDeobfuscatedName());
+        this.getFieldMappings().forEach(field -> field.copy(mapping));
+        this.getMethodMappings().forEach(method -> method.copy(mapping));
+        this.getInnerClassMappings().forEach(klass -> klass.copy(mapping));
+        return mapping;
+    }
+
 }
