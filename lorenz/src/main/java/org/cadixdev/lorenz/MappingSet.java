@@ -332,4 +332,16 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
         return parent;
     }
 
+    /**
+     * Produces a new mapping set, which is a clone copy of the original.
+     *
+     * @return The cloned set
+     * @since 0.5.0
+     */
+    default MappingSet copy() {
+        final MappingSet mappings = MappingSet.create();
+        this.getTopLevelClassMappings().forEach(klass -> klass.copy(mappings));
+        return mappings;
+    }
+
 }

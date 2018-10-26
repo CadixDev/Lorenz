@@ -189,4 +189,11 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
         return newMapping;
     }
 
+    @Override
+    default MethodMapping copy(final ClassMapping parent) {
+        final MethodMapping mapping = parent.createMethodMapping(this.getSignature(), this.getDeobfuscatedName());
+        this.getParameterMappings().forEach(param -> param.copy(mapping));
+        return mapping;
+    }
+
 }

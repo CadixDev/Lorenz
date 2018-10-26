@@ -105,4 +105,14 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping,
         // A -> [B / C] -> D
         return newMapping;
     }
+
+    @Override
+    default TopLevelClassMapping copy(final MappingSet parent) {
+        final TopLevelClassMapping mapping = parent.createTopLevelClassMapping(this.getObfuscatedName(), this.getDeobfuscatedName());
+        this.getFieldMappings().forEach(field -> field.copy(mapping));
+        this.getMethodMappings().forEach(method -> method.copy(mapping));
+        this.getInnerClassMappings().forEach(klass -> klass.copy(mapping));
+        return mapping;
+    }
+
 }

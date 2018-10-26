@@ -97,4 +97,9 @@ public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> 
                 .setDeobfuscatedName(with.getDeobfuscatedName());
     }
 
+    @Override
+    default FieldMapping copy(final ClassMapping parent) {
+        return parent.createFieldMapping(this.getSignature(), this.getDeobfuscatedName());
+    }
+
 }
