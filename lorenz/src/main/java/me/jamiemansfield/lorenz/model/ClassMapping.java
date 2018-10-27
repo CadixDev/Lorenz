@@ -415,7 +415,7 @@ public interface ClassMapping<M extends ClassMapping> extends Mapping<M> {
     default boolean hasMappings() {
         return this.hasDeobfuscatedName() ||
                 this.getFieldMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
-                this.getMethodMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
+                this.getMethodMappings().stream().anyMatch(MethodMapping::hasMappings) ||
                 this.getInnerClassMappings().stream().anyMatch(ClassMapping::hasMappings);
     }
 
