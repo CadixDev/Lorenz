@@ -34,6 +34,7 @@ import me.jamiemansfield.lorenz.MappingSet;
 import me.jamiemansfield.lorenz.io.MappingsReader;
 import me.jamiemansfield.lorenz.io.TextMappingsReader;
 import me.jamiemansfield.lorenz.model.ClassMapping;
+import me.jamiemansfield.lorenz.model.Mapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
 import java.io.Reader;
@@ -111,9 +112,7 @@ public class EnigmaReader extends TextMappingsReader {
             );
         }
 
-        private final Deque<ClassMapping<?>> stack = new ArrayDeque<>();
-        private MethodMapping currentMethod = null;
-        private int lastIndentLevel = 0;
+        private final Deque<Mapping<?>> stack = new ArrayDeque<>();
 
         public Processor(final MappingSet mappings) {
             super(mappings);
@@ -129,21 +128,13 @@ public class EnigmaReader extends TextMappingsReader {
 
             // If there is a change in the indentation level, we will need to alter the
             // state as need be.
-            final int classLevel = indentLevel - (this.currentMethod == null ? 0 : 1);
-            if (classLevel < this.stack.size()) {
-                final int difference = this.stack.size() - classLevel;
-                final int indentDifference = this.lastIndentLevel - indentLevel;
+            if (indentLevel < this.stack.size()) {
+                final int difference = this.stack.size() - indentLevel;
 
-                // as the stack is exclusive to classes, don't pop anything when a method
-                // is the container
-                if (!(this.currentMethod != null && indentDifference == 1)) {
-                    for (int i = 0; i < difference; i++) {
-                        this.stack.pop();
-                    }
+                // Pop all the mappings as needed
+                for (int i = 0; i < difference; i++) {
+                    this.stack.pop();
                 }
-
-                // wipe the current method
-                this.currentMethod = null;
             }
 
             final String line = EnigmaConstants.removeComments(rawLine).trim();
@@ -169,29 +160,37 @@ public class EnigmaReader extends TextMappingsReader {
                 final String obfName = split[1];
                 final String deobfName = split[2];
                 final String type = handleNonePrefix(FieldType.of(split[3])).toString();
-                this.stack.peek().getOrCreateFieldMapping(obfName, type)
+                this.peekClass().getOrCreateFieldMapping(obfName, type)
                         .setDeobfuscatedName(deobfName);
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String descriptor = handleNonePrefix(MethodDescriptor.of(split[2])).toString();
-                this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor);
+                this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor));
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
                 final String descriptor = handleNonePrefix(MethodDescriptor.of(split[3])).toString();
-                this.currentMethod = this.stack.peek().getOrCreateMethodMapping(obfName, descriptor)
-                        .setDeobfuscatedName(deobfName);
+                this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor)
+                        .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(PARAM_MAPPING_KEY) && len == PARAM_MAPPING_ELEMENT_COUNT) {
                 final int index = Integer.parseInt(split[1]);
                 final String deobfName = split[2];
-                this.currentMethod.getOrCreateParameterMapping(index)
+                this.peekMethod().getOrCreateParameterMapping(index)
                         .setDeobfuscatedName(deobfName);
             }
+        }
 
-            this.lastIndentLevel = indentLevel;
+        protected ClassMapping<?> peekClass() {
+            if (!(this.stack.peek() instanceof ClassMapping)) throw new UnsupportedOperationException("Not a class on the stack!");
+            return (ClassMapping<?>) this.stack.peek();
+        }
+
+        protected MethodMapping peekMethod() {
+            if (!(this.stack.peek() instanceof MethodMapping)) throw new UnsupportedOperationException("Not a method on the stack!");
+            return (MethodMapping) this.stack.peek();
         }
 
     }
