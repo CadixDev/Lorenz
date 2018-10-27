@@ -37,7 +37,8 @@ import me.jamiemansfield.lorenz.model.ClassMapping;
 import me.jamiemansfield.lorenz.model.MethodMapping;
 
 import java.io.Reader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +111,7 @@ public class EnigmaReader extends TextMappingsReader {
             );
         }
 
-        private final Stack<ClassMapping<?>> stack = new Stack<>();
+        private final Deque<ClassMapping<?>> stack = new ArrayDeque<>();
         private MethodMapping currentMethod = null;
         private int lastIndentLevel = 0;
 
