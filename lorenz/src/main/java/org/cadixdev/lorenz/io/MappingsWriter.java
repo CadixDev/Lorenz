@@ -25,16 +25,20 @@
 
 package org.cadixdev.lorenz.io;
 
+import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.Mapping;
+import org.cadixdev.lorenz.model.MethodMapping;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * Represents a writer, that is capable of writing de-obfuscation
- * mapping.
+ * mappings.
  *
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
@@ -51,7 +55,34 @@ public abstract class MappingsWriter implements Closeable {
      * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
      */
     protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
-            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
+            comparingLength(Mapping::getFullObfuscatedName);
+
+    /**
+     * A {@link Comparator} used to alphabetise a collection of {@link FieldMapping}s.
+     *
+     * @since 0.5.0
+     */
+    protected static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
+            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getType().map(FieldType::toString).orElse(""));
+
+    /**
+     * A {@link Comparator} used to alphabetise a collection of {@link MethodMapping}s.
+     *
+     * @since 0.5.0
+     */
+    protected static final Comparator<MethodMapping> ALPHABETISE_METHODS =
+            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getDescriptor().toString());
+
+    private static <T> Comparator<T> comparingLength(final Function<? super T, String> keyExtractor) {
+        return (c1, c2) -> {
+            final String key1 = keyExtractor.apply(c1);
+            final String key2 = keyExtractor.apply(c2);
+            if (key1.length() != key2.length()) {
+                return key1.length() - key2.length();
+            }
+            return key1.compareTo(key2);
+        };
+    }
 
     /**
      * Writes the given mappings to the previously given output.

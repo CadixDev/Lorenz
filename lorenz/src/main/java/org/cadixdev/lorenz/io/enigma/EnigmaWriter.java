@@ -120,13 +120,13 @@ public class EnigmaWriter extends TextMappingsWriter {
         // Write field mappings
         klass.getFieldMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_FIELDS)
                 .forEach(field -> this.writeFieldMapping(field, indent + 1));
 
         // Write method mappings
         klass.getMethodMappings().stream()
                 .filter(MethodMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_METHODS)
                 .forEach(method -> this.writeMethodMapping(method, indent + 1));
     }
 

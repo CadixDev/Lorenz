@@ -97,13 +97,13 @@ public class SrgWriter extends TextMappingsWriter {
         // Write field mappings
         mapping.getFieldsByName().values().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_FIELDS)
                 .forEach(this::writeFieldMapping);
 
         // Write method mappings
         mapping.getMethodMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_METHODS)
                 .forEach(this::writeMethodMapping);
     }
 

@@ -95,13 +95,13 @@ public class JamWriter extends TextMappingsWriter {
         // Write field mappings
         mapping.getFieldMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_FIELDS)
                 .forEach(this::writeFieldMapping);
 
         // Write method mappings
         mapping.getMethodMappings().stream()
                 .filter(MethodMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(ALPHABETISE_METHODS)
                 .forEach(this::writeMethodMapping);
     }
 
