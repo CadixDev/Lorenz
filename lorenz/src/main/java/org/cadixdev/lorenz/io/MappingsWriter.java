@@ -30,9 +30,7 @@ import org.cadixdev.lorenz.model.Mapping;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 /**
  * Represents a writer, that is capable of writing de-obfuscation
@@ -56,34 +54,11 @@ public abstract class MappingsWriter implements Closeable {
             (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
 
     /**
-     * Indents the given String at each newline, with 4 spaces.
-     *
-     * @param str The String to indent
-     * @return The indented String
-     */
-    protected static String indentSpaces(final String str) {
-        return Arrays.stream(str.split("\n"))
-                .map(line -> "    " + line + "\n")
-                .collect(Collectors.joining());
-    }
-
-    /**
-     * Indents the given String at each newline, with a tab.
-     *
-     * @param str The String to indent
-     * @return The indented String
-     */
-    protected static String indentTab(final String str) {
-        return Arrays.stream(str.split("\n"))
-                .map(line -> "\t" + line + "\n")
-                .collect(Collectors.joining());
-    }
-
-    /**
      * Writes the given mappings to the previously given output.
      *
      * @param mappings The mapping set
      * @throws IOException Should an IO issue occur
      */
     public abstract void write(final MappingSet mappings) throws IOException;
+
 }
