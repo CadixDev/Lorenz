@@ -35,14 +35,14 @@ Lorenz releases can be obtained through Maven Central:
 <dependency>
     <groupId>me.jamiemansfield</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-compile 'me.jamiemansfield:lorenz:0.4.2'
+compile 'me.jamiemansfield:lorenz:0.4.3'
 ```
 
 You may also find snapshot artifacts on [Sonatype's OSS repository], and for older

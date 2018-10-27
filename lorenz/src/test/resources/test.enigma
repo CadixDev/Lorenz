@@ -2,10 +2,16 @@
 CLASS uih uk/jamierocks/CommentTest # CLASS op uk/jr/Operator
 CLASS ght uk/jamierocks/Test
 	CLASS ght$ds Example
+		CLASS ght$ds$bg Inner
+			METHOD dup print (I)Z
+				ARG 0 num
 		FIELD juh server Luk/jamierocks/Server;
 		METHOD hyuip isOdd (I)Z
 			ARG 0 num
-		CLASS ght$ds$bg Inner
+	CLASS ght$beep Beep
+		CLASS ght$beep$boop Boop
+			METHOD dup print (I)Z
+				ARG 0 num
 	FIELD rft log Ljava/util/logging/Logger;
 	METHOD hyuip isEven (I)Z
 		ARG 0 num
