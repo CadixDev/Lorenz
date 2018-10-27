@@ -137,7 +137,7 @@ public class EnigmaWriter extends TextMappingsWriter {
             this.printIndentedLine(indent, String.format("FIELD %s %s %s",
                     field.getObfuscatedName(),
                     field.getDeobfuscatedName(),
-                    field.getMappings().deobfuscate(type)
+                    type
             ));
         });
         // TODO: throw an exception if the type is unknown / WriterResult container
