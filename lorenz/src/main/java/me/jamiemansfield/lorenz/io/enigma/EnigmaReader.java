@@ -126,15 +126,10 @@ public class EnigmaReader extends TextMappingsReader {
         public void accept(final String rawLine) {
             final int indentLevel = getIndentLevel(rawLine);
 
-            // If there is a change in the indentation level, we will need to alter the
-            // state as need be.
-            if (indentLevel < this.stack.size()) {
-                final int difference = this.stack.size() - indentLevel;
-
-                // Pop all the mappings as needed
-                for (int i = 0; i < difference; i++) {
-                    this.stack.pop();
-                }
+            // If there is a change in the indentation level, we will need to pop the stack
+            // as needed
+            while (indentLevel < this.stack.size()) {
+                this.stack.pop();
             }
 
             final String line = EnigmaConstants.removeComments(rawLine).trim();
