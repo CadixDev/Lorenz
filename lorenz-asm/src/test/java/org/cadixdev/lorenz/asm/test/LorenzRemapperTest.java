@@ -102,10 +102,23 @@ public final class LorenzRemapperTest {
 
     @Test
     public void innerClass() {
-        final ClassNode node = new ClassNode();
-        final ClassRemapper remapper = new ClassRemapper(node, REMAPPER);
-        remapper.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght$hy", null, "java/lang/Object", null);
-        assertEquals("Demo$Inner", node.name);
+        // rename classes properly
+        {
+            final ClassNode node = new ClassNode();
+            final ClassRemapper remapper = new ClassRemapper(node, REMAPPER);
+            remapper.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght$hy", null, "java/lang/Object", null);
+            assertEquals("Demo$Inner", node.name);
+        }
+        // handle renaming attribute properly
+        {
+            final ClassNode node = new ClassNode();
+            final ClassRemapper remapper = new ClassRemapper(node, REMAPPER);
+            remapper.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght", null, "java/lang/Object", null);
+            remapper.visitInnerClass("ght$hy", "ght", "hy", Opcodes.ACC_PUBLIC);
+            assertFalse(node.innerClasses.isEmpty());
+            assertEquals("Demo", node.innerClasses.get(0).outerName);
+            assertEquals("Inner", node.innerClasses.get(0).innerName);
+        }
     }
 
     @Test

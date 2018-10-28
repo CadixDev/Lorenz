@@ -61,6 +61,13 @@ public class LorenzRemapper extends Remapper {
                 .orElse(typeName);
     }
 
+    @Override
+    public String mapInnerClassName(final String name, final String ownerName, final String innerName) {
+        return this.mappings.computeClassMapping(name)
+                .map(Mapping::getDeobfuscatedName)
+                .orElse(innerName);
+    }
+
     private ClassMapping<?, ?> getCompletedClassMapping(final String owner) {
         final ClassMapping<?, ?> mapping = this.mappings.getOrCreateClassMapping(owner);
         mapping.complete(this.inheritanceProvider);
