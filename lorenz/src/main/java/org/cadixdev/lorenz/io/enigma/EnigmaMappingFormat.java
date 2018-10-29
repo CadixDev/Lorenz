@@ -56,4 +56,9 @@ public class EnigmaMappingFormat implements TextMappingFormat {
         return Optional.of(EnigmaConstants.STANDARD_EXTENSION);
     }
 
+    @Override
+    public String toString() {
+        return "enigma";
+    }
+
 }

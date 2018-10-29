@@ -56,4 +56,9 @@ public class JamMappingFormat implements TextMappingFormat {
         return Optional.of(JamConstants.STANDARD_EXTENSION);
     }
 
+    @Override
+    public String toString() {
+        return "jam";
+    }
+
 }

@@ -56,4 +56,9 @@ public class SrgMappingFormat implements TextMappingFormat {
         return Optional.of(SrgConstants.STANDARD_EXTENSION);
     }
 
+    @Override
+    public String toString() {
+        return "srg";
+    }
+
 }

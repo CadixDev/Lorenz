@@ -57,4 +57,9 @@ public class KinMappingFormat implements MappingFormat {
         return Optional.of(KinConstants.STANDARD_EXTENSION);
     }
 
+    @Override
+    public String toString() {
+        return "kin";
+    }
+
 }
