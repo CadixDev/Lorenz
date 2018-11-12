@@ -25,6 +25,7 @@
 
 package org.cadixdev.lorenz.io.jam;
 
+import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingsWriter;
 import org.cadixdev.lorenz.io.TextMappingsWriter;
@@ -33,7 +34,6 @@ import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.Mapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
-import org.cadixdev.bombe.type.FieldType;
 
 import java.io.Writer;
 import java.util.ArrayList;

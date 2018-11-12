@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.test.io.jam;
+package org.cadixdev.lorenz.io.enigma.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingFormats;
 import org.cadixdev.lorenz.io.MappingsReader;
-import org.cadixdev.lorenz.io.jam.JamConstants;
+import org.cadixdev.lorenz.io.enigma.EnigmaConstants;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
@@ -41,17 +41,16 @@ import org.cadixdev.lorenz.model.TopLevelClassMapping;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.bombe.type.signature.MethodSignature;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-public class JamReaderTest {
+public class EnigmaReaderTest {
 
     private final MappingSet mappings;
 
-    public JamReaderTest() throws IOException {
-        try (MappingsReader reader = MappingFormats.JAM.createReader(JamReaderTest.class.getResourceAsStream("/test.jam"))) {
+    public EnigmaReaderTest() throws IOException {
+        try (MappingsReader reader = MappingFormats.ENIGMA.createReader(EnigmaReaderTest.class.getResourceAsStream("/test.enigma"))) {
             this.mappings = reader.read();
         }
     }
@@ -60,11 +59,11 @@ public class JamReaderTest {
     public void commentRemoval() {
         // 1. Check an all comments line
         final String emptyLine = "# This is a comment";
-        Assertions.assertEquals("", JamConstants.removeComments(emptyLine).trim());
+        assertEquals("", EnigmaConstants.removeComments(emptyLine).trim());
 
         // 2. Check a mixed line
         final String mixedLine = "blah blah blah # This is a comment";
-        assertEquals("blah blah blah", JamConstants.removeComments(mixedLine).trim());
+        assertEquals("blah blah blah", EnigmaConstants.removeComments(mixedLine).trim());
 
         // 3. Check that SrgParser#processLine(String) won't accept comments
         assertFalse(this.mappings.hasTopLevelClassMapping("yu"));

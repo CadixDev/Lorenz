@@ -25,6 +25,7 @@
 
 package org.cadixdev.lorenz.io.kin;
 
+import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.BinaryMappingsWriter;
 import org.cadixdev.lorenz.io.MappingsWriter;
@@ -33,7 +34,6 @@ import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.bombe.type.FieldType;
 
 import java.io.IOException;
 import java.io.OutputStream;

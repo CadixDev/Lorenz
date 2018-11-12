@@ -25,9 +25,6 @@
 
 package org.cadixdev.lorenz.io;
 
-import org.cadixdev.lorenz.io.enigma.EnigmaMappingFormat;
-import org.cadixdev.lorenz.io.jam.JamMappingFormat;
-import org.cadixdev.lorenz.io.kin.KinMappingFormat;
 import org.cadixdev.lorenz.io.srg.csrg.CSrgMappingFormat;
 import org.cadixdev.lorenz.io.srg.SrgMappingFormat;
 import org.cadixdev.lorenz.io.srg.tsrg.TSrgMappingFormat;
@@ -54,21 +51,6 @@ public final class MappingFormats {
      * The TSRG (tiny SRG) mapping format.
      */
     public static final TextMappingFormat TSRG = new TSrgMappingFormat();
-
-    /**
-     * The Kin (/k/ashike b/in/ary) mapping format.
-     */
-    public static final MappingFormat KIN = new KinMappingFormat();
-
-    /**
-     * The JAM (Java Associated Mappings) mapping format.
-     */
-    public static final TextMappingFormat JAM = new JamMappingFormat();
-
-    /**
-     * The Enigma mapping format.
-     */
-    public static final TextMappingFormat ENIGMA = new EnigmaMappingFormat();
 
     private MappingFormats() {
     }

@@ -1,4 +1,7 @@
 rootProject.name = name
 include 'lorenz'
 include 'lorenz-asm'
+include 'lorenz-io-enigma'
+include 'lorenz-io-jam'
+include 'lorenz-io-kin'
 
