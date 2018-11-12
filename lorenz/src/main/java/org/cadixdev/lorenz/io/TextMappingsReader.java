@@ -26,10 +26,8 @@
 package org.cadixdev.lorenz.io;
 
 import org.cadixdev.lorenz.MappingSet;
-import org.cadixdev.lorenz.io.enigma.EnigmaReader;
-import org.cadixdev.lorenz.io.jam.JamReader;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgReader;
 import org.cadixdev.lorenz.io.srg.SrgReader;
+import org.cadixdev.lorenz.io.srg.csrg.CSrgReader;
 import org.cadixdev.lorenz.io.srg.tsrg.TSrgReader;
 
 import java.io.BufferedReader;
@@ -44,8 +42,6 @@ import java.util.regex.Pattern;
  * with the implementation of mapping readers for text-based
  * mapping formats.
  *
- * @see EnigmaReader
- * @see JamReader
  * @see SrgReader
  * @see CSrgReader
  * @see TSrgReader

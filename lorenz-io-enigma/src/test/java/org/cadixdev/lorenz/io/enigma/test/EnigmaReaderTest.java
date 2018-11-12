@@ -50,7 +50,7 @@ public class EnigmaReaderTest {
     private final MappingSet mappings;
 
     public EnigmaReaderTest() throws IOException {
-        try (MappingsReader reader = MappingFormats.ENIGMA.createReader(EnigmaReaderTest.class.getResourceAsStream("/test.enigma"))) {
+        try (final MappingsReader reader = MappingFormats.REGISTRY.byId("enigma").createReader(EnigmaReaderTest.class.getResourceAsStream("/test.enigma"))) {
             this.mappings = reader.read();
         }
     }

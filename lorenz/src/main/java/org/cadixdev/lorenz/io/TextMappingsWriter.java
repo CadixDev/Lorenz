@@ -25,10 +25,8 @@
 
 package org.cadixdev.lorenz.io;
 
-import org.cadixdev.lorenz.io.enigma.EnigmaWriter;
-import org.cadixdev.lorenz.io.jam.JamWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
 import org.cadixdev.lorenz.io.srg.SrgWriter;
+import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
 import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
 
 import java.io.BufferedWriter;
@@ -41,8 +39,6 @@ import java.io.Writer;
  * with the implementation of mapping writers for text-based
  * mapping formats.
  *
- * @see EnigmaWriter
- * @see JamWriter
  * @see SrgWriter
  * @see CSrgWriter
  * @see TSrgWriter
