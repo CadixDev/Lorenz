@@ -23,48 +23,42 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
+package org.cadixdev.lorenz.util;
 
-import org.cadixdev.lorenz.util.Registry;
-
-import java.util.ServiceLoader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * A psuedo-enum of the mapping formats implemented within Lorenz.
+ * A registry of identifiable objects.
  *
+ * @param <T> The type of the registered objects
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.5.0
  */
-public final class MappingFormats {
+public class Registry<T> {
+
+    private final Map<String, T> map = new HashMap<>();
 
     /**
-     * The registry of {@link MappingFormat}s.
+     * Registers the given value, with the given identifier.
+     *
+     * @param id The identifier of the value
+     * @param value The value
+     * @return {@code this}, for chaining
      */
-    public static final Registry<MappingFormat> REGISTRY = new Registry<>();
-
-    static {
-        // Populate the registry
-        for (final MappingFormat format : ServiceLoader.load(MappingFormat.class)) {
-            REGISTRY.register(format.toString(), format);
-        }
+    public Registry<T> register(final String id, final T value) {
+        this.map.put(id, value);
+        return this;
     }
 
     /**
-     * The SRG mapping format.
+     * Gets the value of the given identifier.
+     *
+     * @param id The identifier of the value
+     * @return The value
      */
-    public static final TextMappingFormat SRG = (TextMappingFormat) REGISTRY.byId("srg");
-
-    /**
-     * The CSRG (compact SRG) mapping format.
-     */
-    public static final TextMappingFormat CSRG = (TextMappingFormat) REGISTRY.byId("csrg");
-
-    /**
-     * The TSRG (tiny SRG) mapping format.
-     */
-    public static final TextMappingFormat TSRG = (TextMappingFormat) REGISTRY.byId("tsrg");
-
-    private MappingFormats() {
+    public T byId(final String id) {
+        return this.map.get(id.toLowerCase());
     }
 
 }
