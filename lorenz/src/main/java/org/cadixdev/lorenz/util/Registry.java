@@ -47,7 +47,7 @@ public class Registry<T> {
      * @return {@code this}, for chaining
      */
     public Registry<T> register(final String id, final T value) {
-        this.map.put(id, value);
+        this.map.put(id.toLowerCase(), value);
         return this;
     }
 

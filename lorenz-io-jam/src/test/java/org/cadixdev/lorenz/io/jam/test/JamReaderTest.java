@@ -51,7 +51,7 @@ public class JamReaderTest {
     private final MappingSet mappings;
 
     public JamReaderTest() throws IOException {
-        try (final MappingsReader reader = MappingFormats.REGISTRY.byId("jam").createReader(JamReaderTest.class.getResourceAsStream("/test.jam"))) {
+        try (final MappingsReader reader = MappingFormats.byId("jam").createReader(JamReaderTest.class.getResourceAsStream("/test.jam"))) {
             this.mappings = reader.read();
         }
     }

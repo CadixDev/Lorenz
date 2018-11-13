@@ -52,17 +52,24 @@ public final class MappingFormats {
     /**
      * The SRG mapping format.
      */
-    public static final TextMappingFormat SRG = (TextMappingFormat) REGISTRY.byId("srg");
+    public static final TextMappingFormat SRG = (TextMappingFormat) byId("srg");
 
     /**
      * The CSRG (compact SRG) mapping format.
      */
-    public static final TextMappingFormat CSRG = (TextMappingFormat) REGISTRY.byId("csrg");
+    public static final TextMappingFormat CSRG = (TextMappingFormat) byId("csrg");
 
     /**
      * The TSRG (tiny SRG) mapping format.
      */
-    public static final TextMappingFormat TSRG = (TextMappingFormat) REGISTRY.byId("tsrg");
+    public static final TextMappingFormat TSRG = (TextMappingFormat) byId("tsrg");
+
+    /**
+     * @see Registry#byId(String)
+     */
+    public static MappingFormat byId(final String id) {
+        return REGISTRY.byId(id);
+    }
 
     private MappingFormats() {
     }
