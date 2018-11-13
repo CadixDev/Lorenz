@@ -25,6 +25,8 @@
 
 package org.cadixdev.lorenz.util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +61,15 @@ public class Registry<T> {
      */
     public T byId(final String id) {
         return this.map.get(id.toLowerCase());
+    }
+
+    /**
+     * Gets all of the values within the registry.
+     *
+     * @return The values
+     */
+    public Collection<T> values() {
+        return Collections.unmodifiableCollection(this.map.values());
     }
 
 }
