@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * A registry of identifiable objects.
@@ -70,6 +71,13 @@ public class Registry<T> {
      */
     public Collection<T> values() {
         return Collections.unmodifiableCollection(this.map.values());
+    }
+
+    /**
+     * @see Map#forEach(BiConsumer)
+     */
+    public void forEach(final BiConsumer<String, T> consumer) {
+        this.map.forEach(consumer);
     }
 
 }
