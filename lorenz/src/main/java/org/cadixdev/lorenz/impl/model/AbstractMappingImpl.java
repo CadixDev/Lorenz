@@ -26,9 +26,13 @@
 package org.cadixdev.lorenz.impl.model;
 
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.model.ExtensionKey;
 import org.cadixdev.lorenz.model.Mapping;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 /**
@@ -43,6 +47,7 @@ import java.util.StringJoiner;
 public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mapping<M, P> {
 
     private final MappingSet mappings;
+    private final Map<ExtensionKey<?>, Object> data = new HashMap<>();
     private final String obfuscatedName;
     private String deobfuscatedName;
 
@@ -86,8 +91,18 @@ public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mappi
         return this.mappings;
     }
 
+    @Override
+    public <T> Optional<T> get(final ExtensionKey<T> key) {
+        return Optional.ofNullable(this.data.get(key)).map(key::cast);
+    }
+
+    @Override
+    public <T> void set(final ExtensionKey<T> key, final T value) {
+        this.data.put(key, value);
+    }
+
     protected StringJoiner buildToString() {
-        return new StringJoiner(", ", getClass().getSimpleName() + "{", "}")
+        return new StringJoiner(", ", this.getClass().getSimpleName() + "{", "}")
                 .add("obfuscatedName=" + this.obfuscatedName)
                 .add("deobfuscatedName=" + this.deobfuscatedName);
     }

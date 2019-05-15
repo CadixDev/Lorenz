@@ -28,6 +28,9 @@ package org.cadixdev.lorenz.model;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.util.Reversible;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
  * Represents a de-obfuscation mapping for mappable constructs of the Java
  * class format - e.g. classes, fields, and methods.
@@ -117,6 +120,7 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      * @param with The mapping to merge with
      * @param parent The parent
      * @return The new mapping
+     * @since 0.5.0
      */
     M merge(final M with, final P parent);
 
@@ -128,5 +132,42 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      * @since 0.5.0
      */
     M copy(final P parent);
+
+    /**
+     * Gets the value of the extension data, if it exists.
+     *
+     * @param key The key of the extension data
+     * @param <T> The type of the extension data
+     * @return The value, wrapped in an {@link Optional}
+     * @since 0.5.0
+     */
+    <T> Optional<T> get(final ExtensionKey<T> key);
+
+    /**
+     * Gets the value of the extension data, or uses the supplier (setting that value too).
+     *
+     * @param key The key of the extension data
+     * @param supplier The "backup" value supplier
+     * @param <T> The type of the extension data
+     * @return The value
+     * @since 0.5.0
+     */
+    default <T> T getOrCreate(final ExtensionKey<T> key, final Supplier<T> supplier) {
+        return this.get(key).orElseGet(() -> {
+           final T value = supplier.get();
+           this.set(key, value);
+           return value;
+        });
+    }
+
+    /**
+     * Sets the given extension data to the given value.
+     *
+     * @param key The extension data key
+     * @param value The extension data value
+     * @param <T> The type of the extension data
+     * @since 0.5.0
+     */
+    <T> void set(final ExtensionKey<T> key, final T value);
 
 }
