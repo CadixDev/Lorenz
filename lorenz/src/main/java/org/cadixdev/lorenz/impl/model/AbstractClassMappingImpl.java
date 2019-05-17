@@ -93,7 +93,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
     }
 
     @Override
-    public Optional<FieldMapping> computeFieldMapping(FieldSignature signature) {
+    public Optional<FieldMapping> computeFieldMapping(final FieldSignature signature) {
         // If the field type is not provided, lookup up only the field name
         if (!signature.getType().isPresent()) {
             return this.getFieldMapping(signature.getName());

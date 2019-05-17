@@ -69,7 +69,7 @@ public class TSrgWriter extends TextMappingsWriter {
     protected void writeClassMapping(final ClassMapping<?, ?> mapping) {
         // Effectively ClassMapping#hasMappings() without the inner class check
         if (mapping.hasDeobfuscatedName() ||
-                mapping.getFieldMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
+                mapping.getFieldsByName().values().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
                 mapping.getMethodMappings().stream().anyMatch(MethodMapping::hasMappings)) {
             this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
