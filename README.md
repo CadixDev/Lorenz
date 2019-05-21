@@ -3,14 +3,14 @@ Lorenz
 
 Lorenz is a library intended for creating and altering de-obfuscation mappings for Java
 programs (compiled or otherwise), this is done independent of the format being used. Lorenz
-supports a variety of mapping formats itself:
+supports a variety of mapping formats:
 
 - SRG
 - CSRG
 - TSRG
-- Enigma
-- JAM
-- Kin
+- Enigma (through `lorenz-io-enigma`)
+- JAM (through `lorenz-io-jam`)
+- Kin (through `lorenz-io-kin`)
 
 ## Branches
 
@@ -29,24 +29,26 @@ implementation can be constructed through `MappingSet.create()`.
 
 Lorenz releases can be obtained through Maven Central:
 
+### Gradle
+
+```groovy
+implementation 'org.cadixdev:lorenz:0.5.0'
+```
+
 ### Maven
 
 ```xml
 <dependency>
-    <groupId>me.jamiemansfield</groupId>
+    <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.4.3</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
-### Gradle
+You may also find snapshot artifacts on [Sonatype's OSS repository].
 
-```groovy
-compile 'me.jamiemansfield:lorenz:0.4.3'
-```
-
-You may also find snapshot artifacts on [Sonatype's OSS repository], and for older
-versions on my own Maven repository (`repo.jamiemansfield.me`).
+Versions prior to `0.5.0` were made under the `me.jamiemansfield` group, and initial
+snapshot releases were made to my personal Maven  (`repo.jamiemansfield.me`).
 
 ## License
 
