@@ -29,26 +29,26 @@ implementation can be constructed through `MappingSet.create()`.
 
 Lorenz releases can be obtained through Maven Central:
 
+### Gradle
+
+```groovy
+implementation 'org.cadixdev:lorenz:0.5.0'
+```
+
 ### Maven
 
 ```xml
 <dependency>
-    <groupId>me.jamiemansfield</groupId>
+    <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.4.3</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
-### Gradle
+You may also find snapshot artifacts on [Sonatype's OSS repository].
 
-```groovy
-compile 'me.jamiemansfield:lorenz:0.4.3'
-```
-
-You may also find snapshot artifacts on [Sonatype's OSS repository], and for older
-versions on my own Maven repository (`repo.jamiemansfield.me`).
-
-**Future releases of Lorenz will be made under the `org.cadixdev` group**.
+Versions prior to `0.5.0` were made under the `me.jamiemansfield` group, and initial
+snapshot releases were made to my personal Maven  (`repo.jamiemansfield.me`).
 
 ## License
 
