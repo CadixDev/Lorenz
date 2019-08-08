@@ -54,7 +54,7 @@ public abstract class MappingsWriter implements Closeable {
     /**
      * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
      */
-    protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
+    public static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
             comparingLength(Mapping::getFullObfuscatedName);
 
     /**
@@ -62,7 +62,7 @@ public abstract class MappingsWriter implements Closeable {
      *
      * @since 0.5.0
      */
-    protected static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
+    public static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
             Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getType().map(FieldType::toString).orElse(""));
 
     /**
@@ -70,7 +70,7 @@ public abstract class MappingsWriter implements Closeable {
      *
      * @since 0.5.0
      */
-    protected static final Comparator<MethodMapping> ALPHABETISE_METHODS =
+    public static final Comparator<MethodMapping> ALPHABETISE_METHODS =
             Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getDescriptor().toString());
 
     private static <T> Comparator<T> comparingLength(final Function<? super T, String> keyExtractor) {

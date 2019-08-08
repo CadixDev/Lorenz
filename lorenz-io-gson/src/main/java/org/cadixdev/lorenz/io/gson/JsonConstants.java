@@ -23,50 +23,23 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
-
-import org.cadixdev.lorenz.io.srg.SrgWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
+package org.cadixdev.lorenz.io.gson;
 
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of mapping writers for text-based
- * mapping formats.
- *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
+ * A collection of constants and utilities specific to
+ * the JSON mapping format.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.6.0
  */
-public abstract class TextMappingsWriter extends MappingsWriter {
-
-    protected final PrintWriter writer;
+public final class JsonConstants {
 
     /**
-     * Creates a new mappings writer, from the given {@link Writer}.
-     *
-     * @param writer The output writer, to write to
+     * The standard file extension used with the JSON format.
      */
-    protected TextMappingsWriter(final Writer writer) {
-        if (writer instanceof PrintWriter) {
-            this.writer = (PrintWriter) writer;
-        } else {
-            final BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
-            this.writer = new PrintWriter(bufferedWriter);
-        }
-    }
+    public static final String STANDARD_EXTENSION = "json";
 
-    @Override
-    public void close() throws IOException {
-        this.writer.close();
+    private JsonConstants() {
     }
 
 }

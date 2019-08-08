@@ -23,50 +23,42 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
+package org.cadixdev.lorenz.io.gson;
 
-import org.cadixdev.lorenz.io.srg.SrgWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingsWriter;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of mapping writers for text-based
- * mapping formats.
- *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
+ * An implementation of {@link MappingsWriter} for the JSON format.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.6.0
  */
-public abstract class TextMappingsWriter extends MappingsWriter {
-
-    protected final PrintWriter writer;
+public class JsonWriter extends TextMappingsWriter {
 
     /**
-     * Creates a new mappings writer, from the given {@link Writer}.
+     * Creates a new JSON mappings writer, from the given {@link Writer}.
      *
      * @param writer The output writer, to write to
      */
-    protected TextMappingsWriter(final Writer writer) {
-        if (writer instanceof PrintWriter) {
-            this.writer = (PrintWriter) writer;
-        } else {
-            final BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
-            this.writer = new PrintWriter(bufferedWriter);
-        }
+    public JsonWriter(final Writer writer) {
+        super(writer);
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
+    public void write(final MappingSet mappings) throws IOException {
+        final Gson GSON = new GsonBuilder()
+            // Needs to be registerTypeHierarchyAdapter, as its an interface
+            .registerTypeHierarchyAdapter(MappingSet.class, new MappingSetTypeAdapter(mappings))
+            .setPrettyPrinting()
+            .create();
+        GSON.toJson(mappings, this.writer);
     }
 
 }

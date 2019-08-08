@@ -23,50 +23,42 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
+package org.cadixdev.lorenz.io.gson;
 
-import org.cadixdev.lorenz.io.srg.SrgWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
+import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingFormat;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.Writer;
+import java.util.Optional;
 
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of mapping writers for text-based
- * mapping formats.
- *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
+ * The JSON mapping format, implemented with the GSON library.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.6.0
  */
-public abstract class TextMappingsWriter extends MappingsWriter {
+public class JsonMappingFormat implements TextMappingFormat {
 
-    protected final PrintWriter writer;
-
-    /**
-     * Creates a new mappings writer, from the given {@link Writer}.
-     *
-     * @param writer The output writer, to write to
-     */
-    protected TextMappingsWriter(final Writer writer) {
-        if (writer instanceof PrintWriter) {
-            this.writer = (PrintWriter) writer;
-        } else {
-            final BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
-            this.writer = new PrintWriter(bufferedWriter);
-        }
+    @Override
+    public MappingsReader createReader(final Reader reader) {
+        return new JsonReader(reader);
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
+    public MappingsWriter createWriter(final Writer writer) {
+        return new JsonWriter(writer);
+    }
+
+    @Override
+    public Optional<String> getStandardFileExtension() {
+        return Optional.of(JsonConstants.STANDARD_EXTENSION);
+    }
+
+    @Override
+    public String toString() {
+        return "json";
     }
 
 }
