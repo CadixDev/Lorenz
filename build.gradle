@@ -6,17 +6,17 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.net.minecrell:licenser:0.3'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'groovy'
     apply plugin: 'maven'
     apply plugin: 'net.minecrell.licenser'
 
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 
     group = 'org.cadixdev'
     archivesBaseName = project.name.toLowerCase()
@@ -32,8 +32,11 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
-        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+        testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+        testCompile "org.spockframework:spock-core:$spockVersion"
+        testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+        testRuntime "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+        testRuntime "org.junit.vintage:junit-vintage-engine:$junitVersion"
     }
 
     test {

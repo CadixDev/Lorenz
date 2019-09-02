@@ -28,6 +28,7 @@ package org.cadixdev.lorenz.model;
 import org.cadixdev.bombe.analysis.InheritanceCompletable;
 import org.cadixdev.bombe.analysis.InheritanceProvider;
 import org.cadixdev.bombe.type.FieldType;
+import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.bombe.type.signature.MethodSignature;
 
@@ -172,7 +173,7 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
      * @return The field mapping
      */
     default FieldMapping createFieldMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.createFieldMapping(new FieldSignature(obfuscatedName, (FieldType) null), deobfuscatedName);
+        return this.createFieldMapping(new FieldSignature(obfuscatedName), deobfuscatedName);
     }
 
     /**
@@ -237,6 +238,19 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     }
 
     /**
+     * Gets, or creates should it not exist, a field mapping of the
+     * given signature.
+     *
+     * @param obfuscatedName The obfuscated name of the field mapping
+     * @param obfuscatedDescriptor The obfuscated descriptor of the field mapping
+     * @return The field mapping
+     * @since 0.6.0
+     */
+    default FieldMapping getOrCreateFieldMapping(final String obfuscatedName, final FieldType obfuscatedDescriptor) {
+        return this.getOrCreateFieldMapping(new FieldSignature(obfuscatedName, obfuscatedDescriptor));
+    }
+
+    /**
      * Establishes whether the class mapping contains a field mapping
      * of the given signature.
      *
@@ -258,7 +272,7 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
      *         {@code false} otherwise
      */
     default boolean hasFieldMapping(final String obfuscatedName) {
-        return this.hasFieldMapping(new FieldSignature(obfuscatedName, null));
+        return this.hasFieldMapping(new FieldSignature(obfuscatedName));
     }
 
     /**
@@ -325,6 +339,19 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     }
 
     /**
+     * Creates a new method mapping, attached to this class mapping, using
+     * the given obfuscated method name and descriptor.
+     *
+     * @param obfuscatedName The obfuscated method name
+     * @param obfuscatedDescriptor The obfuscated method descriptor
+     * @return The method mapping
+     * @since 0.6.0
+     */
+    default MethodMapping createMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
+        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
+    }
+
+    /**
      * Gets, or creates should it not exist, a method mapping of the
      * given obfuscated signature.
      *
@@ -346,6 +373,19 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
      */
     default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
         return this.getOrCreateMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
+    }
+
+    /**
+     * Gets, or creates should it not exist, a method mapping of the
+     * given obfuscated name, and descriptor.
+     *
+     * @param obfuscatedName The obfuscated name of the method mapping
+     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
+     * @return The method mapping
+     * @since 0.6.0
+     */
+    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
+        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
     }
 
     /**
