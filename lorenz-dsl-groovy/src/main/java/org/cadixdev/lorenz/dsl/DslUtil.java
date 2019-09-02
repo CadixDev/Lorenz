@@ -26,37 +26,31 @@
 package org.cadixdev.lorenz.dsl;
 
 import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import org.cadixdev.lorenz.model.MethodMapping;
-import org.cadixdev.lorenz.model.MethodParameterMapping;
+
+import java.util.function.Function;
 
 /**
- * A DSL to simplify the manipulation of {@link MethodMapping}s in Groovy.
+ * Internal utility functions for the Lorenz Groovy DSL.
  *
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class MethodMappingDsl extends MappingDsl<MethodMapping> {
+class DslUtil {
 
-    public MethodMappingDsl(final MethodMapping mapping) {
-        super(mapping);
+    static final int RESOLVE_STRATEGY = Closure.DELEGATE_FIRST;
+
+    static void setupAndCallDelegateClosure(final Object delegate, final Closure<?> script) {
+        script.setResolveStrategy(DslUtil.RESOLVE_STRATEGY);
+        script.setDelegate(delegate);
+        script.call();
     }
 
-    /**
-     * Creates a method parameter mapping for the given index,
-     * and applies the given {@link Closure} to it.
-     *
-     * @param index The index of the parameter
-     * @param script The closure to use
-     * @return The mapping
-     * @see MethodMapping#getOrCreateParameterMapping(int)
-     */
-    public MethodParameterMapping param(
-            final int index,
-            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
-        return DslUtil.delegate(
-                this.mapping.getOrCreateParameterMapping(index),
-                MappingDsl::new, script);
+    static <T> T delegate(final T obj, final Function<T, Object> delegate, final Closure<?> script) {
+        setupAndCallDelegateClosure(delegate.apply(obj), script);
+        return obj;
+    }
+
+    private DslUtil() {
     }
 
 }

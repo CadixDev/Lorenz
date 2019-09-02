@@ -61,12 +61,10 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public FieldMapping field(
             final String name, final FieldType type,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MappingDsl.class) final Closure<?> script) {
-        final FieldMapping mapping = this.mapping.getOrCreateFieldMapping(new FieldSignature(name, type));
-        script.setResolveStrategy(Closure.DELEGATE_FIRST);
-        script.setDelegate(new MappingDsl<>(mapping));
-        script.call();
-        return mapping;
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
+        return DslUtil.delegate(
+                this.mapping.getOrCreateFieldMapping(new FieldSignature(name, type)),
+                MappingDsl::new, script);
     }
 
     /**
@@ -82,7 +80,7 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public FieldMapping field(
             final String name, final String type,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MappingDsl.class) final Closure<?> script) {
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
         return this.field(name, FieldType.of(type), script);
     }
 
@@ -97,7 +95,7 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public FieldMapping field(
             final String name,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MappingDsl.class) final Closure<?> script) {
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
         return this.field(name, (FieldType) null, script);
     }
 
@@ -113,12 +111,10 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public MethodMapping method(
             final String name, final MethodDescriptor desc,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MethodMappingDsl.class) final Closure<?> script) {
-        final MethodMapping mapping = this.mapping.getOrCreateMethodMapping(new MethodSignature(name, desc));
-        script.setResolveStrategy(Closure.DELEGATE_FIRST);
-        script.setDelegate(new MethodMappingDsl(mapping));
-        script.call();
-        return mapping;
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MethodMappingDsl.class) final Closure<?> script) {
+        return DslUtil.delegate(
+                this.mapping.getOrCreateMethodMapping(new MethodSignature(name, desc)),
+                MethodMappingDsl::new, script);
     }
 
     /**
@@ -134,7 +130,7 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public MethodMapping method(
             final String name, final String desc,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MethodMappingDsl.class) final Closure<?> script) {
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MethodMappingDsl.class) final Closure<?> script) {
         return this.method(name, MethodDescriptor.of(desc), script);
     }
 
@@ -149,12 +145,10 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      */
     public InnerClassMapping klass(
             final String name,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ClassMappingDsl.class) final Closure<?> script) {
-        final InnerClassMapping mapping = this.mapping.getOrCreateInnerClassMapping(name);
-        script.setResolveStrategy(Closure.DELEGATE_FIRST);
-        script.setDelegate(new ClassMappingDsl<>(mapping));
-        script.call();
-        return mapping;
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = ClassMappingDsl.class) final Closure<?> script) {
+        return DslUtil.delegate(
+                this.mapping.getOrCreateInnerClassMapping(name),
+                ClassMappingDsl::new, script);
     }
 
 }

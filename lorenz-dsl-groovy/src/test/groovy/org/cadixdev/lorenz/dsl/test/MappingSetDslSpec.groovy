@@ -29,6 +29,7 @@ import org.cadixdev.lorenz.MappingSet
 import org.cadixdev.lorenz.dsl.MappingSetDsl
 import org.cadixdev.lorenz.model.ExtensionKey
 import org.cadixdev.lorenz.model.FieldMapping
+import org.cadixdev.lorenz.model.InnerClassMapping
 import org.cadixdev.lorenz.model.MethodMapping
 import org.cadixdev.lorenz.model.MethodParameterMapping
 import org.cadixdev.lorenz.model.TopLevelClassMapping
@@ -56,6 +57,9 @@ class MappingSetDslSpec extends Specification {
             klass('b') {
                 deobf = 'Demo'
                 extension TEST, 'Hello, World!'
+                klass('e') {
+                    deobf = 'Inner'
+                }
             }
         }
 
@@ -87,6 +91,11 @@ class MappingSetDslSpec extends Specification {
         final Optional<String> testData = b.get(TEST)
         testData.isPresent()
         testData.get() == 'Hello, World!'
+        // b$e.class
+        b.innerClassMappings.size() == 1
+        final InnerClassMapping b$e = b.innerClassMappings[0]
+        b$e.obfuscatedName == 'e'
+        b$e.deobfuscatedName == 'Inner'
     }
 
 }

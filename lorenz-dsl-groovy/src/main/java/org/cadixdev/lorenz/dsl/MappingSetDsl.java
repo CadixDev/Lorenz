@@ -45,12 +45,8 @@ public class MappingSetDsl {
      * @return The mapping set
      * @see MappingSet#create()
      */
-    public static MappingSet create(@DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = MappingSetDsl.class) final Closure<?> script) {
-        final MappingSet mappings = MappingSet.create();
-        script.setResolveStrategy(Closure.DELEGATE_FIRST);
-        script.setDelegate(new MappingSetDsl(mappings));
-        script.call();
-        return mappings;
+    public static MappingSet create(@DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingSetDsl.class) final Closure<?> script) {
+        return DslUtil.delegate(MappingSet.create(), MappingSetDsl::new, script);
     }
 
     private final MappingSet mappings;
@@ -70,12 +66,10 @@ public class MappingSetDsl {
      */
     public TopLevelClassMapping klass(
             final String name,
-            @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ClassMappingDsl.class) final Closure<?> script) {
-        final TopLevelClassMapping mapping = this.mappings.getOrCreateTopLevelClassMapping(name);
-        script.setResolveStrategy(Closure.DELEGATE_FIRST);
-        script.setDelegate(new ClassMappingDsl<>(mapping));
-        script.call();
-        return mapping;
+            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = ClassMappingDsl.class) final Closure<?> script) {
+        return DslUtil.delegate(
+                this.mappings.getOrCreateTopLevelClassMapping(name),
+                ClassMappingDsl::new, script);
     }
 
 }
