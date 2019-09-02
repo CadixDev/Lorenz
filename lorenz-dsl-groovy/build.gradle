@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly 'org.codehaus.groovy:groovy:2.5.8'
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
     compile project(':lorenz')
 }
 
