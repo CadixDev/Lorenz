@@ -23,29 +23,40 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
+package org.cadixdev.lorenz.dsl.kotlin
 
-/**
- * Represents a mapping that is a member to a {@link ClassMapping}.
- *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
- *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
- *
- * @author Jamie Mansfield
- * @since 0.1.0
- */
-public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
+import org.cadixdev.lorenz.io.MappingFormats
+import org.cadixdev.lorenz.model.ExtensionKey
 
-    /**
-     * Gets the parent {@link Mapping} of this member mapping.
-     *
-     * @return The parent mapping
-     * @since 0.4.0
-     */
-    P getParent();
+val EXTRA = ExtensionKey(String::class.java, "extra")
 
+fun main() {
+    val mappings = MappingSetDsl.create {
+        klass("a") {
+            deobf = "Example"
+            extension(EXTRA, "Hello, World!")
+        }
+        klass("b") {
+            deobf = "Demo"
+
+            field("g") {
+                deobf = "name"
+            }
+
+            method("h", "(Z)Ljava/lang/String;") {
+                deobf = "getName"
+                param(0) {
+                    deobf = "propagate"
+                }
+            }
+
+            klass("d") {
+                deobf = "Inner"
+            }
+        }
+    }
+
+    MappingFormats.TSRG.createWriter(System.out).use {
+        it.write(mappings)
+    }
 }

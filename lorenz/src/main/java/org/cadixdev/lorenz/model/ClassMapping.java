@@ -45,7 +45,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, InheritanceCompletable {
+public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M, P>, InheritanceCompletable {
 
     /**
      * {@inheritDoc}

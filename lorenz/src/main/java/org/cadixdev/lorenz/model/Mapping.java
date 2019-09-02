@@ -41,7 +41,7 @@ import java.util.function.Supplier;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
+public interface Mapping<M extends Mapping<M, P>, P> extends Reversible<M, P> {
 
     /**
      * Gets the obfuscated name of the member being represented.
