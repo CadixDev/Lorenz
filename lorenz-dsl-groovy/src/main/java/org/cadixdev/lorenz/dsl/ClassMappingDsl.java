@@ -63,7 +63,7 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
             final String name, final FieldType type,
             @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
         return DslUtil.delegate(
-                this.mapping.getOrCreateFieldMapping(new FieldSignature(name, type)),
+                this.mapping.getOrCreateFieldMapping(name, type),
                 MappingDsl::new, script);
     }
 
@@ -113,7 +113,7 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
             final String name, final MethodDescriptor desc,
             @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MethodMappingDsl.class) final Closure<?> script) {
         return DslUtil.delegate(
-                this.mapping.getOrCreateMethodMapping(new MethodSignature(name, desc)),
+                this.mapping.getOrCreateMethodMapping(name, desc),
                 MethodMappingDsl::new, script);
     }
 
