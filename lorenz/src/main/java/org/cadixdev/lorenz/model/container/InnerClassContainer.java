@@ -25,33 +25,28 @@
 
 package org.cadixdev.lorenz.model.container;
 
-import org.cadixdev.lorenz.model.Mapping;
+import org.cadixdev.lorenz.impl.model.InnerClassMappingImpl;
+import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.InnerClassMapping;
 
 /**
- * A simple implementation of {@link ParentedMappingContainer}, for
- * mappings that have straight-forward relationships with their
- * signatures.
+ * A {@link MappingContainer container} of {@link ClassMapping class mappings}.
  *
- * @param <M> The type of mapping contained
- * @param <S> The type of the signature, representing the mapping
- * @param <P> The type of the parent object
+ * @param <P> The type of the parent class mapping
  *
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public abstract class SimpleParentedMappingContainer<M extends Mapping<?, ?>, S, P>
-        extends SimpleMappingContainer<M, S>
-        implements ParentedMappingContainer<M, S, P> {
+public class InnerClassContainer<P extends ClassMapping<?, ?>>
+        extends SimpleParentedMappingContainer<InnerClassMapping, String, P> {
 
-    protected final P parent;
-
-    public SimpleParentedMappingContainer(final P parent) {
-        this.parent = parent;
+    public InnerClassContainer(final P parent) {
+        super(parent);
     }
 
     @Override
-    public P back() {
-        return this.parent;
+    protected InnerClassMapping create(final String signature) {
+        return new InnerClassMappingImpl(this.parent, signature, signature);
     }
 
 }

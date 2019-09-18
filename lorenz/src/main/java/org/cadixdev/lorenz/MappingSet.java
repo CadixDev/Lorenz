@@ -76,6 +76,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * the implementation classes for all the models.
      *
      * @return The model factory
+     * @since 0.3.0
      */
     MappingSetModelFactory getModelFactory();
 

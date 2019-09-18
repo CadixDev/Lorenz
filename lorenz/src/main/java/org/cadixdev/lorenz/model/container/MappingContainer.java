@@ -45,7 +45,9 @@ import java.util.Optional;
  * @param <S> The type of the signature, representing the mapping
  *
  * @see ParentedMappingContainer
+ * @see SimpleMappingContainer
  * @see SimpleParentedMappingContainer
+ * @see ClassContainer
  * @see MethodContainer
  *
  * @author Jamie Mansfield

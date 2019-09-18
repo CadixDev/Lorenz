@@ -27,31 +27,54 @@ package org.cadixdev.lorenz.model.container;
 
 import org.cadixdev.lorenz.model.Mapping;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 /**
- * A simple implementation of {@link ParentedMappingContainer}, for
+ * A simple implementation of {@link MappingContainer}, for
  * mappings that have straight-forward relationships with their
  * signatures.
  *
  * @param <M> The type of mapping contained
  * @param <S> The type of the signature, representing the mapping
- * @param <P> The type of the parent object
  *
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public abstract class SimpleParentedMappingContainer<M extends Mapping<?, ?>, S, P>
-        extends SimpleMappingContainer<M, S>
-        implements ParentedMappingContainer<M, S, P> {
+public abstract class SimpleMappingContainer<M extends Mapping<?, ?>, S>
+        implements MappingContainer<M, S> {
 
-    protected final P parent;
+    private final Map<S, M> mappings = new HashMap<>();
 
-    public SimpleParentedMappingContainer(final P parent) {
-        this.parent = parent;
+    /**
+     * Creates a mapping, with the given signature.
+     *
+     * @param signature The signature of the mapping
+     * @return The mapping
+     */
+    protected abstract M create(final S signature);
+
+    @Override
+    public Collection<M> getAll() {
+        return Collections.unmodifiableCollection(this.mappings.values());
     }
 
     @Override
-    public P back() {
-        return this.parent;
+    public boolean has(final S signature) {
+        return this.mappings.containsKey(signature);
+    }
+
+    @Override
+    public Optional<M> get(final S signature) {
+        return Optional.ofNullable(this.mappings.get(signature));
+    }
+
+    @Override
+    public M getOrCreate(final S signature) {
+        return this.mappings.computeIfAbsent(signature, this::create);
     }
 
 }

@@ -47,7 +47,12 @@ public class MethodContainer<P extends ClassMapping<?, ?>>
         extends SimpleParentedMappingContainer<MethodMapping, MethodSignature, P> {
 
     public MethodContainer(final P parent) {
-        super(parent, (p, signature) -> new MethodMappingImpl(p, signature, signature.getName()));
+        super(parent);
+    }
+
+    @Override
+    protected MethodMapping create(final MethodSignature signature) {
+        return new MethodMappingImpl(this.parent, signature, signature.getName());
     }
 
     /**
