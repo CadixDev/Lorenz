@@ -36,7 +36,7 @@ import java.util.Objects;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMapping, ClassMapping> implements InnerClassMapping {
+public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMapping, ClassMapping<?, ?>> implements InnerClassMapping {
 
     private final ClassMapping parentClass;
 

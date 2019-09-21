@@ -23,29 +23,21 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
-
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
+ * Provides containers for {@link org.cadixdev.lorenz.model.Mapping mappings},
+ * identified by signatures - standardising access and manipulation there-of.
  *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
+ * <p>The benefit of having {@link org.cadixdev.lorenz.model.container.MappingContainer mapping containers}
+ * is that access to mappings all across Lorenz is done in a consistent way,
+ * and specialised convenience code is separate and easily visible (and
+ * therefore maintainable).
  *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
+ * <p>Consumers will either use {@link org.cadixdev.lorenz.model.container.MappingContainer}
+ * or {@link org.cadixdev.lorenz.model.container.ParentedMappingContainer},
+ * determined by whether their container is the same object as the mapping
+ * parent (in that case, use a mapping container).
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.6.0
  */
-public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
-
-    /**
-     * Gets the parent {@link Mapping} of this member mapping.
-     *
-     * @return The parent mapping
-     * @since 0.4.0
-     */
-    P getParent();
-
-}
+package org.cadixdev.lorenz.model.container;

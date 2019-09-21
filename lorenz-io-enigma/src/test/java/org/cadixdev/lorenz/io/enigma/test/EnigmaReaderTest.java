@@ -66,18 +66,18 @@ public class EnigmaReaderTest {
         assertEquals("blah blah blah", EnigmaConstants.removeComments(mixedLine).trim());
 
         // 3. Check that SrgParser#processLine(String) won't accept comments
-        assertFalse(this.mappings.hasTopLevelClassMapping("yu"));
-        assertTrue(this.mappings.hasTopLevelClassMapping("uih"));
-        assertFalse(this.mappings.hasTopLevelClassMapping("op"));
+        assertFalse(this.mappings.has("yu"));
+        assertTrue(this.mappings.has("uih"));
+        assertFalse(this.mappings.has("op"));
     }
 
     @Test
     public void topLevelClass() {
         // 1. Check the class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(this.mappings.has("ght"));
 
         // 2. Get the class mapping, and check the obfuscated and de-obfuscated name
-        final TopLevelClassMapping classMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping classMapping = this.mappings.getOrCreate("ght");
         assertEquals("ght", classMapping.getObfuscatedName());
         assertEquals("uk/jamierocks/Test", classMapping.getDeobfuscatedName());
     }
@@ -85,23 +85,23 @@ public class EnigmaReaderTest {
     @Test
     public void innerClass() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(this.mappings.has("ght"));
 
         // 2. Get the parent class mapping, and check the inner class mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
-        assertTrue(parentMapping.hasInnerClassMapping("ds"));
+        final TopLevelClassMapping parentMapping = this.mappings.getOrCreate("ght");
+        assertTrue(parentMapping.innerClasses().has("ds"));
 
         // 3. Get the inner class mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
         //    Also check the inner /inner/ class has been added to it
-        final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
+        final InnerClassMapping classMapping = parentMapping.innerClasses().getOrCreate("ds");
         assertEquals("ds", classMapping.getObfuscatedName());
         assertEquals("Example", classMapping.getDeobfuscatedName());
         assertEquals("ght$ds", classMapping.getFullObfuscatedName());
         assertEquals("uk/jamierocks/Test$Example", classMapping.getFullDeobfuscatedName());
-        assertTrue(classMapping.hasInnerClassMapping("bg"));
+        assertTrue(classMapping.innerClasses().has("bg"));
 
         // 4. Get the inner /inner/ class mapping, and check the obfuscated, de-obfuscated, and full de-obfuscated name
-        final InnerClassMapping innerClassMapping = classMapping.getOrCreateInnerClassMapping("bg");
+        final InnerClassMapping innerClassMapping = classMapping.innerClasses().getOrCreate("bg");
         assertEquals("bg", innerClassMapping.getObfuscatedName());
         assertEquals("Inner", innerClassMapping.getDeobfuscatedName());
         assertEquals("ght$ds$bg", innerClassMapping.getFullObfuscatedName());
@@ -111,10 +111,10 @@ public class EnigmaReaderTest {
     @Test
     public void field() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(this.mappings.has("ght"));
 
         // 2. Get the class mapping, and check the field mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping parentMapping = this.mappings.getOrCreate("ght");
         final FieldSignature rftSignature = FieldSignature.of("rft", "Ljava/util/logging/Logger;");
         assertTrue(parentMapping.hasFieldMapping(rftSignature));
 
@@ -126,10 +126,10 @@ public class EnigmaReaderTest {
         assertEquals("uk/jamierocks/Test/log", fieldMapping.getFullDeobfuscatedName());
 
         // 4. Check the /inner/ class mapping has been added to the class mapping
-        assertTrue(parentMapping.hasInnerClassMapping("ds"));
+        assertTrue(parentMapping.innerClasses().has("ds"));
 
         // 5. Get the inner class mapping, and check the field mapping has been added to it
-        final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
+        final InnerClassMapping classMapping = parentMapping.innerClasses().getOrCreate("ds");
         final FieldSignature juhSignature = FieldSignature.of("juh", "Luk/jamierocks/Server;");
         assertTrue(classMapping.hasFieldMapping(juhSignature));
 
@@ -144,16 +144,16 @@ public class EnigmaReaderTest {
     @Test
     public void method() {
         // 1. Check the /parent/ class has been added to the mapping set
-        assertTrue(this.mappings.hasTopLevelClassMapping("ght"));
+        assertTrue(this.mappings.has("ght"));
 
         // 2. Get the class mapping, and check the method mapping has been added to it
-        final TopLevelClassMapping parentMapping = this.mappings.getOrCreateTopLevelClassMapping("ght");
+        final TopLevelClassMapping parentMapping = this.mappings.getOrCreate("ght");
         final MethodDescriptor isEvenSignature = MethodDescriptor.of("(I)Z");
         final MethodSignature isEvenDescriptor = new MethodSignature("hyuip", isEvenSignature);
-        assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
+        assertTrue(parentMapping.methods().has(isEvenDescriptor));
 
         // 3. Get the method mapping, and verify it
-        final MethodMapping methodMapping = parentMapping.getOrCreateMethodMapping(isEvenDescriptor);
+        final MethodMapping methodMapping = parentMapping.methods().getOrCreate(isEvenDescriptor);
         assertEquals("hyuip", methodMapping.getObfuscatedName());
         assertEquals("isEven", methodMapping.getDeobfuscatedName());
         assertEquals("(I)Z", methodMapping.getObfuscatedDescriptor());
@@ -169,14 +169,14 @@ public class EnigmaReaderTest {
         assertEquals("num", parameterMapping.getDeobfuscatedName());
 
         // 6. Check the /inner/ class mapping has been added to the class mapping
-        assertTrue(parentMapping.hasInnerClassMapping("ds"));
+        assertTrue(parentMapping.innerClasses().has("ds"));
 
         // 7. Get the inner class mapping, and check the field mapping has been added to it
-        final InnerClassMapping classMapping = parentMapping.getOrCreateInnerClassMapping("ds");
-        assertTrue(parentMapping.hasMethodMapping(isEvenDescriptor));
+        final InnerClassMapping classMapping = parentMapping.innerClasses().getOrCreate("ds");
+        assertTrue(parentMapping.methods().has(isEvenDescriptor));
 
         // 8. Get the method mapping, and verify it
-        final MethodMapping innerMethodMapping = classMapping.getOrCreateMethodMapping(isEvenDescriptor);
+        final MethodMapping innerMethodMapping = classMapping.methods().getOrCreate(isEvenDescriptor);
         assertEquals("hyuip", innerMethodMapping.getObfuscatedName());
         assertEquals("isOdd", innerMethodMapping.getDeobfuscatedName());
         assertEquals("(I)Z", innerMethodMapping.getObfuscatedDescriptor());

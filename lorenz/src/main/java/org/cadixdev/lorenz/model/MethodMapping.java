@@ -38,7 +38,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping> {
+public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping<?, ?>> {
 
     /**
      * Gets the signature of this method mapping.
@@ -167,16 +167,17 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
     }
 
     @Override
-    default MethodMapping reverse(final ClassMapping parent) {
-        final MethodMapping mapping = parent.createMethodMapping(this.getDeobfuscatedSignature(), this.getObfuscatedName());
+    default MethodMapping reverse(final ClassMapping<?, ?> parent) {
+        final MethodMapping mapping = parent.methods().getOrCreate(this.getDeobfuscatedSignature())
+                .setDeobfuscatedName(this.getObfuscatedName());
         this.getParameterMappings().forEach(param -> param.reverse(mapping));
         return mapping;
     }
 
     @Override
-    default MethodMapping merge(final MethodMapping with, final ClassMapping parent) {
+    default MethodMapping merge(final MethodMapping with, final ClassMapping<?, ?> parent) {
         // effectively clone the mapping for the new parent
-        final MethodMapping newMapping = parent.createMethodMapping(this.getSignature())
+        final MethodMapping newMapping = parent.methods().getOrCreate(this.getSignature())
                 .setDeobfuscatedName(with.getDeobfuscatedName());
 
         // fill child data
@@ -190,8 +191,9 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
     }
 
     @Override
-    default MethodMapping copy(final ClassMapping parent) {
-        final MethodMapping mapping = parent.createMethodMapping(this.getSignature(), this.getDeobfuscatedName());
+    default MethodMapping copy(final ClassMapping<?, ?> parent) {
+        final MethodMapping mapping = parent.methods().getOrCreate(this.getSignature())
+                .setDeobfuscatedName(this.getDeobfuscatedName());
         this.getParameterMappings().forEach(param -> param.copy(mapping));
         return mapping;
     }

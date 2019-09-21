@@ -46,13 +46,13 @@ public final class ReverseTest {
     private static final MappingSet MAPPINGS = MappingSet.create();
 
     static {
-        final TopLevelClassMapping ab = MAPPINGS.getOrCreateTopLevelClassMapping("ab")
+        final TopLevelClassMapping ab = MAPPINGS.getOrCreate("ab")
                 .setDeobfuscatedName("Demo");
         ab.getOrCreateFieldMapping("ui")
                 .setDeobfuscatedName("log");
-        ab.getOrCreateMethodMapping("hhyg", "()V")
+        ab.methods().getOrCreate("hhyg", "()V")
                 .setDeobfuscatedName("main");
-        ab.getOrCreateInnerClassMapping("gh")
+        ab.innerClasses().getOrCreate("gh")
                 .setDeobfuscatedName("Boop");
     }
 
@@ -61,12 +61,12 @@ public final class ReverseTest {
         final MappingSet reversed = MAPPINGS.reverse();
 
         // top level class
-        final Optional<TopLevelClassMapping> demo = reversed.getTopLevelClassMapping("Demo");
+        final Optional<TopLevelClassMapping> demo = reversed.get("Demo");
         assertTrue(demo.isPresent(), "Demo not present!");
         assertEquals("ab", demo.get().getDeobfuscatedName(), "Demo has the wrong de-obf name!");
 
         // inner class
-        final Optional<InnerClassMapping> boop = demo.get().getInnerClassMapping("Boop");
+        final Optional<InnerClassMapping> boop = demo.get().innerClasses().get("Boop");
         assertTrue(boop.isPresent(), "Boop not present!");
         assertEquals("gh", boop.get().getDeobfuscatedName(), "Boop has the wrong de-obf name!");
 
@@ -76,7 +76,7 @@ public final class ReverseTest {
         assertEquals("ui", log.get().getDeobfuscatedName(), "log has the wrong de-obf name!");
 
         // method
-        final Optional<MethodMapping> main = demo.get().getMethodMapping("main", "()V");
+        final Optional<MethodMapping> main = demo.get().methods().get("main", "()V");
         assertTrue(main.isPresent(), "main not present!");
         assertEquals("hhyg", main.get().getDeobfuscatedName(), "main has the wrong de-obf name!");
     }

@@ -61,8 +61,8 @@ public class KinWriter extends BinaryMappingsWriter {
         this.stream.writeInt(0);
 
         // write classes
-        this.stream.writeInt(mappings.getTopLevelClassMappings().size());
-        for (final TopLevelClassMapping klass : mappings.getTopLevelClassMappings()) {
+        this.stream.writeInt(mappings.getAll().size());
+        for (final TopLevelClassMapping klass : mappings.getAll()) {
             this.writeClass(klass);
         }
     }
@@ -82,16 +82,16 @@ public class KinWriter extends BinaryMappingsWriter {
         }
 
         // write methods
-        this.stream.writeInt(mapping.getMethodMappings().size());
-        for (final MethodMapping method : mapping.getMethodMappings()) {
+        this.stream.writeInt(mapping.methods().getAll().size());
+        for (final MethodMapping method : mapping.methods().getAll()) {
             this.stream.writeUTF(method.getObfuscatedName());
             this.stream.writeUTF(method.getObfuscatedDescriptor());
             this.stream.writeUTF(method.getDeobfuscatedName());
         }
 
         // write inner classes
-        this.stream.writeInt(mapping.getInnerClassMappings().size());
-        for (final InnerClassMapping inner : mapping.getInnerClassMappings()) {
+        this.stream.writeInt(mapping.innerClasses().getAll().size());
+        for (final InnerClassMapping inner : mapping.innerClasses().getAll()) {
             this.writeClass(inner);
         }
     }

@@ -30,11 +30,12 @@ import groovy.lang.DelegatesTo;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
+import org.cadixdev.lorenz.model.container.InnerClassContainer;
+import org.cadixdev.lorenz.model.container.MethodContainer;
 
 /**
  * A DSL to simplify the manipulation of {@link ClassMapping}s in Groovy.
@@ -107,13 +108,14 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      * @param desc The descriptor of the method
      * @param script The closure to use
      * @return The mapping
-     * @see ClassMapping#getOrCreateMethodMapping(MethodSignature)
+     * @see ClassMapping#methods() 
+     * @see MethodContainer#getOrCreate(Object)
      */
     public MethodMapping method(
             final String name, final MethodDescriptor desc,
             @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MethodMappingDsl.class) final Closure<?> script) {
         return DslUtil.delegate(
-                this.mapping.getOrCreateMethodMapping(name, desc),
+                this.mapping.methods().getOrCreate(name, desc),
                 MethodMappingDsl::new, script);
     }
 
@@ -141,13 +143,14 @@ public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T>
      * @param name The obfuscated name of the class
      * @param script The closure to use
      * @return The mapping
-     * @see ClassMapping#getOrCreateInnerClassMapping(String)
+     * @see ClassMapping#innerClasses() 
+     * @see InnerClassContainer#getOrCreate(Object)
      */
     public InnerClassMapping klass(
             final String name,
             @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = ClassMappingDsl.class) final Closure<?> script) {
         return DslUtil.delegate(
-                this.mapping.getOrCreateInnerClassMapping(name),
+                this.mapping.innerClasses().getOrCreate(name),
                 ClassMappingDsl::new, script);
     }
 

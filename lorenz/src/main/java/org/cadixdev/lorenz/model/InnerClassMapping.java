@@ -31,7 +31,7 @@ package org.cadixdev.lorenz.model;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface InnerClassMapping extends ClassMapping<InnerClassMapping, ClassMapping>, MemberMapping<InnerClassMapping, ClassMapping> {
+public interface InnerClassMapping extends ClassMapping<InnerClassMapping, ClassMapping<?, ?>>, MemberMapping<InnerClassMapping, ClassMapping<?, ?>> {
 
     /**
      * Sets the de-obfuscated name of this inner class mapping.
@@ -84,18 +84,19 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
     }
 
     @Override
-    default InnerClassMapping reverse(final ClassMapping parent) {
-        final InnerClassMapping mapping = parent.createInnerClassMapping(this.getDeobfuscatedName(), this.getObfuscatedName());
+    default InnerClassMapping reverse(final ClassMapping<?, ?> parent) {
+        final InnerClassMapping mapping = parent.innerClasses().getOrCreate(this.getDeobfuscatedName())
+                .setDeobfuscatedName(this.getObfuscatedName());
         this.getFieldMappings().forEach(field -> field.reverse(mapping));
-        this.getMethodMappings().forEach(method -> method.reverse(mapping));
-        this.getInnerClassMappings().forEach(klass -> klass.reverse(mapping));
+        this.methods().getAll().forEach(method -> method.reverse(mapping));
+        this.innerClasses().getAll().forEach(klass -> klass.reverse(mapping));
         return mapping;
     }
 
     @Override
-    default InnerClassMapping merge(final InnerClassMapping with, final ClassMapping parent) {
+    default InnerClassMapping merge(final InnerClassMapping with, final ClassMapping<?, ?> parent) {
         // create the container mapping
-        final InnerClassMapping newMapping = parent.getOrCreateInnerClassMapping(this.getObfuscatedName())
+        final InnerClassMapping newMapping = parent.innerClasses().getOrCreate(this.getObfuscatedName())
                 .setDeobfuscatedName(with.getDeobfuscatedName());
 
         // fill with child data
@@ -103,12 +104,12 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
             final FieldMapping fieldWith = with.getOrCreateFieldMapping(field.getDeobfuscatedSignature());
             field.merge(fieldWith, newMapping);
         });
-        this.getMethodMappings().forEach(method -> {
-            final MethodMapping methodWith = with.getOrCreateMethodMapping(method.getDeobfuscatedSignature());
+        this.methods().getAll().forEach(method -> {
+            final MethodMapping methodWith = with.methods().getOrCreate(method.getDeobfuscatedSignature());
             method.merge(methodWith, newMapping);
         });
-        this.getInnerClassMappings().forEach(klass -> {
-            final InnerClassMapping klassWith = with.getOrCreateInnerClassMapping(klass.getDeobfuscatedName());
+        this.innerClasses().getAll().forEach(klass -> {
+            final InnerClassMapping klassWith = with.innerClasses().getOrCreate(klass.getDeobfuscatedName());
             klass.merge(klassWith, newMapping);
         });
 
@@ -117,11 +118,12 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
     }
 
     @Override
-    default InnerClassMapping copy(final ClassMapping parent) {
-        final InnerClassMapping mapping = parent.createInnerClassMapping(this.getObfuscatedName(), this.getDeobfuscatedName());
+    default InnerClassMapping copy(final ClassMapping<?, ?> parent) {
+        final InnerClassMapping mapping = parent.innerClasses().getOrCreate(this.getObfuscatedName())
+                .setDeobfuscatedName(this.getDeobfuscatedName());
         this.getFieldMappings().forEach(field -> field.copy(mapping));
-        this.getMethodMappings().forEach(method -> method.copy(mapping));
-        this.getInnerClassMappings().forEach(klass -> klass.copy(mapping));
+        this.methods().getAll().forEach(method -> method.copy(mapping));
+        this.innerClasses().getAll().forEach(klass -> klass.copy(mapping));
         return mapping;
     }
 

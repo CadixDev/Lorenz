@@ -25,12 +25,11 @@
 
 package org.cadixdev.lorenz.asm;
 
+import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.Mapping;
-import org.cadixdev.bombe.analysis.InheritanceProvider;
-import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.objectweb.asm.commons.Remapper;
 
 /**
@@ -56,20 +55,20 @@ public class LorenzRemapper extends Remapper {
 
     @Override
     public String map(final String typeName) {
-        return this.mappings.computeClassMapping(typeName)
+        return this.mappings.compute(typeName)
                 .map(Mapping::getFullDeobfuscatedName)
                 .orElse(typeName);
     }
 
     @Override
     public String mapInnerClassName(final String name, final String ownerName, final String innerName) {
-        return this.mappings.computeClassMapping(name)
+        return this.mappings.compute(name)
                 .map(Mapping::getDeobfuscatedName)
                 .orElse(innerName);
     }
 
     private ClassMapping<?, ?> getCompletedClassMapping(final String owner) {
-        final ClassMapping<?, ?> mapping = this.mappings.getOrCreateClassMapping(owner);
+        final ClassMapping<?, ?> mapping = this.mappings.resolveOrCreate(owner);
         mapping.complete(this.inheritanceProvider);
         return mapping;
     }
@@ -85,7 +84,7 @@ public class LorenzRemapper extends Remapper {
     @Override
     public String mapMethodName(final String owner, final String name, final String desc) {
         return this.getCompletedClassMapping(owner)
-                .getMethodMapping(MethodSignature.of(name, desc))
+                .methods().get(name, desc)
                 .map(Mapping::getDeobfuscatedName)
                 .orElse(name);
     }

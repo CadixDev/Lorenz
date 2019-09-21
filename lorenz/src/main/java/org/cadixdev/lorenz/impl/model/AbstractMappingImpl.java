@@ -44,7 +44,7 @@ import java.util.StringJoiner;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mapping<M, P> {
+public abstract class AbstractMappingImpl<M extends Mapping<M, P>, P> implements Mapping<M, P> {
 
     private final MappingSet mappings;
     private final Map<ExtensionKey<?>, Object> data = new HashMap<>();

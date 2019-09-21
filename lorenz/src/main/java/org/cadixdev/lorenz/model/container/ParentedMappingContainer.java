@@ -23,29 +23,40 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
+package org.cadixdev.lorenz.model.container;
+
+import org.cadixdev.lorenz.model.Mapping;
 
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
+ * A {@link MappingContainer container} of {@link Mapping mappings}
+ * identified by signature, and parented by another object.
  *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
+ * <p><strong>A parented container should only be used where the
+ * container is separate from the parent object!</strong>
  *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
+ * @param <M> The type of mapping contained
+ * @param <S> The type of the signature, representing the mapping
+ * @param <P> The type of the parent object
+ *
+ * @see SimpleParentedMappingContainer
+ * @see FieldContainer
+ * @see MethodContainer
+ * @see InnerClassContainer
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.6.0
  */
-public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
+public interface ParentedMappingContainer<M extends Mapping<?, ?>, S, P> extends MappingContainer<M, S> {
 
     /**
-     * Gets the parent {@link Mapping} of this member mapping.
+     * Gets the parent object, of the mappings contained in the
+     * container.
      *
-     * @return The parent mapping
-     * @since 0.4.0
+     * <p><em>This is named back, as it is used heavily in fluent
+     * chain operations.</em>
+     *
+     * @return The parent object
      */
-    P getParent();
+    P back();
 
 }

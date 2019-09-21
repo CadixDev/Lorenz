@@ -30,7 +30,6 @@ import static org.cadixdev.lorenz.io.kin.KinConstants.VERSION_ONE;
 import static org.cadixdev.lorenz.io.kin.KinConstants.toHexString;
 
 import org.cadixdev.bombe.type.FieldType;
-import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.BinaryMappingsReader;
 import org.cadixdev.lorenz.io.MappingsReader;
@@ -74,18 +73,18 @@ public class KinReader extends BinaryMappingsReader {
 
         final int classCount = this.stream.readInt();
         for (int i = 0; i < classCount; i++) {
-            this.readClass(mappings.getOrCreateTopLevelClassMapping(this.stream.readUTF()));
+            this.readClass(mappings.getOrCreate(this.stream.readUTF()));
         }
 
         return mappings;
     }
 
-    private void readClass(final ClassMapping mapping) throws IOException {
+    private void readClass(final ClassMapping<?, ?> mapping) throws IOException {
         mapping.setDeobfuscatedName(this.stream.readUTF());
 
         final int classCount = this.stream.readInt();
         for (int i = 0; i < classCount; i++) {
-            this.readClass(mapping.getOrCreateInnerClassMapping(this.stream.readUTF()));
+            this.readClass(mapping.innerClasses().getOrCreate(this.stream.readUTF()));
         }
 
         final int fieldCount = this.stream.readInt();
@@ -93,9 +92,8 @@ public class KinReader extends BinaryMappingsReader {
             final FieldMapping field;
             final String obf = this.stream.readUTF();
             // has type info
-            // todo: clean this up (introduce more convenience methods to ClassMapping)
             if (this.stream.readBoolean()) {
-                field = mapping.getOrCreateFieldMapping(new FieldSignature(obf, FieldType.of(this.stream.readUTF())));
+                field = mapping.getOrCreateFieldMapping(obf, this.stream.readUTF());
             }
             else {
                 field = mapping.getOrCreateFieldMapping(obf);
@@ -105,7 +103,7 @@ public class KinReader extends BinaryMappingsReader {
 
         final int methodCount = this.stream.readInt();
         for (int i = 0; i < methodCount; i++) {
-            mapping.getOrCreateMethodMapping(this.stream.readUTF(), this.stream.readUTF())
+            mapping.methods().getOrCreate(this.stream.readUTF(), this.stream.readUTF())
                     .setDeobfuscatedName(this.stream.readUTF());
         }
     }

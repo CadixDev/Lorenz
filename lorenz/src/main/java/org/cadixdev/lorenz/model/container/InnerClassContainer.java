@@ -23,49 +23,37 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.impl;
+package org.cadixdev.lorenz.model.container;
 
-import org.cadixdev.lorenz.MappingSet;
-import org.cadixdev.lorenz.MappingSetModelFactory;
-import org.cadixdev.lorenz.impl.model.TopLevelClassMappingImpl;
-import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.container.SimpleMappingContainer;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.impl.model.InnerClassMappingImpl;
+import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.InnerClassMapping;
 
 /**
- * A basic implementation of {@link MappingSet}.
+ * A {@link MappingContainer container} of
+ * {@link InnerClassMapping inner class mappings}, identified by their
+ * names.
+ *
+ * @param <P> The type of the parent class mapping
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.6.0
  */
-public class MappingSetImpl
-        extends SimpleMappingContainer<TopLevelClassMapping, String>
-        implements MappingSet {
+public class InnerClassContainer<P extends ClassMapping<?, ?>>
+        extends SimpleParentedMappingContainer<InnerClassMapping, String, P> {
 
-    private final MappingSetModelFactory modelFactory;
-    private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
-
-    public MappingSetImpl() {
-        this(new MappingSetModelFactoryImpl());
-    }
-
-    public MappingSetImpl(final MappingSetModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
+    /**
+     * Creates an inner class mapping container.
+     *
+     * @param parent The parent mapping
+     */
+    public InnerClassContainer(final P parent) {
+        super(parent);
     }
 
     @Override
-    public MappingSetModelFactory getModelFactory() {
-        return this.modelFactory;
-    }
-
-    @Override
-    public CascadingFieldTypeProvider getFieldTypeProvider() {
-        return this.fieldTypeProvider;
-    }
-
-    @Override
-    protected TopLevelClassMapping create(final String signature) {
-        return new TopLevelClassMappingImpl(this, signature, signature);
+    protected InnerClassMapping create(final String signature) {
+        return new InnerClassMappingImpl(this.parent, signature, signature);
     }
 
 }

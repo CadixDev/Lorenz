@@ -23,49 +23,35 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.impl;
+package org.cadixdev.lorenz.model.container;
 
-import org.cadixdev.lorenz.MappingSet;
-import org.cadixdev.lorenz.MappingSetModelFactory;
-import org.cadixdev.lorenz.impl.model.TopLevelClassMappingImpl;
-import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.container.SimpleMappingContainer;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.Mapping;
 
 /**
- * A basic implementation of {@link MappingSet}.
+ * A simple implementation of {@link ParentedMappingContainer}, for
+ * mappings that have straight-forward relationships with their
+ * signatures.
+ *
+ * @param <M> The type of mapping contained
+ * @param <S> The type of the signature, representing the mapping
+ * @param <P> The type of the parent object
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.6.0
  */
-public class MappingSetImpl
-        extends SimpleMappingContainer<TopLevelClassMapping, String>
-        implements MappingSet {
+public abstract class SimpleParentedMappingContainer<M extends Mapping<?, ?>, S, P>
+        extends SimpleMappingContainer<M, S>
+        implements ParentedMappingContainer<M, S, P> {
 
-    private final MappingSetModelFactory modelFactory;
-    private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
+    protected final P parent;
 
-    public MappingSetImpl() {
-        this(new MappingSetModelFactoryImpl());
-    }
-
-    public MappingSetImpl(final MappingSetModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
+    public SimpleParentedMappingContainer(final P parent) {
+        this.parent = parent;
     }
 
     @Override
-    public MappingSetModelFactory getModelFactory() {
-        return this.modelFactory;
-    }
-
-    @Override
-    public CascadingFieldTypeProvider getFieldTypeProvider() {
-        return this.fieldTypeProvider;
-    }
-
-    @Override
-    protected TopLevelClassMapping create(final String signature) {
-        return new TopLevelClassMappingImpl(this, signature, signature);
+    public P back() {
+        return this.parent;
     }
 
 }

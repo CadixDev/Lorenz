@@ -46,8 +46,8 @@ public final class LorenzRemapperTest {
     private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
 
     static {
-        final TopLevelClassMapping ght = MAPPINGS.getOrCreateTopLevelClassMapping("ght");
-        final InnerClassMapping ght$hy = ght.getOrCreateInnerClassMapping("hy");
+        final TopLevelClassMapping ght = MAPPINGS.getOrCreate("ght");
+        final InnerClassMapping ght$hy = ght.innerClasses().getOrCreate("hy");
 
         // Mappings for #topLevelClass()
         ght.setDeobfuscatedName("Demo");
@@ -57,7 +57,7 @@ public final class LorenzRemapperTest {
                 .setDeobfuscatedName("log");
 
         // - #topLevelClassMethod()
-        ght.getOrCreateMethodMapping("trp", "()V")
+        ght.methods().getOrCreate("trp", "()V")
                 .setDeobfuscatedName("run");
 
         // Mappings for #innerClass()
@@ -68,7 +68,7 @@ public final class LorenzRemapperTest {
                 .setDeobfuscatedName("name");
 
         // - #innerClassMethod()
-        ght$hy.getOrCreateMethodMapping("kjl", "()Ljava/lang/String;")
+        ght$hy.methods().getOrCreate("kjl", "()Ljava/lang/String;")
                 .setDeobfuscatedName("getName");
     }
 

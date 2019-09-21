@@ -84,7 +84,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
         if (!json.isJsonArray()) throw new JsonParseException("MappingSet must be an array!");
         final JsonArray array = json.getAsJsonArray();
 
-        deserialiseClasses(array, this.mappings::getOrCreateTopLevelClassMapping);
+        deserialiseClasses(array, this.mappings::getOrCreate);
 
         return this.mappings;
     }
@@ -136,7 +136,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
                             throw new JsonParseException("Method missing obfuscated name!");
                         if (!obj.has(DESCRIPTOR) || !obj.get(DESCRIPTOR).isJsonPrimitive())
                             throw new JsonParseException("Method missing descriptor!");
-                        return mapping.getOrCreateMethodMapping(
+                        return mapping.methods().getOrCreate(
                                 obj.get(OBF).getAsString(),
                                 obj.get(DESCRIPTOR).getAsString()
                         );
@@ -148,7 +148,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
         if (json.has(INNERS)) {
             if (!json.get(INNERS).isJsonArray()) throw new JsonParseException("Inner classes must be an array!");
             final JsonArray inners = json.getAsJsonArray(INNERS);
-            deserialiseClasses(inners, mapping::getOrCreateInnerClassMapping);
+            deserialiseClasses(inners, mapping.innerClasses()::getOrCreate);
         }
     }
 
@@ -213,7 +213,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
                                  final JsonSerializationContext context) {
         final JsonArray array = new JsonArray();
 
-        for (final TopLevelClassMapping srcKlass : src.getTopLevelClassMappings()) {
+        for (final TopLevelClassMapping srcKlass : src.getAll()) {
             array.add(serialiseClass(srcKlass));
         }
 
@@ -239,14 +239,14 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
 
         // Methods
         final JsonArray methods = new JsonArray();
-        for (final MethodMapping method : klass.getMethodMappings()) {
+        for (final MethodMapping method : klass.methods().getAll()) {
             methods.add(serialiseMethod(method));
         }
         json.add(METHODS, methods);
 
         // Inner Classes
         final JsonArray inners = new JsonArray();
-        for (final InnerClassMapping inner : klass.getInnerClassMappings()) {
+        for (final InnerClassMapping inner : klass.innerClasses().getAll()) {
             inners.add(serialiseClass(inner));
         }
         json.add(INNERS, inners);

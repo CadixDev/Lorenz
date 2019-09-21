@@ -59,7 +59,7 @@ public final class CascadingFieldTypeProviderTest {
 
     @Test
     public void demo() {
-        final Optional<FieldType> type = MAPPINGS.getOrCreateTopLevelClassMapping("Demo")
+        final Optional<FieldType> type = MAPPINGS.getOrCreate("Demo")
                 .getOrCreateFieldMapping("demo")
                 .getType();
         assertTrue(type.isPresent());
@@ -69,7 +69,7 @@ public final class CascadingFieldTypeProviderTest {
 
     @Test
     public void uiop() {
-        final Optional<FieldType> type = MAPPINGS.getOrCreateTopLevelClassMapping("Demo")
+        final Optional<FieldType> type = MAPPINGS.getOrCreate("Demo")
                 .getOrCreateFieldMapping("uiop")
                 .getType();
         assertTrue(type.isPresent());

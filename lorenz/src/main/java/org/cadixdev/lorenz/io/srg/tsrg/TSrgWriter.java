@@ -55,7 +55,7 @@ public class TSrgWriter extends TextMappingsWriter {
     @Override
     public void write(final MappingSet mappings) {
         // Write class mappings
-        mappings.getTopLevelClassMappings().stream()
+        mappings.getAll().stream()
                 .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
@@ -70,7 +70,7 @@ public class TSrgWriter extends TextMappingsWriter {
         // Effectively ClassMapping#hasMappings() without the inner class check
         if (mapping.hasDeobfuscatedName() ||
                 mapping.getFieldsByName().values().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
-                mapping.getMethodMappings().stream().anyMatch(MethodMapping::hasMappings)) {
+                mapping.methods().getAll().stream().anyMatch(MethodMapping::hasMappings)) {
             this.writer.println(String.format("%s %s", mapping.getFullObfuscatedName(), mapping.getFullDeobfuscatedName()));
         }
 
@@ -81,13 +81,13 @@ public class TSrgWriter extends TextMappingsWriter {
                 .forEach(this::writeFieldMapping);
 
         // Write method mappings
-        mapping.getMethodMappings().stream()
+        mapping.methods().getAll().stream()
                 .filter(Mapping::hasDeobfuscatedName)
                 .sorted(ALPHABETISE_METHODS)
                 .forEach(this::writeMethodMapping);
 
         // Write inner class mappings
-        mapping.getInnerClassMappings().stream()
+        mapping.innerClasses().getAll().stream()
                 .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);

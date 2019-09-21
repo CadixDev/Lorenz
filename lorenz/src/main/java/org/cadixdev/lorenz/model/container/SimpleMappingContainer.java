@@ -23,59 +23,60 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.impl.model;
+package org.cadixdev.lorenz.model.container;
 
 import org.cadixdev.lorenz.model.Mapping;
-import org.cadixdev.lorenz.model.MemberMapping;
 
-import java.util.Objects;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * An abstract basic implementation of {@link MemberMapping}.
+ * A simple implementation of {@link MappingContainer}, for
+ * mappings that have straight-forward relationships with their
+ * signatures.
  *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
+ * @param <M> The type of mapping contained
+ * @param <S> The type of the signature, representing the mapping
+ *
+ * @see SimpleParentedMappingContainer
  *
  * @author Jamie Mansfield
- * @since 0.2.0
+ * @since 0.6.0
  */
-public abstract class AbstractMemberMappingImpl<M extends MemberMapping<M, P>, P extends Mapping>
-        extends AbstractMappingImpl<M, P>
-        implements MemberMapping<M, P> {
+public abstract class SimpleMappingContainer<M extends Mapping<?, ?>, S>
+        implements MappingContainer<M, S> {
 
-    private final P parent;
+    protected final Map<S, M> mappings = new HashMap<>();
 
     /**
-     * Creates a new member mapping, from the given parameters.
+     * Creates a mapping, with the given signature.
      *
-     * @param parent The mapping, this mapping belongs to
-     * @param obfuscatedName The obfuscated name
-     * @param deobfuscatedName The de-obfuscated name
+     * @param signature The signature of the mapping
+     * @return The mapping
      */
-    protected AbstractMemberMappingImpl(final P parent, final String obfuscatedName,
-            final String deobfuscatedName) {
-        super(parent.getMappings(), obfuscatedName, deobfuscatedName);
-        this.parent = parent;
+    protected abstract M create(final S signature);
+
+    @Override
+    public Collection<M> getAll() {
+        return Collections.unmodifiableCollection(this.mappings.values());
     }
 
     @Override
-    public P getParent() {
-        return this.parent;
+    public boolean has(final S signature) {
+        return this.mappings.containsKey(signature);
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (!(obj instanceof MemberMapping)) return false;
-
-        final MemberMapping that = (MemberMapping) obj;
-        return Objects.equals(this.parent, that.getParent());
+    public Optional<M> get(final S signature) {
+        return Optional.ofNullable(this.mappings.get(signature));
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parent);
+    public M getOrCreate(final S signature) {
+        return this.mappings.computeIfAbsent(signature, this::create);
     }
 
 }

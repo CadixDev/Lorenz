@@ -25,14 +25,14 @@
 
 package org.cadixdev.lorenz.impl.model;
 
+import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
-import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
-import org.cadixdev.bombe.analysis.InheritanceProvider;
-import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
+import org.cadixdev.lorenz.model.container.InnerClassContainer;
+import org.cadixdev.lorenz.model.container.MethodContainer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,14 +51,14 @@ import java.util.StringJoiner;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
+public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
         extends AbstractMappingImpl<M, P>
         implements ClassMapping<M, P> {
 
     private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
     private final Map<String, FieldMapping> fieldsByName = new HashMap<>();
-    private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
-    private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
+    private final MethodContainer<M> methods = new MethodContainer<>((M) this); // todo: look into types
+    private final InnerClassContainer<M> innerClasses = new InnerClassContainer<>((M) this);
     private boolean complete;
 
     /**
@@ -129,57 +129,21 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
     }
 
     @Override
-    public Collection<MethodMapping> getMethodMappings() {
-        return Collections.unmodifiableCollection(this.methods.values());
+    public MethodContainer<M> methods() {
+        return this.methods;
     }
 
     @Override
-    public Optional<MethodMapping> getMethodMapping(final MethodSignature signature) {
-        return Optional.ofNullable(this.methods.get(signature));
-    }
-
-    @Override
-    public MethodMapping createMethodMapping(final MethodSignature signature, final String deobfuscatedName) {
-        return this.methods.compute(signature, (desc, existingMapping) -> {
-            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getMappings().getModelFactory().createMethodMapping(this, signature, deobfuscatedName);
-        });
-    }
-
-    @Override
-    public boolean hasMethodMapping(final MethodSignature signature) {
-        return this.methods.containsKey(signature);
-    }
-
-    @Override
-    public Collection<InnerClassMapping> getInnerClassMappings() {
-        return Collections.unmodifiableCollection(this.innerClasses.values());
-    }
-
-    @Override
-    public Optional<InnerClassMapping> getInnerClassMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.innerClasses.get(obfuscatedName));
-    }
-
-    @Override
-    public InnerClassMapping createInnerClassMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.innerClasses.compute(obfuscatedName, (name, existingMapping) -> {
-            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getMappings().getModelFactory().createInnerClassMapping(this, obfuscatedName, deobfuscatedName);
-        });
-    }
-
-    @Override
-    public boolean hasInnerClassMapping(final String obfuscatedName) {
-        return this.innerClasses.containsKey(obfuscatedName);
+    public InnerClassContainer<M> innerClasses() {
+        return this.innerClasses;
     }
 
     @Override
     protected StringJoiner buildToString() {
         return super.buildToString()
                 .add("fields=" + this.getFieldMappings())
-                .add("methods=" + this.getMethodMappings())
-                .add("innerClasses=" + this.getInnerClassMappings());
+                .add("methods=" + this.methods.getAll())
+                .add("innerClasses=" + this.innerClasses.getAll());
     }
 
     @Override
@@ -190,8 +154,8 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
 
         final ClassMapping that = (ClassMapping) obj;
         return Objects.equals(this.getFieldMappings(), that.getFieldMappings()) &&
-                Objects.equals(this.getMethodMappings(), that.getMethodMappings()) &&
-                Objects.equals(this.getInnerClassMappings(), that.getInnerClassMappings());
+                Objects.equals(this.methods(), that.methods()) && // TODO: Implement equals in containers
+                Objects.equals(this.innerClasses(), that.innerClasses());
     }
 
     @Override
@@ -211,7 +175,7 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
         }
 
         for (final InheritanceProvider.ClassInfo parent : info.provideParents(provider)) {
-            final ClassMapping<?, ?> parentMappings = this.getMappings().getOrCreateClassMapping(parent.getName());
+            final ClassMapping<?, ?> parentMappings = this.getMappings().resolveOrCreate(parent.getName());
             parentMappings.complete(provider, parent);
 
             for (final FieldMapping mapping : parentMappings.getFieldMappings()) {
@@ -220,10 +184,8 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
                 }
             }
 
-            for (final MethodMapping mapping : parentMappings.getMethodMappings()) {
-                if (parent.canInherit(info, mapping.getSignature())) {
-                    this.methods.putIfAbsent(mapping.getSignature(), mapping);
-                }
+            for (final MethodMapping mapping : parentMappings.methods().getAll()) {
+                this.methods.complete(parent, info, mapping);
             }
         }
 

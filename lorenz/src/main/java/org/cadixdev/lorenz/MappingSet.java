@@ -25,20 +25,19 @@
 
 package org.cadixdev.lorenz;
 
-import org.cadixdev.lorenz.impl.MappingSetImpl;
-import org.cadixdev.lorenz.model.ClassMapping;
-import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
-import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.bombe.type.ArrayType;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
+import org.cadixdev.lorenz.impl.MappingSetImpl;
+import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.TopLevelClassMapping;
+import org.cadixdev.lorenz.model.container.ClassContainer;
+import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.lorenz.util.Reversible;
 
-import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +47,7 @@ import java.util.stream.Collectors;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MappingSet extends Reversible<MappingSet, MappingSet> {
+public interface MappingSet extends ClassContainer<TopLevelClassMapping>, Reversible<MappingSet, MappingSet> {
 
     /**
      * Creates a mapping set, using the default Lorenz model implementation.
@@ -76,128 +75,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * the implementation classes for all the models.
      *
      * @return The model factory
+     * @since 0.3.0
      */
     MappingSetModelFactory getModelFactory();
-
-    /**
-     * Gets an immutable collection of all of the top-level class
-     * mappings of the mapping set.
-     *
-     * @return The top-level class mappings
-     */
-    Collection<TopLevelClassMapping> getTopLevelClassMappings();
-
-    /**
-     * Creates a top-level class mapping with the given obfuscated and de-obfuscated
-     * names.
-     *
-     * @param obfuscatedName The obfuscated name of the top-level class
-     * @param deobfuscatedName The de-obfuscated name of the top-level class
-     * @return The top-level class mapping, to allow for chaining
-     */
-    TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName);
-
-    /**
-     * Gets the top-level class mapping of the given obfuscated name of the
-     * class mapping, should it exist.
-     *
-     * @param obfuscatedName The obfuscated name of the top-level class mapping
-     * @return The top-level class mapping, wrapped in an {@link Optional}
-     */
-    Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName);
-
-    /**
-     * Gets, or creates should it not exist, a top-level class mapping of the
-     * given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the top-level class mapping
-     * @return The top-level class mapping
-     */
-    default TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
-        return this.getTopLevelClassMapping(obfuscatedName)
-                .orElseGet(() -> this.createTopLevelClassMapping(obfuscatedName, obfuscatedName));
-    }
-
-    /**
-     * Establishes whether the mapping set contains a top-level class
-     * mapping of the given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the top-level class
-     *                       mapping
-     * @return {@code true} should a top-level class mapping of the
-     *         given obfuscated name exist in the mapping set;
-     *         {@code false} otherwise
-     */
-    boolean hasTopLevelClassMapping(final String obfuscatedName);
-
-    /**
-     * Gets the class mapping of the given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name
-     * @return The class mapping, wrapped in an {@link Optional}
-     */
-    default Optional<? extends ClassMapping<?, ?>> getClassMapping(final String obfuscatedName) {
-        final int lastIndex = obfuscatedName.lastIndexOf('$');
-        if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
-
-        // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final String parentClassName = obfuscatedName.substring(0, lastIndex);
-        final String innerClassName = obfuscatedName.substring(lastIndex + 1);
-
-        // Get the parent class
-        return this.getClassMapping(parentClassName)
-                // Get and return the inner class
-                .flatMap(parentClassMapping -> parentClassMapping.getInnerClassMapping(innerClassName));
-    }
-
-    /**
-     * Attempts to locate a class mapping for the given obfuscated name.
-     *
-     * <p>This is equivalent to calling {@link #getClassMapping(String)},
-     * except that it will insert a new inner class mapping in case a
-     * class mapping for the outer class exists.</p>
-     *
-     * <p>This method exists to simplify remapping, where it is important
-     * to keep inner classes a part of the outer class.</p>
-     *
-     * @param obfuscatedName The obfuscated name
-     * @return The class mapping, wrapped in an {@link Optional}
-     */
-    default Optional<? extends ClassMapping<?, ?>> computeClassMapping(final String obfuscatedName) {
-        final int lastIndex = obfuscatedName.lastIndexOf('$');
-        if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
-
-        // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final String parentClassName = obfuscatedName.substring(0, lastIndex);
-        final String innerClassName = obfuscatedName.substring(lastIndex + 1);
-
-        // Get the parent class
-        return this.getClassMapping(parentClassName)
-                // Get and return the inner class
-                .map(parentClassMapping -> parentClassMapping.getOrCreateInnerClassMapping(innerClassName));
-    }
-
-    /**
-     * Gets, or creates should it not exist, a class mapping, of the given
-     * obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the class mapping
-     * @return The class mapping
-     */
-    default ClassMapping<?, ?> getOrCreateClassMapping(final String obfuscatedName) {
-        final int lastIndex = obfuscatedName.lastIndexOf('$');
-        if (lastIndex == -1) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
-
-        // Split the obfuscated name, to fetch the parent class name, and inner class name
-        final String parentClassName = obfuscatedName.substring(0, lastIndex);
-        final String innerClassName = obfuscatedName.substring(lastIndex + 1);
-
-        // Get the parent class
-        final ClassMapping parentClass = this.getOrCreateClassMapping(parentClassName);
-
-        // Get the inner class
-        return parentClass.getOrCreateInnerClassMapping(innerClassName);
-    }
 
     /**
      * Gets the field type provider in use for this set of mappings.
@@ -264,7 +144,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
-            return this.getClassMapping(obj.getClassName())
+            return this.get(obj.getClassName())
                     .map(m -> new ObjectType(m.getFullDeobfuscatedName()))
                     .orElse(obj);
         }
@@ -299,7 +179,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
 
     @Override
     default MappingSet reverse(final MappingSet parent) {
-        this.getTopLevelClassMappings().forEach(klass -> klass.reverse(parent));
+        this.getAll().forEach(klass -> klass.reverse(parent));
         return parent;
     }
 
@@ -325,8 +205,8 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @since 0.5.0
      */
     default MappingSet merge(final MappingSet with, final MappingSet parent) {
-        this.getTopLevelClassMappings().forEach(klass -> {
-            final TopLevelClassMapping klassWith = with.getOrCreateTopLevelClassMapping(klass.getDeobfuscatedName());
+        this.getAll().forEach(klass -> {
+            final TopLevelClassMapping klassWith = with.getOrCreate(klass.getDeobfuscatedName());
             klass.merge(klassWith, parent);
         });
         return parent;
@@ -340,7 +220,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      */
     default MappingSet copy() {
         final MappingSet mappings = MappingSet.create();
-        this.getTopLevelClassMappings().forEach(klass -> klass.copy(mappings));
+        this.getAll().forEach(klass -> klass.copy(mappings));
         return mappings;
     }
 

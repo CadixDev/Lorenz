@@ -28,9 +28,10 @@ package org.cadixdev.lorenz.model;
 import org.cadixdev.bombe.analysis.InheritanceCompletable;
 import org.cadixdev.bombe.analysis.InheritanceProvider;
 import org.cadixdev.bombe.type.FieldType;
-import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
+import org.cadixdev.lorenz.model.container.InnerClassContainer;
+import org.cadixdev.lorenz.model.container.MappingContainer;
+import org.cadixdev.lorenz.model.container.MethodContainer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -45,7 +46,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, InheritanceCompletable {
+public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M, P>, InheritanceCompletable {
 
     /**
      * {@inheritDoc}
@@ -276,190 +277,22 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     }
 
     /**
-     * Gets an immutable collection of all of the method mappings
-     * of the class mapping.
+     * Gets the {@link MappingContainer mapping container} for {@link FieldMapping
+     * field mappings}.
      *
-     * @return The method mappings
-     */
-    Collection<MethodMapping> getMethodMappings();
-
-    /**
-     * Gets the method mapping of the given method signature of the
-     * class mapping, should it exist.
-     *
-     * @param signature The signature of the method mapping
-     * @return The method mapping, wrapped in an {@link Optional}
-     */
-    Optional<MethodMapping> getMethodMapping(final MethodSignature signature);
-
-    /**
-     * Gets the method mapping of the given method signature of the
-     * class mapping, should it exist.
-     *
-     * @param obfuscatedName The obfuscated name of the method mapping
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
-     * @return The method mapping, wrapped in an {@link Optional}
-     * @since 0.5.0
-     */
-    default Optional<MethodMapping> getMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.getMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
-    }
-
-    /**
-     * Creates a new method mapping, attached to this class mapping, using
-     * the given method signature and de-obfuscated name.
-     *
-     * @param signature The method signature
-     * @param deobfuscatedName The de-obfuscated name of the method
-     * @return The method mapping
-     */
-    MethodMapping createMethodMapping(final MethodSignature signature, final String deobfuscatedName);
-
-    /**
-     * Creates a new method mapping, attached to this class mapping, using
-     * the given method signature.
-     *
-     * @param signature The method signature
-     * @return The method mapping
-     */
-    default MethodMapping createMethodMapping(final MethodSignature signature) {
-        return this.createMethodMapping(signature, signature.getName());
-    }
-
-    /**
-     * Creates a new method mapping, attached to this class mapping, using
-     * the given obfuscated method name and descriptor.
-     *
-     * @param obfuscatedName The obfuscated method name
-     * @param obfuscatedDescriptor The obfuscated method descriptor
-     * @return The method mapping
-     */
-    default MethodMapping createMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.createMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
-    }
-
-    /**
-     * Creates a new method mapping, attached to this class mapping, using
-     * the given obfuscated method name and descriptor.
-     *
-     * @param obfuscatedName The obfuscated method name
-     * @param obfuscatedDescriptor The obfuscated method descriptor
-     * @return The method mapping
+     * @return The method mapping container
      * @since 0.6.0
      */
-    default MethodMapping createMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
-        return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
-    }
+    MethodContainer<M> methods();
 
     /**
-     * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated signature.
+     * Gets the {@link MappingContainer mapping container} for {@link
+     * InnerClassMapping inner class mappings}.
      *
-     * @param signature The signature of the method mapping
-     * @return The method mapping
-     */
-    default MethodMapping getOrCreateMethodMapping(final MethodSignature signature) {
-        return this.getMethodMapping(signature)
-                .orElseGet(() -> this.createMethodMapping(signature));
-    }
-
-    /**
-     * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated name, and descriptor.
-     *
-     * @param obfuscatedName The obfuscated name of the method mapping
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
-     * @return The method mapping
-     */
-    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final String obfuscatedDescriptor) {
-        return this.getOrCreateMethodMapping(MethodSignature.of(obfuscatedName, obfuscatedDescriptor));
-    }
-
-    /**
-     * Gets, or creates should it not exist, a method mapping of the
-     * given obfuscated name, and descriptor.
-     *
-     * @param obfuscatedName The obfuscated name of the method mapping
-     * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
-     * @return The method mapping
+     * @return The inner class mapping container
      * @since 0.6.0
      */
-    default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
-        return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
-    }
-
-    /**
-     * Establishes whether the class mapping contains a method mapping
-     * of the given obfuscated name.
-     *
-     * @param signature The signature of the method mapping
-     * @return {@code true} should a method mapping of the given
-     *         obfuscated name exist in the class mapping;
-     *         {@code false} otherwise
-     */
-    boolean hasMethodMapping(final MethodSignature signature);
-
-    /**
-     * Gets an immutable collection of all of the inner class
-     * mappings of the class mapping.
-     *
-     * @return The inner class mappings
-     */
-    Collection<InnerClassMapping> getInnerClassMappings();
-
-    /**
-     * Gets the inner class mapping of the given obfuscated name of the
-     * class mapping, should it exist.
-     *
-     * @param obfuscatedName The obfuscated name of the inner class mapping
-     * @return The inner class mapping, wrapped in an {@link Optional}
-     */
-    Optional<InnerClassMapping> getInnerClassMapping(final String obfuscatedName);
-
-    /**
-     * Creates a new inner class mapping, attached to this class mapping, using
-     * the given obfuscated and de-obfuscated class name.
-     *
-     * @param obfuscatedName The obfuscated class name
-     * @param deobfuscatedName The de-obfuscated class name
-     * @return The class mapping
-     */
-    InnerClassMapping createInnerClassMapping(final String obfuscatedName, final String deobfuscatedName);
-
-    /**
-     * Creates a new inner class mapping, attached to this class mapping, using
-     * the given obfuscated class name.
-     *
-     * @param obfuscatedName The obfuscated class name
-     * @return The class mapping
-     */
-    default InnerClassMapping createInnerClassMapping(final String obfuscatedName) {
-        return this.createInnerClassMapping(obfuscatedName, obfuscatedName);
-    }
-
-    /**
-     * Gets, or creates should it not exist, a inner class mapping of the
-     * given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the inner class mapping
-     * @return The inner class mapping
-     */
-    default InnerClassMapping getOrCreateInnerClassMapping(final String obfuscatedName) {
-        return this.getInnerClassMapping(obfuscatedName)
-                .orElseGet(() -> this.createInnerClassMapping(obfuscatedName));
-    }
-
-    /**
-     * Establishes whether the class mapping contains a inner class
-     * mapping of the given obfuscated name.
-     *
-     * @param obfuscatedName The obfuscated name of the inner class
-     *                       mapping
-     * @return {@code true} should a inner class mapping of the
-     *         given obfuscated name exist in the class mapping;
-     *         {@code false} otherwise
-     */
-    boolean hasInnerClassMapping(final String obfuscatedName);
+    InnerClassContainer<M> innerClasses();
 
     /**
      * Establishes whether the class mapping has a de-obfuscation mapping, or
@@ -471,8 +304,8 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     default boolean hasMappings() {
         return this.hasDeobfuscatedName() ||
                 this.getFieldMappings().stream().anyMatch(Mapping::hasDeobfuscatedName) ||
-                this.getMethodMappings().stream().anyMatch(MethodMapping::hasMappings) ||
-                this.getInnerClassMappings().stream().anyMatch(ClassMapping::hasMappings);
+                this.methods().getAll().stream().anyMatch(MethodMapping::hasMappings) ||
+                this.innerClasses().getAll().stream().anyMatch(ClassMapping::hasMappings);
     }
 
     @Override
