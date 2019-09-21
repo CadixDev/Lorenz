@@ -33,10 +33,6 @@ import java.util.Optional;
 /**
  * A container of {@link Mapping mappings} identified by a signature.
  *
- * <p>Mapping Containers allow for easy code reuse, reducing code,
- * and making convenience methods more easily visible (and therefore
- * maintainable).
- *
  * <p>If the container is used a field, rather than apart the model it
  * backs, then {@link ParentedMappingContainer} should be used to allow
  * for fluent operations.
@@ -48,7 +44,9 @@ import java.util.Optional;
  * @see SimpleMappingContainer
  * @see SimpleParentedMappingContainer
  * @see ClassContainer
+ * @see FieldContainer
  * @see MethodContainer
+ * @see InnerClassContainer
  *
  * @author Jamie Mansfield
  * @since 0.6.0

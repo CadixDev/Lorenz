@@ -42,6 +42,11 @@ import org.cadixdev.lorenz.model.InnerClassMapping;
 public class InnerClassContainer<P extends ClassMapping<?, ?>>
         extends SimpleParentedMappingContainer<InnerClassMapping, String, P> {
 
+    /**
+     * Creates an inner class mapping container.
+     *
+     * @param parent The parent mapping
+     */
     public InnerClassContainer(final P parent) {
         super(parent);
     }

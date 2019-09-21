@@ -46,6 +46,11 @@ import java.util.Optional;
 public class MethodContainer<P extends ClassMapping<?, ?>>
         extends SimpleParentedMappingContainer<MethodMapping, MethodSignature, P> {
 
+    /**
+     * Creates a method mapping container.
+     *
+     * @param parent The parent mapping
+     */
     public MethodContainer(final P parent) {
         super(parent);
     }

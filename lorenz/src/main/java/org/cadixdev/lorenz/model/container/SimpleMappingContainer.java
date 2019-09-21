@@ -41,6 +41,8 @@ import java.util.Optional;
  * @param <M> The type of mapping contained
  * @param <S> The type of the signature, representing the mapping
  *
+ * @see SimpleParentedMappingContainer
+ *
  * @author Jamie Mansfield
  * @since 0.6.0
  */

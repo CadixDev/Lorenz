@@ -49,6 +49,11 @@ public class FieldContainer<P extends ClassMapping<?, ?>>
 
     private final Map<String, FieldMapping> byName = new HashMap<>();
 
+    /**
+     * Creates a field mapping container.
+     *
+     * @param parent The parent mapping
+     */
     public FieldContainer(final P parent) {
         super(parent);
     }
