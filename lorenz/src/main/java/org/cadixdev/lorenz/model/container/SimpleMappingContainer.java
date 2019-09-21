@@ -47,7 +47,7 @@ import java.util.Optional;
 public abstract class SimpleMappingContainer<M extends Mapping<?, ?>, S>
         implements MappingContainer<M, S> {
 
-    private final Map<S, M> mappings = new HashMap<>();
+    protected final Map<S, M> mappings = new HashMap<>();
 
     /**
      * Creates a mapping, with the given signature.

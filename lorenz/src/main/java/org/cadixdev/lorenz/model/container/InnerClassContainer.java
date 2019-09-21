@@ -30,7 +30,9 @@ import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 
 /**
- * A {@link MappingContainer container} of {@link ClassMapping class mappings}.
+ * A {@link MappingContainer container} of
+ * {@link InnerClassMapping inner class mappings}, identified by their
+ * names.
  *
  * @param <P> The type of the parent class mapping
  *
