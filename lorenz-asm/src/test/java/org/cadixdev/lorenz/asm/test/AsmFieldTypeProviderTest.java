@@ -45,7 +45,7 @@ public final class AsmFieldTypeProviderTest {
     @Test
     public void fetchFieldType() {
         final MappingSet mappings = MappingSet.create();
-        final FieldMapping field = mappings.getOrCreateTopLevelClassMapping("ght")
+        final FieldMapping field = mappings.getOrCreate("ght")
                 .getOrCreateFieldMapping("op");
 
         final ClassWriter writer = new ClassWriter(0);

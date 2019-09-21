@@ -60,8 +60,7 @@ public interface ClassContainer<M extends ClassMapping<?, ?>> extends MappingCon
         // Get the parent class
         return this.resolve(parentClassName)
                 // Get and return the inner class
-                // TODO: rewrite for containers when they're used in the mappings themselves
-                .flatMap(parentClassMapping -> parentClassMapping.getInnerClassMapping(innerClassName));
+                .flatMap(parentClassMapping -> parentClassMapping.innerClasses().get(innerClassName));
     }
 
     /**
@@ -88,8 +87,7 @@ public interface ClassContainer<M extends ClassMapping<?, ?>> extends MappingCon
         // Get the parent class
         return this.resolve(parentClassName)
                 // Get and return the inner class
-                // TODO: rewrite for containers when they're used in the mappings themselves
-                .map(parentClassMapping -> parentClassMapping.getOrCreateInnerClassMapping(innerClassName));
+                .map(parentClassMapping -> parentClassMapping.innerClasses().getOrCreate(innerClassName));
     }
 
     /**
@@ -108,11 +106,10 @@ public interface ClassContainer<M extends ClassMapping<?, ?>> extends MappingCon
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
-        final ClassMapping parentClass = this.resolveOrCreate(parentClassName);
+        final ClassMapping<?, ?> parentClass = this.resolveOrCreate(parentClassName);
 
         // Get the inner class
-        // TODO: rewrite for containers when they're used in the mappings themselves
-        return parentClass.getOrCreateInnerClassMapping(innerClassName);
+        return parentClass.innerClasses().getOrCreate(innerClassName);
     }
 
 }

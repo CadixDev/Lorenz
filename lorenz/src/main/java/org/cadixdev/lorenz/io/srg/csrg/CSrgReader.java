@@ -93,7 +93,7 @@ public class CSrgReader extends TextMappingsReader {
                 final String deobfuscatedName = split[1];
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(obfuscatedName)
+                this.mappings.resolveOrCreate(obfuscatedName)
                         .setDeobfuscatedName(deobfuscatedName);
             }
             // Process field mapping
@@ -103,7 +103,7 @@ public class CSrgReader extends TextMappingsReader {
                 final String deobfuscatedName = split[2];
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(parentClass)
+                this.mappings.resolveOrCreate(parentClass)
                         .getOrCreateFieldMapping(obfuscatedName)
                         .setDeobfuscatedName(deobfuscatedName);
             }
@@ -115,8 +115,8 @@ public class CSrgReader extends TextMappingsReader {
                 final String deobfuscatedName = split[3];
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(parentClass)
-                        .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                this.mappings.resolveOrCreate(parentClass)
+                        .methods().getOrCreate(obfuscatedName, obfuscatedSignature)
                         .setDeobfuscatedName(deobfuscatedName);
             }
             else {

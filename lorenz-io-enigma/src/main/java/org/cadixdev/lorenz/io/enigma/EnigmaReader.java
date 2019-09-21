@@ -143,12 +143,12 @@ public class EnigmaReader extends TextMappingsReader {
             final String key = split[0];
             if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = handleNonePrefix(split[1]);
-                this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
+                this.stack.push(this.mappings.resolveOrCreate(obfName));
             }
             else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = handleNonePrefix(split[1]);
                 final String deobfName = handleNonePrefix(split[2]);
-                this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
+                this.stack.push(this.mappings.resolveOrCreate(obfName)
                         .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
@@ -161,13 +161,13 @@ public class EnigmaReader extends TextMappingsReader {
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String descriptor = handleNonePrefix(MethodDescriptor.of(split[2])).toString();
-                this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor));
+                this.stack.push(this.peekClass().methods().getOrCreate(obfName, descriptor));
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
                 final String descriptor = handleNonePrefix(MethodDescriptor.of(split[3])).toString();
-                this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor)
+                this.stack.push(this.peekClass().methods().getOrCreate(obfName, descriptor)
                         .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(PARAM_MAPPING_KEY) && len == PARAM_MAPPING_ELEMENT_COUNT) {

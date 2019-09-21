@@ -75,17 +75,18 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping,
 
     @Override
     default TopLevelClassMapping reverse(final MappingSet parent) {
-        final TopLevelClassMapping mapping = parent.createTopLevelClassMapping(this.getDeobfuscatedName(), this.getObfuscatedName());
+        final TopLevelClassMapping mapping = parent.getOrCreate(this.getDeobfuscatedName())
+                .setDeobfuscatedName(this.getObfuscatedName());
         this.getFieldMappings().forEach(field -> field.reverse(mapping));
-        this.getMethodMappings().forEach(method -> method.reverse(mapping));
-        this.getInnerClassMappings().forEach(klass -> klass.reverse(mapping));
+        this.methods().getAll().forEach(method -> method.reverse(mapping));
+        this.innerClasses().getAll().forEach(klass -> klass.reverse(mapping));
         return mapping;
     }
 
     @Override
     default TopLevelClassMapping merge(final TopLevelClassMapping with, final MappingSet parent) {
         // create the container mapping
-        final TopLevelClassMapping newMapping = parent.getOrCreateTopLevelClassMapping(this.getObfuscatedName())
+        final TopLevelClassMapping newMapping = parent.getOrCreate(this.getObfuscatedName())
                 .setDeobfuscatedName(with.getDeobfuscatedName());
 
         // fill with child data
@@ -93,12 +94,12 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping,
             final FieldMapping fieldWith = with.getOrCreateFieldMapping(field.getDeobfuscatedSignature());
             field.merge(fieldWith, newMapping);
         });
-        this.getMethodMappings().forEach(method -> {
-            final MethodMapping methodWith = with.getOrCreateMethodMapping(method.getDeobfuscatedSignature());
+        this.methods().getAll().forEach(method -> {
+            final MethodMapping methodWith = with.methods().getOrCreate(method.getDeobfuscatedSignature());
             method.merge(methodWith, newMapping);
         });
-        this.getInnerClassMappings().forEach(klass -> {
-            final InnerClassMapping klassWith = with.getOrCreateInnerClassMapping(klass.getDeobfuscatedName());
+        this.innerClasses().getAll().forEach(klass -> {
+            final InnerClassMapping klassWith = with.innerClasses().getOrCreate(klass.getDeobfuscatedName());
             klass.merge(klassWith, newMapping);
         });
 
@@ -108,10 +109,11 @@ public interface TopLevelClassMapping extends ClassMapping<TopLevelClassMapping,
 
     @Override
     default TopLevelClassMapping copy(final MappingSet parent) {
-        final TopLevelClassMapping mapping = parent.createTopLevelClassMapping(this.getObfuscatedName(), this.getDeobfuscatedName());
+        final TopLevelClassMapping mapping = parent.getOrCreate(this.getObfuscatedName())
+                .setDeobfuscatedName(this.getDeobfuscatedName());
         this.getFieldMappings().forEach(field -> field.copy(mapping));
-        this.getMethodMappings().forEach(method -> method.copy(mapping));
-        this.getInnerClassMappings().forEach(klass -> klass.copy(mapping));
+        this.methods().getAll().forEach(method -> method.copy(mapping));
+        this.innerClasses().getAll().forEach(klass -> klass.copy(mapping));
         return mapping;
     }
 

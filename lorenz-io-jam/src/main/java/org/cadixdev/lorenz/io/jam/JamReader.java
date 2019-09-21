@@ -85,7 +85,7 @@ public class JamReader extends TextMappingsReader {
                 final String obfName = split[1];
                 final String deobfName = split[2];
 
-                this.mappings.getOrCreateClassMapping(obfName)
+                this.mappings.resolveOrCreate(obfName)
                         .setDeobfuscatedName(deobfName);
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
@@ -94,7 +94,7 @@ public class JamReader extends TextMappingsReader {
                 final String obfDescriptor = split[3];
                 final String deobfName = split[4];
 
-                this.mappings.getOrCreateClassMapping(owningClass)
+                this.mappings.resolveOrCreate(owningClass)
                         .getOrCreateFieldMapping(obfName, obfDescriptor)
                         .setDeobfuscatedName(deobfName);
             }
@@ -104,8 +104,8 @@ public class JamReader extends TextMappingsReader {
                 final String obfDescriptor = split[3];
                 final String deobfName = split[4];
 
-                this.mappings.getOrCreateClassMapping(owningClass)
-                        .getOrCreateMethodMapping(obfName, obfDescriptor)
+                this.mappings.resolveOrCreate(owningClass)
+                        .methods().getOrCreate(obfName, obfDescriptor)
                         .setDeobfuscatedName(deobfName);
             }
             else if (key.equals(PARAM_MAPPING_KEY) && len == PARAM_MAPPING_ELEMENT_COUNT) {
@@ -121,8 +121,8 @@ public class JamReader extends TextMappingsReader {
                 }
                 final String deobfName = split[5];
 
-                this.mappings.getOrCreateClassMapping(owningClass)
-                        .getOrCreateMethodMapping(owningMethod, owningMethodDescriptor)
+                this.mappings.resolveOrCreate(owningClass)
+                        .methods().getOrCreate(owningMethod, owningMethodDescriptor)
                         .getOrCreateParameterMapping(index)
                         .setDeobfuscatedName(deobfName);
             }

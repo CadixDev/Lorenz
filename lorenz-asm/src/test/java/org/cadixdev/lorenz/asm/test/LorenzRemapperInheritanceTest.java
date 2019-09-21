@@ -27,12 +27,11 @@ package org.cadixdev.lorenz.asm.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.analysis.ReflectionInheritanceProvider;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.asm.LorenzRemapper;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.bombe.analysis.InheritanceProvider;
-import org.cadixdev.bombe.analysis.ReflectionInheritanceProvider;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.commons.ClassRemapper;
@@ -47,8 +46,9 @@ public class LorenzRemapperInheritanceTest {
     private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
 
     static {
-        final TopLevelClassMapping baseClass = MAPPINGS.getOrCreateTopLevelClassMapping("test/inheritance/a/BaseClass");
-        baseClass.createMethodMapping(MethodSignature.of("helloWorld()V"), "bye");
+        final TopLevelClassMapping baseClass = MAPPINGS.getOrCreate("test/inheritance/a/BaseClass");
+        baseClass.methods().getOrCreate("helloWorld", "()V")
+                .setDeobfuscatedName("bye");
     }
 
     @Test
@@ -56,6 +56,7 @@ public class LorenzRemapperInheritanceTest {
         ClassReader reader = new ClassReader("test.inheritance.TestClass");
         ClassNode node = new ClassNode();
         reader.accept(new ClassRemapper(node, REMAPPER), 0);
+        final MappingSet mappings = MAPPINGS;
 
         assertEquals("bye", node.methods.get(1).name);
     }

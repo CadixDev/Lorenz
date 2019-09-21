@@ -62,13 +62,13 @@ public class MappingSetDsl {
      * @param name The obfuscated name of the class
      * @param script The closure to use
      * @return The mapping
-     * @see MappingSet#getOrCreateTopLevelClassMapping(String)
+     * @see MappingSet#getOrCreate(Object)
      */
     public TopLevelClassMapping klass(
             final String name,
             @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = ClassMappingDsl.class) final Closure<?> script) {
         return DslUtil.delegate(
-                this.mappings.getOrCreateTopLevelClassMapping(name),
+                this.mappings.getOrCreate(name),
                 ClassMappingDsl::new, script);
     }
 

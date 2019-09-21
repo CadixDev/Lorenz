@@ -45,13 +45,13 @@ public final class CopyTest {
     private static final MappingSet MAPPINGS = MappingSet.create();
 
     static {
-        final TopLevelClassMapping ab = MAPPINGS.getOrCreateTopLevelClassMapping("ab")
+        final TopLevelClassMapping ab = MAPPINGS.getOrCreate("ab")
                 .setDeobfuscatedName("Demo");
         ab.getOrCreateFieldMapping("ui")
                 .setDeobfuscatedName("log");
-        ab.getOrCreateMethodMapping("hhyg", "()V")
+        ab.methods().getOrCreate("hhyg", "()V")
                 .setDeobfuscatedName("main");
-        ab.getOrCreateInnerClassMapping("gh")
+        ab.innerClasses().getOrCreate("gh")
                 .setDeobfuscatedName("Boop");
     }
 
@@ -60,12 +60,12 @@ public final class CopyTest {
         final MappingSet cloned = MAPPINGS.copy();
 
         // top level class
-        final Optional<TopLevelClassMapping> demo = cloned.getTopLevelClassMapping("ab");
+        final Optional<TopLevelClassMapping> demo = cloned.get("ab");
         assertTrue(demo.isPresent(), "Demo not present!");
         assertEquals("Demo", demo.get().getDeobfuscatedName(), "Demo has the wrong de-obf name!");
 
         // inner class
-        final Optional<InnerClassMapping> boop = demo.get().getInnerClassMapping("gh");
+        final Optional<InnerClassMapping> boop = demo.get().innerClasses().get("gh");
         assertTrue(boop.isPresent(), "Boop not present!");
         assertEquals("Boop", boop.get().getDeobfuscatedName(), "Boop has the wrong de-obf name!");
 
@@ -75,7 +75,7 @@ public final class CopyTest {
         assertEquals("log", log.get().getDeobfuscatedName(), "log has the wrong de-obf name!");
 
         // method
-        final Optional<MethodMapping> main = demo.get().getMethodMapping("hhyg", "()V");
+        final Optional<MethodMapping> main = demo.get().methods().get("hhyg", "()V");
         assertTrue(main.isPresent(), "main not present!");
         assertEquals("main", main.get().getDeobfuscatedName(), "main has the wrong de-obf name!");
     }

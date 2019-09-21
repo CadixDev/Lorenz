@@ -27,14 +27,10 @@ package org.cadixdev.lorenz.impl;
 
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.MappingSetModelFactory;
+import org.cadixdev.lorenz.impl.model.TopLevelClassMappingImpl;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
+import org.cadixdev.lorenz.model.container.SimpleMappingContainer;
 import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * A basic implementation of {@link MappingSet}.
@@ -42,9 +38,10 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public class MappingSetImpl implements MappingSet {
+public class MappingSetImpl
+        extends SimpleMappingContainer<TopLevelClassMapping, String>
+        implements MappingSet {
 
-    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
     private final MappingSetModelFactory modelFactory;
     private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
 
@@ -62,31 +59,13 @@ public class MappingSetImpl implements MappingSet {
     }
 
     @Override
-    public Collection<TopLevelClassMapping> getTopLevelClassMappings() {
-        return Collections.unmodifiableCollection(this.topLevelClasses.values());
-    }
-
-    @Override
-    public TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName) {
-        return this.topLevelClasses.compute(obfuscatedName.replace('.', '/'), (name, existingMapping) -> {
-            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
-            return this.getModelFactory().createTopLevelClassMapping(this, name, deobfuscatedName);
-        });
-    }
-
-    @Override
-    public Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName) {
-        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName.replace('.', '/')));
-    }
-
-    @Override
-    public boolean hasTopLevelClassMapping(final String obfuscatedName) {
-        return this.topLevelClasses.containsKey(obfuscatedName.replace('.', '/'));
-    }
-
-    @Override
     public CascadingFieldTypeProvider getFieldTypeProvider() {
         return this.fieldTypeProvider;
+    }
+
+    @Override
+    protected TopLevelClassMapping create(final String signature) {
+        return new TopLevelClassMappingImpl(this, signature, signature);
     }
 
 }

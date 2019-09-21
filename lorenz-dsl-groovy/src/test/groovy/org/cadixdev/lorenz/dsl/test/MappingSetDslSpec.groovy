@@ -64,10 +64,10 @@ class MappingSetDslSpec extends Specification {
         }
 
         expect:
-        mappings.topLevelClassMappings.size() == 2
+        mappings.all.size() == 2
 
         // a.class
-        final TopLevelClassMapping a = mappings.topLevelClassMappings[0]
+        final TopLevelClassMapping a = mappings.all[0]
         a.obfuscatedName == 'a'
         a.deobfuscatedName == 'Example'
         a.fieldMappings.size() == 1
@@ -75,8 +75,8 @@ class MappingSetDslSpec extends Specification {
         c.obfuscatedName == 'c'
         c.deobfuscatedName == 'name'
         !c.type.isPresent()
-        a.methodMappings.size() == 1
-        final MethodMapping d = a.methodMappings[0]
+        a.methods().all.size() == 1
+        final MethodMapping d = a.methods().all[0]
         d.obfuscatedName == 'd'
         d.deobfuscatedName == 'getName'
         d.parameterMappings.size() == 1
@@ -85,15 +85,15 @@ class MappingSetDslSpec extends Specification {
         d0.deobfuscatedName == 'propagate'
 
         // b.class
-        final TopLevelClassMapping b = mappings.topLevelClassMappings[1]
+        final TopLevelClassMapping b = mappings.all[1]
         b.obfuscatedName == 'b'
         b.deobfuscatedName == 'Demo'
         final Optional<String> testData = b.get(TEST)
         testData.isPresent()
         testData.get() == 'Hello, World!'
         // b$e.class
-        b.innerClassMappings.size() == 1
-        final InnerClassMapping b$e = b.innerClassMappings[0]
+        b.innerClasses().all.size() == 1
+        final InnerClassMapping b$e = b.innerClasses().all[0]
         b$e.obfuscatedName == 'e'
         b$e.deobfuscatedName == 'Inner'
     }

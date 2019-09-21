@@ -59,7 +59,7 @@ public class JamWriter extends TextMappingsWriter {
     @Override
     public void write(final MappingSet mappings) {
         // Write class mappings
-        mappings.getTopLevelClassMappings().stream()
+        mappings.getAll().stream()
                 .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
@@ -87,7 +87,7 @@ public class JamWriter extends TextMappingsWriter {
         }
 
         // Write inner class mappings
-        mapping.getInnerClassMappings().stream()
+        mapping.innerClasses().getAll().stream()
                 .filter(ClassMapping::hasMappings)
                 .sorted(ALPHABETISE_MAPPINGS)
                 .forEach(this::writeClassMapping);
@@ -99,7 +99,7 @@ public class JamWriter extends TextMappingsWriter {
                 .forEach(this::writeFieldMapping);
 
         // Write method mappings
-        mapping.getMethodMappings().stream()
+        mapping.methods().getAll().stream()
                 .filter(MethodMapping::hasMappings)
                 .sorted(ALPHABETISE_METHODS)
                 .forEach(this::writeMethodMapping);

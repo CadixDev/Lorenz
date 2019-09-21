@@ -99,7 +99,7 @@ public class SrgReader extends TextMappingsReader {
                 final String deobfuscatedName = split[2];
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(obfuscatedName)
+                this.mappings.resolveOrCreate(obfuscatedName)
                         .setDeobfuscatedName(deobfuscatedName);
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
@@ -111,7 +111,7 @@ public class SrgReader extends TextMappingsReader {
                 final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(owningClass)
+                this.mappings.resolveOrCreate(owningClass)
                         .getOrCreateFieldMapping(obfuscatedName)
                         .setDeobfuscatedName(deobfuscatedName);
             }
@@ -126,8 +126,8 @@ public class SrgReader extends TextMappingsReader {
                 final String deobfuscatedName = fullDeobfuscatedName.substring(fullDeobfuscatedName.lastIndexOf('/') + 1);
 
                 // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(owningClass)
-                        .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                this.mappings.resolveOrCreate(owningClass)
+                        .methods().getOrCreate(obfuscatedName, obfuscatedSignature)
                         .setDeobfuscatedName(deobfuscatedName);
             }
             else if (key.equals(PACKAGE_MAPPING_KEY) && len == PACKAGE_MAPPING_ELEMENT_COUNT) {

@@ -46,22 +46,22 @@ public final class MergeTest {
     private static final MappingSet TWO = MappingSet.create();
 
     static {
-        final TopLevelClassMapping ab = ONE.getOrCreateTopLevelClassMapping("ab")
+        final TopLevelClassMapping ab = ONE.getOrCreate("ab")
                 .setDeobfuscatedName("Demo");
         ab.getOrCreateFieldMapping("ui")
                 .setDeobfuscatedName("log");
-        ab.getOrCreateMethodMapping("hhyg", "()V")
+        ab.methods().getOrCreate("hhyg", "()V")
                 .setDeobfuscatedName("main");
-        ab.getOrCreateInnerClassMapping("gh")
+        ab.innerClasses().getOrCreate("gh")
                 .setDeobfuscatedName("Boop");
 
-        final TopLevelClassMapping demo = TWO.getOrCreateTopLevelClassMapping("Demo")
+        final TopLevelClassMapping demo = TWO.getOrCreate("Demo")
                 .setDeobfuscatedName("Container");
         demo.getOrCreateFieldMapping("log")
                 .setDeobfuscatedName("logger");
-        demo.getOrCreateMethodMapping("main", "()V")
+        demo.methods().getOrCreate("main", "()V")
                 .setDeobfuscatedName("run");
-        demo.getOrCreateInnerClassMapping("Boop")
+        demo.innerClasses().getOrCreate("Boop")
                 .setDeobfuscatedName("Beep");
     }
 
@@ -70,12 +70,12 @@ public final class MergeTest {
         final MappingSet merged = ONE.merge(TWO);
 
         // top level class
-        final Optional<TopLevelClassMapping> demo = merged.getTopLevelClassMapping("ab");
+        final Optional<TopLevelClassMapping> demo = merged.get("ab");
         assertTrue(demo.isPresent(), "ab not present!");
         assertEquals("Container", demo.get().getDeobfuscatedName(), "ab has the wrong de-obf name!");
 
         // inner class
-        final Optional<InnerClassMapping> boop = demo.get().getInnerClassMapping("gh");
+        final Optional<InnerClassMapping> boop = demo.get().innerClasses().get("gh");
         assertTrue(boop.isPresent(), "gh not present!");
         assertEquals("Beep", boop.get().getDeobfuscatedName(), "gh has the wrong de-obf name!");
 
@@ -85,7 +85,7 @@ public final class MergeTest {
         assertEquals("logger", log.get().getDeobfuscatedName(), "ui has the wrong de-obf name!");
 
         // method
-        final Optional<MethodMapping> main = demo.get().getMethodMapping("hhyg", "()V");
+        final Optional<MethodMapping> main = demo.get().methods().get("hhyg", "()V");
         assertTrue(main.isPresent(), "hhyg not present!");
         assertEquals("run", main.get().getDeobfuscatedName(), "hhyg has the wrong de-obf name!");
     }

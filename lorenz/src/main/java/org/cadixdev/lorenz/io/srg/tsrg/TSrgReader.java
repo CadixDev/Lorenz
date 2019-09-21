@@ -96,7 +96,7 @@ public class TSrgReader extends TextMappingsReader {
                 final String deobfuscatedName = split[1];
 
                 // Get mapping, and set de-obfuscated name
-                this.currentClass = this.mappings.getOrCreateClassMapping(obfuscatedName);
+                this.currentClass = this.mappings.resolveOrCreate(obfuscatedName);
                 this.currentClass.setDeobfuscatedName(deobfuscatedName);
             }
             else if (split[0].startsWith("\t") && this.currentClass != null) {
@@ -118,7 +118,7 @@ public class TSrgReader extends TextMappingsReader {
 
                     // Get mapping, and set de-obfuscated name
                     this.currentClass
-                            .getOrCreateMethodMapping(obfuscatedName, obfuscatedSignature)
+                            .methods().getOrCreate(obfuscatedName, obfuscatedSignature)
                             .setDeobfuscatedName(deobfuscatedName);
                 }
             } else {

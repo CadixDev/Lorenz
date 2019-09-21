@@ -38,7 +38,7 @@ package org.cadixdev.lorenz.model;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MemberMapping<M extends MemberMapping, P extends Mapping> extends Mapping<M, P> {
+public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
 
     /**
      * Gets the parent {@link Mapping} of this member mapping.

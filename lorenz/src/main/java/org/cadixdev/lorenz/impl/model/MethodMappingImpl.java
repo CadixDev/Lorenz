@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @since 0.2.0
  */
 public class MethodMappingImpl
-        extends AbstractMemberMappingImpl<MethodMapping, ClassMapping>
+        extends AbstractMemberMappingImpl<MethodMapping, ClassMapping<?, ?>>
         implements MethodMapping {
 
     private final MethodSignature signature;

@@ -25,6 +25,7 @@
 
 package org.cadixdev.lorenz.model.container;
 
+import org.cadixdev.bombe.analysis.InheritanceProvider;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.impl.model.MethodMappingImpl;
@@ -114,6 +115,12 @@ public class MethodContainer<P extends ClassMapping<?, ?>>
      */
     public MethodMapping getOrCreate(final String obfuscatedName, final String obfuscatedDescriptor) {
         return this.getOrCreate(obfuscatedName, MethodDescriptor.of(obfuscatedDescriptor));
+    }
+
+    public void complete(final InheritanceProvider.ClassInfo parent, final InheritanceProvider.ClassInfo info, final MethodMapping mapping) {
+        if (parent.canInherit(info, mapping.getSignature())) {
+            this.mappings.putIfAbsent(mapping.getSignature(), mapping);
+        }
     }
 
 }
