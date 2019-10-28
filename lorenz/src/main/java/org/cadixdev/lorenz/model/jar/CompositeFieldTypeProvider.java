@@ -39,7 +39,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public class CascadingFieldTypeProvider implements FieldTypeProvider {
+public class CompositeFieldTypeProvider implements FieldTypeProvider {
 
     private final List<FieldTypeProvider> providers = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class CascadingFieldTypeProvider implements FieldTypeProvider {
      * @param provider The provider
      * @return {@code this}, for chaining
      */
-    public CascadingFieldTypeProvider add(final FieldTypeProvider provider) {
+    public CompositeFieldTypeProvider add(final FieldTypeProvider provider) {
         this.providers.add(provider);
         return this;
     }
@@ -60,7 +60,7 @@ public class CascadingFieldTypeProvider implements FieldTypeProvider {
      * @param provider The provider
      * @return {@code this}, for chaining
      */
-    public CascadingFieldTypeProvider remove(final FieldTypeProvider provider) {
+    public CompositeFieldTypeProvider remove(final FieldTypeProvider provider) {
         this.providers.remove(provider);
         return this;
     }

@@ -28,7 +28,7 @@ package org.cadixdev.lorenz;
 import org.cadixdev.lorenz.impl.MappingSetImpl;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.bombe.type.ArrayType;
 import org.cadixdev.bombe.type.FieldType;
@@ -205,14 +205,14 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The field type provider
      * @since 0.4.0
      */
-    CascadingFieldTypeProvider getFieldTypeProvider();
+    CompositeFieldTypeProvider getFieldTypeProvider();
 
     /**
      * Adds the given {@link FieldTypeProvider} to this set of mappings.
      *
      * @param fieldTypeProvider The field type provider
      * @return {@code this}, for chaining
-     * @see CascadingFieldTypeProvider#add(FieldTypeProvider)
+     * @see CompositeFieldTypeProvider#add(FieldTypeProvider)
      * @since 0.4.0
      */
     default MappingSet addFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
@@ -225,7 +225,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      *
      * @param fieldTypeProvider The field type provider
      * @return {@code this}, for chaining
-     * @see CascadingFieldTypeProvider#remove(FieldTypeProvider)
+     * @see CompositeFieldTypeProvider#remove(FieldTypeProvider)
      * @since 0.4.0
      */
     default MappingSet removeFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {

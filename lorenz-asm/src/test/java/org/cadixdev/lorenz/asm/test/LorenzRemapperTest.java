@@ -32,7 +32,7 @@ import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.asm.LorenzRemapper;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.bombe.analysis.CascadingInheritanceProvider;
+import org.cadixdev.bombe.analysis.CompositeInheritanceProvider;
 import org.cadixdev.bombe.analysis.InheritanceProvider;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
@@ -42,7 +42,7 @@ import org.objectweb.asm.tree.ClassNode;
 public final class LorenzRemapperTest {
 
     private static final MappingSet MAPPINGS = MappingSet.create();
-    private static final InheritanceProvider INHERITANCE = new CascadingInheritanceProvider();
+    private static final InheritanceProvider INHERITANCE = new CompositeInheritanceProvider();
     private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
 
     static {

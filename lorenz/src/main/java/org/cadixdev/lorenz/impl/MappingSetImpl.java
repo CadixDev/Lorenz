@@ -28,7 +28,7 @@ package org.cadixdev.lorenz.impl;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.MappingSetModelFactory;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class MappingSetImpl implements MappingSet {
 
     private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
     private final MappingSetModelFactory modelFactory;
-    private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
+    private CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
     public MappingSetImpl() {
         this(new MappingSetModelFactoryImpl());
@@ -85,7 +85,7 @@ public class MappingSetImpl implements MappingSet {
     }
 
     @Override
-    public CascadingFieldTypeProvider getFieldTypeProvider() {
+    public CompositeFieldTypeProvider getFieldTypeProvider() {
         return this.fieldTypeProvider;
     }
 

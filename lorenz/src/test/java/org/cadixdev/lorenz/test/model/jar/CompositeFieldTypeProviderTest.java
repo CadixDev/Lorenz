@@ -29,17 +29,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.cadixdev.lorenz.MappingSet;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.ObjectType;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-public final class CascadingFieldTypeProviderTest {
+public final class CompositeFieldTypeProviderTest {
 
     private static final MappingSet MAPPINGS = MappingSet.create();
-    private static final CascadingFieldTypeProvider PROVIDER = new CascadingFieldTypeProvider()
+    private static final CompositeFieldTypeProvider PROVIDER = new CompositeFieldTypeProvider()
             .add(field -> {
                 if ("demo".equals(field.getObfuscatedName())) {
                     return Optional.of(new ObjectType("java/util/logging/Logger"));
