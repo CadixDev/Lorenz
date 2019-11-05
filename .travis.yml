@@ -6,7 +6,7 @@ jdk:
 
 script: ./gradlew build
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "develop" ]; then ./gradlew uploadArchives; fi
+  - '[[ "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "develop" ]] && ./gradlew uploadArchives'
 
 # Ugh.
 notifications:
