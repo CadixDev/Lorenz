@@ -89,9 +89,14 @@ public abstract class AbstractMappingImpl<M extends Mapping<M, P>, P> implements
     }
 
     @Override
-    public M addRemapListener(final MappingChangedListener<M, P> listener) {
+    public M addListener(final MappingChangedListener<M, P> listener) {
         this.listeners.add(listener);
         return (M) this;
+    }
+
+    @Override
+    public void removeListener(final MappingChangedListener<M, P> listener) {
+        this.listeners.remove(listener);
     }
 
     @Override

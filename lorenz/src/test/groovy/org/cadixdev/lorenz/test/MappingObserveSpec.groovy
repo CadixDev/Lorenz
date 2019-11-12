@@ -36,7 +36,7 @@ class MappingObserveSpec extends Specification {
         given:
         final MappingSet mappings = MappingSetDsl.create {
             klass('a') {
-            }.addRemapListener({ TopLevelClassMapping mapping, String newName ->
+            }.addListener({ TopLevelClassMapping mapping, String newName ->
                 throw new IllegalArgumentException("beep boop")
             })
         }

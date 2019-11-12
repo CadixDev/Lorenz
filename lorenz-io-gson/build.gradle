@@ -1,4 +1,5 @@
 dependencies {
     compile project(':lorenz')
+    compile 'com.google.code.gson:gson:2.8.6'
     compile 'me.jamiemansfield:gson-simple:0.1.1'
 }

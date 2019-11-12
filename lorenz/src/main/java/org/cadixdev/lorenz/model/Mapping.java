@@ -79,7 +79,16 @@ public interface Mapping<M extends Mapping<M, P>, P> extends Reversible<M, P> {
      * @return {@code this} for chaining
      * @since 0.6.0
      */
-    M addRemapListener(final MappingChangedListener<M, P> listener);
+    M addListener(final MappingChangedListener<M, P> listener);
+
+    /**
+     * De-registers a {@link MappingChangedListener mapping changed listener},
+     * from the mapping.
+     *
+     * @param listener The listener to remove
+     * @since 0.6.0
+     */
+    void removeListener(final MappingChangedListener<M, P> listener);
 
     /**
      * Gets the unqualified ("simple") obfuscated name of the member.
