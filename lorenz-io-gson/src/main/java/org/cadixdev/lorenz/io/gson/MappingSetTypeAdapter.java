@@ -25,6 +25,13 @@
 
 package org.cadixdev.lorenz.io.gson;
 
+import static me.jamiemansfield.gsonsimple.GsonObjects.getArray;
+import static me.jamiemansfield.gsonsimple.GsonObjects.getObject;
+import static me.jamiemansfield.gsonsimple.GsonObjects.getString;
+import static me.jamiemansfield.gsonsimple.GsonRequirements.requireArray;
+import static me.jamiemansfield.gsonsimple.GsonRequirements.requireObject;
+import static me.jamiemansfield.gsonsimple.GsonRequirements.requireString;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -81,8 +88,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
     public MappingSet deserialize(final JsonElement json,
                                   final Type typeOfT,
                                   final JsonDeserializationContext context) throws JsonParseException {
-        if (!json.isJsonArray()) throw new JsonParseException("MappingSet must be an array!");
-        final JsonArray array = json.getAsJsonArray();
+        final JsonArray array = requireArray(json, "MappingSet");
 
         deserialiseClasses(array, this.mappings::getOrCreateTopLevelClassMapping);
 
@@ -90,8 +96,8 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
     }
 
     private static void deserialiseMapping(final JsonObject json, final Mapping<?, ?> mapping) {
-        if (json.has(DEOBF) && json.get(DEOBF).isJsonPrimitive()) {
-            mapping.setDeobfuscatedName(json.get(DEOBF).getAsString());
+        if (json.has(DEOBF)) {
+            mapping.setDeobfuscatedName(getString(json, DEOBF));
         }
     }
 
@@ -100,20 +106,14 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
 
         // Fields
         if (json.has(FIELDS)) {
-            if (!json.get(FIELDS).isJsonArray()) throw new JsonParseException("Fields must be an array!");
-            final JsonArray fields = json.getAsJsonArray(FIELDS);
+            final JsonArray fields = getArray(json, FIELDS);
             deserialiseMappings(
                     fields,
                     obj -> {
-                        if (!obj.has(OBF) || !obj.get(OBF).isJsonPrimitive())
-                            throw new JsonParseException("Method missing obfuscated name!");
-                        final String obf = obj.get(OBF).getAsString();
+                        final String obf = getString(obj, OBF);
 
                         if (obj.has(TYPE)) {
-                            if (!obj.get(TYPE).isJsonPrimitive())
-                                throw new JsonParseException("Field type must be a String!");
-                            final String type = obj.get(TYPE).getAsString();
-
+                            final String type = getString(obj, TYPE);
                             return mapping.getOrCreateFieldMapping(obf, type);
                         }
                         else {
@@ -127,27 +127,19 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
 
         // Methods
         if (json.has(METHODS)) {
-            if (!json.get(METHODS).isJsonArray()) throw new JsonParseException("Methods must be an array!");
-            final JsonArray methods = json.getAsJsonArray(METHODS);
+            final JsonArray methods = getArray(json, METHODS);
             deserialiseMethods(
                     methods,
-                    obj -> {
-                        if (!obj.has(OBF) || !obj.get(OBF).isJsonPrimitive())
-                            throw new JsonParseException("Method missing obfuscated name!");
-                        if (!obj.has(DESCRIPTOR) || !obj.get(DESCRIPTOR).isJsonPrimitive())
-                            throw new JsonParseException("Method missing descriptor!");
-                        return mapping.getOrCreateMethodMapping(
-                                obj.get(OBF).getAsString(),
-                                obj.get(DESCRIPTOR).getAsString()
-                        );
-                    }
+                    obj -> mapping.getOrCreateMethodMapping(
+                            getString(obj, OBF),
+                            getString(obj, DESCRIPTOR)
+                    )
             );
         }
 
         // Inner Classes
         if (json.has(INNERS)) {
-            if (!json.get(INNERS).isJsonArray()) throw new JsonParseException("Inner classes must be an array!");
-            final JsonArray inners = json.getAsJsonArray(INNERS);
+            final JsonArray inners = getArray(json, INNERS);
             deserialiseClasses(inners, mapping::getOrCreateInnerClassMapping);
         }
     }
@@ -156,14 +148,11 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
         deserialiseMapping(json, mapping);
 
         if (json.has(PARAMS)) {
-            if (!json.get(PARAMS).isJsonObject()) throw new JsonParseException("Params must be an object!");
-            final JsonObject params = json.get(PARAMS).getAsJsonObject();
+            final JsonObject params = getObject(json, PARAMS);
 
             for (final Map.Entry<String, JsonElement> param : params.entrySet()) {
                 final int index = Integer.parseInt(param.getKey());
-                if (!param.getValue().isJsonPrimitive())
-                    throw new JsonParseException("Param deobf name must be a String!");
-                final String deobf = param.getValue().getAsString();
+                final String deobf = requireString(param.getValue(), "param deobf name");
 
                 mapping.getOrCreateParameterMapping(index)
                         .setDeobfuscatedName(deobf);
@@ -176,8 +165,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
             final Function<JsonObject, T> provider,
             final BiConsumer<JsonObject, T> deserialiser) {
         for (final JsonElement klass : json) {
-            if (!klass.isJsonObject()) throw new JsonParseException("Mapping must be an object!");
-            final JsonObject obj = klass.getAsJsonObject();
+            final JsonObject obj = requireObject(klass, "mapping");
 
             deserialiser.accept(obj, provider.apply(obj));
         }
@@ -188,11 +176,7 @@ public class MappingSetTypeAdapter implements JsonSerializer<MappingSet>, JsonDe
             final Function<String, ClassMapping<?, ?>> provider) {
         deserialiseMappings(
                 json,
-                obj -> {
-                    if (!obj.has(OBF) || !obj.get(OBF).isJsonPrimitive())
-                        throw new JsonParseException("Class missing obfuscated name!");
-                    return provider.apply(obj.get(OBF).getAsString());
-                },
+                obj -> provider.apply(getString(obj, OBF)),
                 MappingSetTypeAdapter::deserialiseClass
         );
     }
