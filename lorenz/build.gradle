@@ -1,5 +1,7 @@
 dependencies {
     compile "org.cadixdev:bombe:${rootProject.bombeVersion}"
+
+    testCompile project(':lorenz-dsl-groovy')
 }
 
 javadoc {

@@ -39,7 +39,7 @@ import java.util.Objects;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractMemberMappingImpl<M extends MemberMapping, P extends Mapping>
+public abstract class AbstractMemberMappingImpl<M extends MemberMapping<M, P>, P extends Mapping>
         extends AbstractMappingImpl<M, P>
         implements MemberMapping<M, P> {
 

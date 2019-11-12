@@ -23,29 +23,29 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
+package org.cadixdev.lorenz.test
 
-/**
- * Represents a mapping that is a member to a {@link ClassMapping}.
- *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
- *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
- *
- * @author Jamie Mansfield
- * @since 0.1.0
- */
-public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
+import org.cadixdev.lorenz.MappingSet
+import org.cadixdev.lorenz.dsl.MappingSetDsl
+import org.cadixdev.lorenz.model.TopLevelClassMapping
+import spock.lang.Specification
 
-    /**
-     * Gets the parent {@link Mapping} of this member mapping.
-     *
-     * @return The parent mapping
-     * @since 0.4.0
-     */
-    P getParent();
+class MappingObserveSpec extends Specification {
+
+    def "can observe changes"() {
+        given:
+        final MappingSet mappings = MappingSetDsl.create {
+            klass('a') {
+            }.addRemapListener({ TopLevelClassMapping mapping, String newName ->
+                throw new IllegalArgumentException("beep boop")
+            })
+        }
+
+        when:
+        mappings.getOrCreateClassMapping('a').setDeobfuscatedName('Demo')
+
+        then:
+        thrown(IllegalArgumentException)
+    }
 
 }

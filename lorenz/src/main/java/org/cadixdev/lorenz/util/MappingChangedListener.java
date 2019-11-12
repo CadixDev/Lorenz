@@ -23,29 +23,28 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
+package org.cadixdev.lorenz.util;
+
+import org.cadixdev.lorenz.model.Mapping;
 
 /**
- * Represents a mapping that is a member to a {@link ClassMapping}.
+ * A listener for observing changes in {@link Mapping mappings}.
  *
- * @param <M> The type of the mapping
- * @param <P> The type of the parent mapping
- *
- * @see FieldMapping
- * @see MethodMapping
- * @see InnerClassMapping
+ * @param <M> The type of the mapping being changed
+ * @param <P> The type of the mapping's parent
  *
  * @author Jamie Mansfield
- * @since 0.1.0
+ * @since 0.6.0
  */
-public interface MemberMapping<M extends MemberMapping<M, P>, P extends Mapping> extends Mapping<M, P> {
+@FunctionalInterface
+public interface MappingChangedListener<M extends Mapping<M, P>, P> {
 
     /**
-     * Gets the parent {@link Mapping} of this member mapping.
+     * Called whenever the mapping's name is to be changed.
      *
-     * @return The parent mapping
-     * @since 0.4.0
+     * @param mapping The mapping (still with the original de-obfuscated name)
+     * @param newName The new de-obfuscated name
      */
-    P getParent();
+    void handle(final M mapping, final String newName);
 
 }

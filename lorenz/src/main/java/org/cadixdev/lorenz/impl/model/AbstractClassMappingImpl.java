@@ -51,7 +51,7 @@ import java.util.StringJoiner;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
+public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
         extends AbstractMappingImpl<M, P>
         implements ClassMapping<M, P> {
 
