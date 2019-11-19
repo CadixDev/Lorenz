@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MappingSet extends Reversible<MappingSet, MappingSet> {
+public interface MappingSet extends Reversible<MappingSet, MappingSet>, Iterable<TopLevelClassMapping> {
 
     /**
      * Creates a mapping set, using the default Lorenz model implementation.

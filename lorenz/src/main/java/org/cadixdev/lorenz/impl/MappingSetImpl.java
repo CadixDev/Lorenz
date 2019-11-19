@@ -33,6 +33,7 @@ import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,12 +45,12 @@ import java.util.Optional;
  */
 public class MappingSetImpl implements MappingSet {
 
-    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
     private final MappingSetModelFactory modelFactory;
-    private CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+    private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
     public MappingSetImpl() {
-        this(new MappingSetModelFactoryImpl());
+        this(MappingSetModelFactoryImpl.INSTANCE);
     }
 
     public MappingSetImpl(final MappingSetModelFactory modelFactory) {
@@ -87,6 +88,11 @@ public class MappingSetImpl implements MappingSet {
     @Override
     public CompositeFieldTypeProvider getFieldTypeProvider() {
         return this.fieldTypeProvider;
+    }
+
+    @Override
+    public Iterator<TopLevelClassMapping> iterator() {
+        return this.topLevelClasses.values().iterator();
     }
 
 }

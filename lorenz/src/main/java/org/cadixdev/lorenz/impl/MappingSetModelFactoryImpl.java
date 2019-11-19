@@ -49,6 +49,13 @@ import org.cadixdev.bombe.type.signature.MethodSignature;
  */
 public class MappingSetModelFactoryImpl implements MappingSetModelFactory {
 
+    /**
+     * The global Lorenz-provided {@link MappingSetModelFactory model factory}.
+     *
+     * @since 0.6.0
+     */
+    public static MappingSetModelFactory INSTANCE = new MappingSetModelFactoryImpl();
+
     @Override
     public TopLevelClassMapping createTopLevelClassMapping(final MappingSet parent, final String obfuscatedName, final String deobfuscatedName) {
         return new TopLevelClassMappingImpl(parent, obfuscatedName, deobfuscatedName);
