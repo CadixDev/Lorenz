@@ -41,7 +41,7 @@ import org.objectweb.asm.tree.ClassNode;
 
 public final class LorenzRemapperTest {
 
-    private static final MappingSet MAPPINGS = MappingSet.create();
+    private static final MappingSet MAPPINGS = new MappingSet();
     private static final InheritanceProvider INHERITANCE = new CompositeInheritanceProvider();
     private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
 

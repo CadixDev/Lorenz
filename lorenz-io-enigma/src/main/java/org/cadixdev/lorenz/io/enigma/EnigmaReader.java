@@ -119,7 +119,7 @@ public class EnigmaReader extends TextMappingsReader {
         }
 
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override

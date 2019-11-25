@@ -42,7 +42,7 @@ import java.io.IOException;
 
 public class LorenzRemapperInheritanceTest {
 
-    private static final MappingSet MAPPINGS = MappingSet.create();
+    private static final MappingSet MAPPINGS = new MappingSet();
     private static final InheritanceProvider INHERITANCE = new ReflectionInheritanceProvider(LorenzRemapperInheritanceTest.class.getClassLoader());
     private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
 

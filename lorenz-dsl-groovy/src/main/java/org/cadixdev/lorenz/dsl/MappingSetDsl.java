@@ -43,10 +43,10 @@ public class MappingSetDsl {
      *
      * @param script The closure to use
      * @return The mapping set
-     * @see MappingSet#create()
+     * @see MappingSet#MappingSet()
      */
     public static MappingSet create(@DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingSetDsl.class) final Closure<?> script) {
-        return DslUtil.delegate(MappingSet.create(), MappingSetDsl::new, script);
+        return DslUtil.delegate(new MappingSet(), MappingSetDsl::new, script);
     }
 
     private final MappingSet mappings;

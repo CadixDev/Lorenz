@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public final class CompositeFieldTypeProviderTest {
 
-    private static final MappingSet MAPPINGS = MappingSet.create();
+    private static final MappingSet MAPPINGS = new MappingSet();
     private static final CompositeFieldTypeProvider PROVIDER = new CompositeFieldTypeProvider()
             .add(field -> {
                 if ("demo".equals(field.getObfuscatedName())) {

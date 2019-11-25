@@ -42,7 +42,7 @@ import java.util.Optional;
  */
 public final class CopyTest {
 
-    private static final MappingSet MAPPINGS = MappingSet.create();
+    private static final MappingSet MAPPINGS = new MappingSet();
 
     static {
         final TopLevelClassMapping ab = MAPPINGS.getOrCreateTopLevelClassMapping("ab")

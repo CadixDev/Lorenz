@@ -42,8 +42,8 @@ import java.util.Optional;
  */
 public final class MergeTest {
 
-    private static final MappingSet ONE = MappingSet.create();
-    private static final MappingSet TWO = MappingSet.create();
+    private static final MappingSet ONE = new MappingSet();
+    private static final MappingSet TWO = new MappingSet();
 
     static {
         final TopLevelClassMapping ab = ONE.getOrCreateTopLevelClassMapping("ab")

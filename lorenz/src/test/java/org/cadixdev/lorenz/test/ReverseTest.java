@@ -43,7 +43,7 @@ import java.util.Optional;
  */
 public final class ReverseTest {
 
-    private static final MappingSet MAPPINGS = MappingSet.create();
+    private static final MappingSet MAPPINGS = new MappingSet();
 
     static {
         final TopLevelClassMapping ab = MAPPINGS.getOrCreateTopLevelClassMapping("ab")

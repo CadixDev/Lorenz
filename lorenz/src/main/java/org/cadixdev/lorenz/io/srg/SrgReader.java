@@ -76,7 +76,7 @@ public class SrgReader extends TextMappingsReader {
          * Creates a mappings parser for the SRG format.
          */
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override

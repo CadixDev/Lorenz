@@ -89,7 +89,7 @@ public interface MappingFormat {
      * @throws IOException Should an I/O issue occur
      */
     default MappingSet read(final Path path) throws IOException {
-        return this.read(MappingSet.create(), path);
+        return this.read(new MappingSet(), path);
     }
 
     /**

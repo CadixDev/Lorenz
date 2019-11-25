@@ -71,7 +71,7 @@ public class CSrgReader extends TextMappingsReader {
          * Creates a mappings parser for the CSRG format.
          */
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override
