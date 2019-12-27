@@ -5,6 +5,6 @@ dependencies {
 
 javadoc {
     options.links(
-            'http://docs.groovy-lang.org/2.5.8/html/gapi/'
+            "http://docs.groovy-lang.org/$groovyVersion/html/gapi/"
     )
 }

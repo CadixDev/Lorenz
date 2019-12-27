@@ -1,0 +1,13 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+dependencies {
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compile project(':lorenz')
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = javaVersion
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = javaVersion
+}
