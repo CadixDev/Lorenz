@@ -1,6 +1,12 @@
 dependencies {
     compile "org.cadixdev:bombe:${rootProject.bombeVersion}"
 
+    // Optional Dependencies
+    compileOnly "org.ow2.asm:asm-commons:$asmVersion"
+    testCompile "org.ow2.asm:asm-commons:$asmVersion"
+    compileOnly "org.cadixdev:bombe-jar:$bombeVersion"
+    testCompile "org.cadixdev:bombe-jar:$bombeVersion"
+
     testCompile project(':lorenz-dsl-groovy')
 }
 

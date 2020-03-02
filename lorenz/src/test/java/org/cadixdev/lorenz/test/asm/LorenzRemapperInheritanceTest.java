@@ -23,44 +23,41 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.asm.test;
+package org.cadixdev.lorenz.test.asm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.cadixdev.lorenz.MappingSet;
-import org.cadixdev.lorenz.asm.AsmFieldTypeProvider;
-import org.cadixdev.lorenz.model.FieldMapping;
-import org.cadixdev.bombe.type.FieldType;
-import org.cadixdev.bombe.type.ObjectType;
+import org.cadixdev.lorenz.asm.LorenzRemapper;
+import org.cadixdev.lorenz.model.TopLevelClassMapping;
+import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.analysis.ReflectionInheritanceProvider;
+import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.junit.jupiter.api.Test;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.commons.ClassRemapper;
+import org.objectweb.asm.tree.ClassNode;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.io.IOException;
 
-public final class AsmFieldTypeProviderTest {
+public class LorenzRemapperInheritanceTest {
+
+    private static final MappingSet MAPPINGS = new MappingSet();
+    private static final InheritanceProvider INHERITANCE = new ReflectionInheritanceProvider(LorenzRemapperInheritanceTest.class.getClassLoader());
+    private static final LorenzRemapper REMAPPER = new LorenzRemapper(MAPPINGS, INHERITANCE);
+
+    static {
+        final TopLevelClassMapping baseClass = MAPPINGS.getOrCreateTopLevelClassMapping("test/inheritance/a/BaseClass");
+        baseClass.createMethodMapping(MethodSignature.of("helloWorld()V"), "bye");
+    }
 
     @Test
-    public void fetchFieldType() {
-        final MappingSet mappings = new MappingSet();
-        final FieldMapping field = mappings.getOrCreateTopLevelClassMapping("ght")
-                .getOrCreateFieldMapping("op");
+    public void testRemapIfSuperClassWithoutMappingsMakesInheritableMethodVisible() throws IOException {
+        ClassReader reader = new ClassReader("test.inheritance.TestClass");
+        ClassNode node = new ClassNode();
+        reader.accept(new ClassRemapper(node, REMAPPER), 0);
 
-        final ClassWriter writer = new ClassWriter(0);
-        writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "ght", null, "java/lang/Object", null);
-        writer.visitField(Opcodes.ACC_PUBLIC, "op", "Ljava/util/logging/Logger;", null, null);
-
-        mappings.addFieldTypeProvider(new AsmFieldTypeProvider(klass -> {
-            if (Objects.equals("ght", klass)) return writer.toByteArray();
-            return null;
-        }));
-
-        final Optional<FieldType> type = field.getType();
-        assertTrue(type.isPresent());
-        assertTrue(type.get() instanceof ObjectType);
-        assertEquals("java/util/logging/Logger", ((ObjectType) type.get()).getClassName());
+        assertEquals("bye", node.methods.get(1).name);
     }
 
 }

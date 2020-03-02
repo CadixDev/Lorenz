@@ -1,6 +1,6 @@
 rootProject.name = name
+
 include 'lorenz'
-include 'lorenz-asm'
 include 'lorenz-dsl-groovy'
 include 'lorenz-io-enigma'
 include 'lorenz-io-gson'
