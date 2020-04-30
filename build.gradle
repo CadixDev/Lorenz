@@ -20,7 +20,7 @@ subprojects {
 
     group = 'org.cadixdev'
     archivesBaseName = project.name.toLowerCase()
-    version = '0.5.1-SNAPSHOT'
+    version = '0.5.1'
 
     repositories {
         mavenCentral()
@@ -120,7 +120,7 @@ subprojects {
                             developer {
                                 id = 'jamierocks'
                                 name = 'Jamie Mansfield'
-                                email = 'dev@jamierocks.uk'
+                                email = 'jmansfield@cadixdev.org'
                                 url = 'https://www.jamiemansfield.me/'
                                 timezone = 'Europe/London'
                             }
