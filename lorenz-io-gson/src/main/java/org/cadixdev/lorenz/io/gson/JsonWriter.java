@@ -31,7 +31,6 @@ import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingsWriter;
 import org.cadixdev.lorenz.io.TextMappingsWriter;
 
-import java.io.IOException;
 import java.io.Writer;
 
 /**
@@ -52,10 +51,9 @@ public class JsonWriter extends TextMappingsWriter {
     }
 
     @Override
-    public void write(final MappingSet mappings) throws IOException {
+    public void write(final MappingSet mappings) {
         final Gson GSON = new GsonBuilder()
-            // Needs to be registerTypeHierarchyAdapter, as its an interface
-            .registerTypeHierarchyAdapter(MappingSet.class, new MappingSetTypeAdapter(mappings))
+            .registerTypeAdapter(MappingSet.class, new MappingSetTypeAdapter(mappings))
             .setPrettyPrinting()
             .create();
         GSON.toJson(mappings, this.writer);

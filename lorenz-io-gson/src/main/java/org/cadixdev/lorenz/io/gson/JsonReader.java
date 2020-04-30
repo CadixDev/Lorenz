@@ -48,10 +48,9 @@ public class JsonReader extends MappingsReader {
     }
 
     @Override
-    public MappingSet read(final MappingSet mappings) throws IOException {
+    public MappingSet read(final MappingSet mappings) {
         final Gson GSON = new GsonBuilder()
-            // Needs to be registerTypeHierarchyAdapter, as its an interface
-            .registerTypeHierarchyAdapter(MappingSet.class, new MappingSetTypeAdapter(mappings))
+            .registerTypeAdapter(MappingSet.class, new MappingSetTypeAdapter(mappings))
             .create();
         return GSON.fromJson(this.reader, MappingSet.class);
     }

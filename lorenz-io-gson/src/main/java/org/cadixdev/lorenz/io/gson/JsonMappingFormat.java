@@ -58,7 +58,7 @@ public class JsonMappingFormat implements TextMappingFormat {
 
     @Override
     public String toString() {
-        return "json";
+        return "gson";
     }
 
 }
