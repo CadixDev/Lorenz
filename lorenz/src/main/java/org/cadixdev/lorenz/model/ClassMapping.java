@@ -244,7 +244,7 @@ public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M
      * @param obfuscatedName The obfuscated name of the field mapping
      * @param obfuscatedDescriptor The obfuscated descriptor of the field mapping
      * @return The field mapping
-     * @since 0.6.0
+     * @since 0.5.1
      */
     default FieldMapping getOrCreateFieldMapping(final String obfuscatedName, final FieldType obfuscatedDescriptor) {
         return this.getOrCreateFieldMapping(new FieldSignature(obfuscatedName, obfuscatedDescriptor));
@@ -345,7 +345,7 @@ public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M
      * @param obfuscatedName The obfuscated method name
      * @param obfuscatedDescriptor The obfuscated method descriptor
      * @return The method mapping
-     * @since 0.6.0
+     * @since 0.5.1
      */
     default MethodMapping createMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
         return this.createMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));
@@ -382,7 +382,7 @@ public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M
      * @param obfuscatedName The obfuscated name of the method mapping
      * @param obfuscatedDescriptor The obfuscated descriptor of the method mapping
      * @return The method mapping
-     * @since 0.6.0
+     * @since 0.5.1
      */
     default MethodMapping getOrCreateMethodMapping(final String obfuscatedName, final MethodDescriptor obfuscatedDescriptor) {
         return this.getOrCreateMethodMapping(new MethodSignature(obfuscatedName, obfuscatedDescriptor));

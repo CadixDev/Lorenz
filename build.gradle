@@ -123,7 +123,7 @@ subprojects {
                             developer {
                                 id = 'jamierocks'
                                 name = 'Jamie Mansfield'
-                                email = 'dev@jamierocks.uk'
+                                email = 'jmansfield@cadixdev.org'
                                 url = 'https://www.jamiemansfield.me/'
                                 timezone = 'Europe/London'
                             }
