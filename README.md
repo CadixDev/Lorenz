@@ -11,6 +11,7 @@ supports a variety of mapping formats:
 - Enigma (through `lorenz-io-enigma`)
 - JAM (through `lorenz-io-jam`)
 - Kin (through `lorenz-io-kin`)
+- ProGuard (**reader only** through `lorenz-io-proguard`)
 
 ## Branches
 
@@ -32,7 +33,7 @@ Lorenz releases can be obtained through Maven Central:
 ### Gradle
 
 ```groovy
-implementation 'org.cadixdev:lorenz:0.5.0'
+implementation 'org.cadixdev:lorenz:0.5.1'
 ```
 
 ### Maven
@@ -41,7 +42,7 @@ implementation 'org.cadixdev:lorenz:0.5.0'
 <dependency>
     <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
 </dependency>
 ```
 
