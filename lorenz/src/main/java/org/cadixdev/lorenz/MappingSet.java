@@ -25,16 +25,16 @@
 
 package org.cadixdev.lorenz;
 
-import org.cadixdev.lorenz.impl.MappingSetImpl;
-import org.cadixdev.lorenz.model.ClassMapping;
-import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
-import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.bombe.type.ArrayType;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
+import org.cadixdev.lorenz.impl.MappingSetImpl;
+import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.TopLevelClassMapping;
+import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Collection;
