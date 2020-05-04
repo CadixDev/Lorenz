@@ -25,22 +25,22 @@
 
 package org.cadixdev.lorenz.impl.model;
 
+import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.type.signature.FieldSignature;
+import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
-import org.cadixdev.bombe.analysis.InheritanceProvider;
-import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A basic implementation of {@link ClassMapping}.
@@ -55,10 +55,10 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
         extends AbstractMappingImpl<M, P>
         implements ClassMapping<M, P> {
 
-    private final Map<FieldSignature, FieldMapping> fields = new HashMap<>();
-    private final Map<String, FieldMapping> fieldsByName = new HashMap<>();
-    private final Map<MethodSignature, MethodMapping> methods = new HashMap<>();
-    private final Map<String, InnerClassMapping> innerClasses = new HashMap<>();
+    private final Map<FieldSignature, FieldMapping> fields = new ConcurrentHashMap<>();
+    private final Map<String, FieldMapping> fieldsByName = new ConcurrentHashMap<>();
+    private final Map<MethodSignature, MethodMapping> methods = new ConcurrentHashMap<>();
+    private final Map<String, InnerClassMapping> innerClasses = new ConcurrentHashMap<>();
     private boolean complete;
 
     /**

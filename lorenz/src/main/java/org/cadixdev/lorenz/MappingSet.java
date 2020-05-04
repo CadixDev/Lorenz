@@ -39,10 +39,10 @@ import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -80,7 +80,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
     }
 
     private final MappingSetModelFactory modelFactory;
-    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new ConcurrentHashMap<>();
     private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
     public MappingSet() {
