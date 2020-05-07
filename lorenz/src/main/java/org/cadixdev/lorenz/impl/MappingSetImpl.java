@@ -32,9 +32,9 @@ import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A basic implementation of {@link MappingSet}.
@@ -44,7 +44,7 @@ import java.util.Optional;
  */
 public class MappingSetImpl implements MappingSet {
 
-    private final Map<String, TopLevelClassMapping> topLevelClasses = new HashMap<>();
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new ConcurrentHashMap<>();
     private final MappingSetModelFactory modelFactory;
     private CascadingFieldTypeProvider fieldTypeProvider = new CascadingFieldTypeProvider();
 
