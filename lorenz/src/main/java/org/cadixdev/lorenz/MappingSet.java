@@ -37,6 +37,7 @@ import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.lorenz.util.Reversible;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * The container for {@link TopLevelClassMapping}s, allowing for their creating and
+ * The container for {@link TopLevelClassMapping}s, allowing for their creation and
  * locating any {@link ClassMapping}.
  *
  * @author Jamie Mansfield
@@ -163,6 +164,34 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
         return this.topLevelClasses.containsKey(obfuscatedName.replace('.', '/'));
     }
 
+    public Optional<? extends ClassMapping<?, ?>> getClassMapping(final String... obfuscatedNames) {
+        if (obfuscatedNames.length == 0) throw new IllegalArgumentException("No obfuscated names supplied!");
+        if (obfuscatedNames.length == 1) return this.getTopLevelClassMapping(obfuscatedNames[0]);
+
+        // Split the obfuscated name, to fetch the parent class name, and inner class name
+        final String[] parentClassNames = Arrays.copyOf(obfuscatedNames, obfuscatedNames.length);
+        final String innerClassName = obfuscatedNames[obfuscatedNames.length - 1];
+
+        // Get the parent class
+        return this.getClassMapping(parentClassNames)
+                // Get and return the inner class
+                .flatMap(parentClassMapping -> parentClassMapping.getInnerClassMapping(innerClassName));
+    }
+
+    public Optional<? extends ClassMapping<?, ?>> computeClassMapping(final String... obfuscatedNames) {
+        if (obfuscatedNames.length == 0) throw new IllegalArgumentException("No obfuscated names supplied!");
+        if (obfuscatedNames.length == 1) return this.getTopLevelClassMapping(obfuscatedNames[0]);
+
+        // Split the obfuscated name, to fetch the parent class name, and inner class name
+        final String[] parentClassNames = Arrays.copyOf(obfuscatedNames, obfuscatedNames.length);
+        final String innerClassName = obfuscatedNames[obfuscatedNames.length - 1];
+
+        // Get the parent class
+        return this.getClassMapping(parentClassNames)
+                // Get and return the inner class
+                .map(parentClassMapping -> parentClassMapping.getOrCreateInnerClassMapping(innerClassName));
+    }
+
     /**
      * Gets the class mapping of the given obfuscated name.
      *
@@ -226,7 +255,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
         final String innerClassName = obfuscatedName.substring(lastIndex + 1);
 
         // Get the parent class
-        final ClassMapping parentClass = this.getOrCreateClassMapping(parentClassName);
+        final ClassMapping<?, ?> parentClass = this.getOrCreateClassMapping(parentClassName);
 
         // Get the inner class
         return parentClass.getOrCreateInnerClassMapping(innerClassName);
