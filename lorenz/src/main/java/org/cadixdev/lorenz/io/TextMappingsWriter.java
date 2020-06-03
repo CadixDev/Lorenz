@@ -59,8 +59,7 @@ public abstract class TextMappingsWriter extends MappingsWriter {
         if (writer instanceof PrintWriter) {
             this.writer = (PrintWriter) writer;
         } else {
-            final BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
-            this.writer = new PrintWriter(bufferedWriter);
+            this.writer = new PrintWriter(writer);
         }
     }
 
