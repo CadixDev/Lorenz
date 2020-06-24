@@ -24,19 +24,6 @@
  */
 
 /**
- * Lorenz is a library built to interact with Java de-obfuscation mappings.
- *
- * <p>This library gives developers a way to express de-obfuscation mappings, in
- * addition to performing IO for a variety of formats (users can also write
- * their own readers and writers).</p>
- *
- * <p>I developed Lorenz specifically for my needs, largely around Minecraft, and
- * so I have implemented IO classes for the following formats:</p>
- * <ul>
- *     <li>SRG</li>
- *     <li>CSRG</li>
- *     <li>TSRG</li>
- *     <li>XSRG</li>
- * </ul>
+ * The Lorenz-provided implementation of the XSRG mapping format.
  */
-package org.cadixdev.lorenz;
+package org.cadixdev.lorenz.io.srg.xsrg;

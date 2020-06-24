@@ -65,6 +65,11 @@ public final class MappingFormats {
     public static final TextMappingFormat TSRG = (TextMappingFormat) byId("tsrg");
 
     /**
+     * The XSRG (SRG + field types) mapping format.
+     */
+    public static final TextMappingFormat XSRG = (TextMappingFormat) byId("xsrg");
+
+    /**
      * @see Registry#byId(String)
      */
     public static MappingFormat byId(final String id) {

@@ -88,6 +88,24 @@ public final class SrgConstants {
 
     }
 
+    /**
+     * A collection of constants specific to the XSRG
+     * mapping format.
+     *
+     * @since 0.5.3
+     */
+    public static final class XSrg {
+
+        /**
+         * The standard file extension used with the TSRG format.
+         */
+        public static final String STANDARD_EXTENSION = "xsrg";
+
+        private XSrg() {
+        }
+
+    }
+
     private SrgConstants() {
     }
 

@@ -23,20 +23,43 @@
  * THE SOFTWARE.
  */
 
+package org.cadixdev.lorenz.io.srg.xsrg;
+
+import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingFormat;
+import org.cadixdev.lorenz.io.srg.SrgConstants;
+
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Optional;
+
 /**
- * Lorenz is a library built to interact with Java de-obfuscation mappings.
+ * The XSRG mapping format.
  *
- * <p>This library gives developers a way to express de-obfuscation mappings, in
- * addition to performing IO for a variety of formats (users can also write
- * their own readers and writers).</p>
- *
- * <p>I developed Lorenz specifically for my needs, largely around Minecraft, and
- * so I have implemented IO classes for the following formats:</p>
- * <ul>
- *     <li>SRG</li>
- *     <li>CSRG</li>
- *     <li>TSRG</li>
- *     <li>XSRG</li>
- * </ul>
+ * @author Jamie Mansfield
+ * @since 0.5.3
  */
-package org.cadixdev.lorenz;
+public class XSrgMappingFormat implements TextMappingFormat {
+
+    @Override
+    public MappingsReader createReader(final Reader reader) {
+        return new XSrgReader(reader);
+    }
+
+    @Override
+    public MappingsWriter createWriter(final Writer writer) {
+        return new XSrgWriter(writer);
+    }
+
+    @Override
+    public Optional<String> getStandardFileExtension() {
+        return Optional.of(SrgConstants.XSrg.STANDARD_EXTENSION);
+    }
+
+    @Override
+    public String toString() {
+        return "xsrg";
+    }
+
+}
