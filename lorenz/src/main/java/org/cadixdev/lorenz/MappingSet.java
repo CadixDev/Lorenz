@@ -72,11 +72,11 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @param modelFactory The model factory to use
      * @return The mapping set
      * @since 0.3.0
-     * @deprecated Use {@link MappingSet#MappingSet(MappingSetModelFactory)} instead
+     * @deprecated Use {@link MappingSetModelFactory#createMappingSet()} instead
      */
     @Deprecated
     public static MappingSet create(final MappingSetModelFactory modelFactory) {
-        return new MappingSet(modelFactory);
+        return modelFactory.createMappingSet();
     }
 
     private final MappingSetModelFactory modelFactory;
@@ -84,7 +84,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
     private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
     public MappingSet() {
-        this(MappingSetModelFactoryImpl.INSTANCE);
+        this.modelFactory = MappingSetModelFactoryImpl.INSTANCE;
     }
 
     public MappingSet(final MappingSetModelFactory modelFactory) {
@@ -329,7 +329,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet reverse() {
-        return this.reverse(new MappingSet());
+        return this.reverse(modelFactory.createMappingSet());
     }
 
     @Override
@@ -347,7 +347,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet merge(final MappingSet with) {
-        return this.merge(with, new MappingSet());
+        return this.merge(with, modelFactory.createMappingSet());
     }
 
     /**
@@ -374,7 +374,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet copy() {
-        final MappingSet mappings = new MappingSet();
+        final MappingSet mappings = modelFactory.createMappingSet();
         this.getTopLevelClassMappings().forEach(klass -> klass.copy(mappings));
         return mappings;
     }

@@ -47,6 +47,13 @@ import org.cadixdev.bombe.type.signature.MethodSignature;
 public interface MappingSetModelFactory {
 
     /**
+     * Creates a new {@link MappingSet} whose {@link MappingSetModelFactory} can be changed
+     *
+     * @return The mapping set
+     */
+    MappingSet createMappingSet();
+
+    /**
      * Creates a {@link TopLevelClassMapping} linked to the given {@link MappingSet}.
      *
      * @param parent The mapping set to link to
