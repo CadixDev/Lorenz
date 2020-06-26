@@ -83,10 +83,18 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
     private final Map<String, TopLevelClassMapping> topLevelClasses = new ConcurrentHashMap<>();
     private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
+    /**
+     * Creates a mapping set using the default {@link MappingSetModelFactory}.
+     */
     public MappingSet() {
         this(MappingSetModelFactoryImpl.INSTANCE);
     }
 
+    /**
+     * Creates a mapping set using the provided {@link MappingSetModelFactory}.
+     *
+     * @param modelFactory The model factory to use
+     */
     public MappingSet(final MappingSetModelFactory modelFactory) {
         this.modelFactory = modelFactory;
     }
@@ -329,7 +337,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet reverse() {
-        return this.reverse(new MappingSet());
+        return this.reverse(this.createMappingSet());
     }
 
     @Override
@@ -347,7 +355,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet merge(final MappingSet with) {
-        return this.merge(with, new MappingSet());
+        return this.merge(with, this.createMappingSet());
     }
 
     /**
@@ -374,7 +382,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      * @since 0.5.0
      */
     public MappingSet copy() {
-        final MappingSet mappings = new MappingSet();
+        final MappingSet mappings = this.createMappingSet();
         this.getTopLevelClassMappings().forEach(klass -> klass.copy(mappings));
         return mappings;
     }
@@ -382,6 +390,10 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
     @Override
     public Iterator<TopLevelClassMapping> iterator() {
         return this.topLevelClasses.values().iterator();
+    }
+
+    protected MappingSet createMappingSet() {
+        return new MappingSet(this.modelFactory);
     }
 
 }
