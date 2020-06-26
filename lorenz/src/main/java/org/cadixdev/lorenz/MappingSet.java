@@ -83,10 +83,21 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
     private final Map<String, TopLevelClassMapping> topLevelClasses = new ConcurrentHashMap<>();
     private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
 
+    /**
+     * Creates a mapping set using the default {@link MappingSetModelFactory}
+     */
     public MappingSet() {
-        this.modelFactory = MappingSetModelFactoryImpl.INSTANCE;
+        this(MappingSetModelFactoryImpl.INSTANCE);
     }
 
+    /**
+     * Creates a mapping set using the provided {@link MappingSetModelFactory}.
+     *
+     * <p>Do note that using {@link MappingSetModelFactory#createMappingSet()} would
+     * be better as the model factory can define its own {@link MappingSet} implementation</p>
+     *
+     * @param modelFactory The model factory to use
+     */
     public MappingSet(final MappingSetModelFactory modelFactory) {
         this.modelFactory = modelFactory;
     }
