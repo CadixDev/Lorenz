@@ -106,7 +106,7 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parentClass);
+        return Objects.hash(super.hashCode(), this.parentClass.getFullObfuscatedName(), this.parentClass.getFullDeobfuscatedName());
     }
 
 }

@@ -75,7 +75,7 @@ public abstract class AbstractMemberMappingImpl<M extends MemberMapping, P exten
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parent);
+        return Objects.hash(super.hashCode(), this.parent.getFullObfuscatedName(), this.parent.getFullDeobfuscatedName());
     }
 
 }
