@@ -29,6 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.cadixdev.bombe.type.MethodDescriptor;
+import org.cadixdev.bombe.type.signature.FieldSignature;
+import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingFormats;
 import org.cadixdev.lorenz.io.MappingsReader;
@@ -38,9 +41,6 @@ import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.bombe.type.MethodDescriptor;
-import org.cadixdev.bombe.type.signature.FieldSignature;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -58,12 +58,24 @@ public class EnigmaReaderTest {
     @Test
     public void commentRemoval() {
         // 1. Check an all comments line
-        final String emptyLine = "# This is a comment";
-        assertEquals("", EnigmaConstants.removeComments(emptyLine).trim());
+        assertEquals(
+                "",
+                EnigmaConstants.removeComments("#").trim()
+        );
+        assertEquals(
+                "",
+                EnigmaConstants.removeComments("# This is a comment").trim()
+        );
 
         // 2. Check a mixed line
-        final String mixedLine = "blah blah blah # This is a comment";
-        assertEquals("blah blah blah", EnigmaConstants.removeComments(mixedLine).trim());
+        assertEquals(
+                "blah blah blah",
+                EnigmaConstants.removeComments("blah blah blah #").trim()
+        );
+        assertEquals(
+                "blah blah blah",
+                EnigmaConstants.removeComments("blah blah blah # This is a comment").trim()
+        );
 
         // 3. Check that SrgParser#processLine(String) won't accept comments
         assertFalse(this.mappings.hasTopLevelClassMapping("yu"));

@@ -23,48 +23,43 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
+package org.cadixdev.lorenz.io.srg.xsrg;
 
-import org.cadixdev.lorenz.io.srg.SrgWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
+import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingFormat;
+import org.cadixdev.lorenz.io.srg.SrgConstants;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.Writer;
+import java.util.Optional;
 
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of mapping writers for text-based
- * mapping formats.
- *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
+ * The XSRG mapping format.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.5.3
  */
-public abstract class TextMappingsWriter extends MappingsWriter {
+public class XSrgMappingFormat implements TextMappingFormat {
 
-    protected final PrintWriter writer;
-
-    /**
-     * Creates a new mappings writer, from the given {@link Writer}.
-     *
-     * @param writer The output writer, to write to
-     */
-    protected TextMappingsWriter(final Writer writer) {
-        if (writer instanceof PrintWriter) {
-            this.writer = (PrintWriter) writer;
-        } else {
-            this.writer = new PrintWriter(writer);
-        }
+    @Override
+    public MappingsReader createReader(final Reader reader) {
+        return new XSrgReader(reader);
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
+    public MappingsWriter createWriter(final Writer writer) {
+        return new XSrgWriter(writer);
+    }
+
+    @Override
+    public Optional<String> getStandardFileExtension() {
+        return Optional.of(SrgConstants.XSrg.STANDARD_EXTENSION);
+    }
+
+    @Override
+    public String toString() {
+        return "xsrg";
     }
 
 }
