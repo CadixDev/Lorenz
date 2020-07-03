@@ -29,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.cadixdev.bombe.type.MethodDescriptor;
+import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingFormat;
 import org.cadixdev.lorenz.io.MappingsReader;
@@ -37,9 +39,6 @@ import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.bombe.type.MethodDescriptor;
-import org.cadixdev.bombe.type.signature.MethodSignature;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +48,7 @@ public abstract class AbstractSrgReaderTest {
     private final MappingSet mappings;
 
     protected AbstractSrgReaderTest(final MappingFormat format, String path) throws Exception {
-        try (MappingsReader reader = format.createReader(getClass().getResourceAsStream(path))) {
+        try (final MappingsReader reader = format.createReader(getClass().getResourceAsStream(path))) {
             this.mappings = reader.read();
         }
     }
@@ -57,12 +56,24 @@ public abstract class AbstractSrgReaderTest {
     @Test
     public void commentRemoval() {
         // 1. Check an all comments line
-        final String emptyLine = "# This is a comment";
-        Assertions.assertEquals("", SrgConstants.removeComments(emptyLine).trim());
+        assertEquals(
+                "",
+                SrgConstants.removeComments("#").trim()
+        );
+        assertEquals(
+                "",
+                SrgConstants.removeComments("# This is a comment").trim()
+        );
 
         // 2. Check a mixed line
-        final String mixedLine = "blah blah blah # This is a comment";
-        assertEquals("blah blah blah", SrgConstants.removeComments(mixedLine).trim());
+        assertEquals(
+                "blah blah blah",
+                SrgConstants.removeComments("blah blah blah #").trim()
+        );
+        assertEquals(
+                "blah blah blah",
+                SrgConstants.removeComments("blah blah blah # This is a comment").trim()
+        );
 
         // 3. Check that SrgParser#processLine(String) won't accept comments
         assertFalse(this.mappings.hasTopLevelClassMapping("yu"));

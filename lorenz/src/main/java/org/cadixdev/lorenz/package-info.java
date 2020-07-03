@@ -36,6 +36,7 @@
  *     <li>SRG</li>
  *     <li>CSRG</li>
  *     <li>TSRG</li>
+ *     <li>XSRG</li>
  * </ul>
  */
 package org.cadixdev.lorenz;

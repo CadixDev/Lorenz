@@ -26,3 +26,4 @@
 org.cadixdev.lorenz.io.srg.SrgMappingFormat
 org.cadixdev.lorenz.io.srg.csrg.CSrgMappingFormat
 org.cadixdev.lorenz.io.srg.tsrg.TSrgMappingFormat
+org.cadixdev.lorenz.io.srg.xsrg.XSrgMappingFormat

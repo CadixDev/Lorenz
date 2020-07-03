@@ -26,6 +26,8 @@
 package org.cadixdev.lorenz.impl.model;
 
 import org.cadixdev.bombe.analysis.InheritanceProvider;
+import org.cadixdev.bombe.analysis.InheritanceType;
+import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.MappingSet;
@@ -36,9 +38,12 @@ import org.cadixdev.lorenz.model.MethodMapping;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -210,6 +215,12 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
             return;
         }
 
+        final Map<String, Set<MethodSignature>> nameToMethods = new HashMap<>();
+        for (final Map.Entry<MethodSignature, InheritanceType> method : info.getMethods().entrySet()) {
+            final Set<MethodSignature> methods = nameToMethods.computeIfAbsent(method.getKey().getName(), name -> new HashSet<>());
+            methods.add(method.getKey());
+        }
+
         for (final InheritanceProvider.ClassInfo parent : info.provideParents(provider)) {
             final ClassMapping<?, ?> parentMappings = this.getMappings().getOrCreateClassMapping(parent.getName());
             parentMappings.complete(provider, parent);
@@ -223,6 +234,25 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
             for (final MethodMapping mapping : parentMappings.getMethodMappings()) {
                 if (parent.canInherit(info, mapping.getSignature())) {
                     this.methods.putIfAbsent(mapping.getSignature(), mapping);
+                }
+
+                // Check if there are any methods here that override the return type of a parent
+                // method.
+                if (nameToMethods.containsKey(mapping.getObfuscatedName())) {
+                    for (final MethodSignature methodSignature : nameToMethods.get(mapping.getObfuscatedName())) {
+                        final MethodDescriptor methodDescriptor = methodSignature.getDescriptor();
+
+                        final MethodSignature mappingSignature = mapping.getSignature();
+                        final MethodDescriptor mappingDescriptor = mappingSignature.getDescriptor();
+
+                        // The method MUST have the same parameters
+                        // TODO: handle generic params
+                        if (!Objects.equals(methodDescriptor.getParamTypes(), mappingDescriptor.getParamTypes())) continue;
+
+                        if (mappingDescriptor.getReturnType().isAssignableFrom(methodDescriptor.getReturnType(), provider)) {
+                            this.methods.putIfAbsent(methodSignature, mapping);
+                        }
+                    }
                 }
             }
         }

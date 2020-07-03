@@ -39,7 +39,7 @@ public final class SrgConstants {
     /**
      * A regex expression used to remove comments from lines.
      */
-    private static final Pattern HASH_COMMENT = Pattern.compile("#.+");
+    private static final Pattern HASH_COMMENT = Pattern.compile("#.*");
 
     /**
      * The standard file extension used with the SRG format.
@@ -84,6 +84,24 @@ public final class SrgConstants {
         public static final String STANDARD_EXTENSION = "tsrg";
 
         private TSrg() {
+        }
+
+    }
+
+    /**
+     * A collection of constants specific to the XSRG
+     * mapping format.
+     *
+     * @since 0.5.3
+     */
+    public static final class XSrg {
+
+        /**
+         * The standard file extension used with the TSRG format.
+         */
+        public static final String STANDARD_EXTENSION = "xsrg";
+
+        private XSrg() {
         }
 
     }

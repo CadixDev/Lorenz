@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 /**
@@ -58,19 +59,48 @@ public class Registry<T> {
      * Gets the value of the given identifier.
      *
      * @param id The identifier of the value
-     * @return The value
+     * @return The value, or {@code null} if not present
      */
     public T byId(final String id) {
         return this.map.get(id.toLowerCase());
     }
 
     /**
-     * Gets all of the values within the registry.
+     * Gets an <em>immutable</em>-view of value keys registered into
+     * the registry.
+     *
+     * @return The keys
+     * @since 0.5.3
+     *
+     * @see Map#keySet()
+     */
+    public Set<String> keys() {
+        return Collections.unmodifiableSet(this.map.keySet());
+    }
+
+    /**
+     * Gets an <em>immutable</em>-view of all values registered into
+     * the registry.
      *
      * @return The values
+     *
+     * @see Map#values()
      */
     public Collection<T> values() {
         return Collections.unmodifiableCollection(this.map.values());
+    }
+
+    /**
+     * Gets an <em>immutable</em>-view of all entries (key + value)
+     * registered into the registry.
+     *
+     * @return The entries
+     * @since 0.5.3
+     *
+     * @see Map#entrySet()
+     */
+    public Set<Map.Entry<String, T>> entries() {
+        return Collections.unmodifiableSet(this.map.entrySet());
     }
 
     /**

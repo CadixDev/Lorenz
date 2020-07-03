@@ -23,48 +23,7 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io;
-
-import org.cadixdev.lorenz.io.srg.SrgWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-
 /**
- * An implementation of {@link MappingsWriter} designed to aid
- * with the implementation of mapping writers for text-based
- * mapping formats.
- *
- * @see SrgWriter
- * @see CSrgWriter
- * @see TSrgWriter
- *
- * @author Jamie Mansfield
- * @since 0.4.0
+ * The Lorenz-provided implementation of the XSRG mapping format.
  */
-public abstract class TextMappingsWriter extends MappingsWriter {
-
-    protected final PrintWriter writer;
-
-    /**
-     * Creates a new mappings writer, from the given {@link Writer}.
-     *
-     * @param writer The output writer, to write to
-     */
-    protected TextMappingsWriter(final Writer writer) {
-        if (writer instanceof PrintWriter) {
-            this.writer = (PrintWriter) writer;
-        } else {
-            this.writer = new PrintWriter(writer);
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        this.writer.close();
-    }
-
-}
+package org.cadixdev.lorenz.io.srg.xsrg;

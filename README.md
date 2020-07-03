@@ -5,9 +5,7 @@ Lorenz is a library intended for creating and altering de-obfuscation mappings f
 programs (compiled or otherwise), this is done independent of the format being used. Lorenz
 supports a variety of mapping formats:
 
-- SRG
-- CSRG
-- TSRG
+- SRG and its variants (CSRG, TSRG, and XSRG)
 - Enigma (through `lorenz-io-enigma`)
 - JAM (through `lorenz-io-jam`)
 - Kin (through `lorenz-io-kin`)
@@ -33,7 +31,7 @@ Lorenz releases can be obtained through Maven Central:
 ### Gradle
 
 ```groovy
-implementation 'org.cadixdev:lorenz:0.5.1'
+implementation 'org.cadixdev:lorenz:0.5.3'
 ```
 
 ### Maven
@@ -42,7 +40,7 @@ implementation 'org.cadixdev:lorenz:0.5.1'
 <dependency>
     <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.3</version>
 </dependency>
 ```
 
