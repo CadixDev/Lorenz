@@ -39,7 +39,7 @@ public final class JamConstants {
     /**
      * A regex expression used to remove comments from lines.
      */
-    private static final Pattern HASH_COMMENT = Pattern.compile("#.+");
+    private static final Pattern HASH_COMMENT = Pattern.compile("#.*");
 
     /**
      * The standard file extension used with the JAM format.
