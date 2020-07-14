@@ -23,44 +23,11 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.model;
-
-import org.cadixdev.lorenz.merge.MappingSetMerger;
-
 /**
- * Represents a de-obfuscation mapping for a method parameter,
- * identified by index.
+ * An API for merging Lorenz mappings. The main API in this package is
+ * {@link org.cadixdev.lorenz.merge.MappingSetMerger MappingSetMerger}. Also worth noting is
+ * {@link org.cadixdev.lorenz.merge.MappingSetMergerHandler MappingSetMergerHandler}.
  *
- * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.5.4
  */
-public interface MethodParameterMapping extends MemberMapping<MethodParameterMapping, MethodMapping> {
-
-    /**
-     * Gets the index of the method parameter being mapped.
-     *
-     * @return The index
-     */
-    int getIndex();
-
-    @Override
-    default String getObfuscatedName() {
-        return String.valueOf(this.getIndex());
-    }
-
-    @Override
-    default MethodParameterMapping reverse(final MethodMapping parent) {
-        return parent.createParameterMapping(this.getIndex(), this.getDeobfuscatedName());
-    }
-
-    @Override
-    default MethodParameterMapping merge(final MethodParameterMapping with, final MethodMapping parent) {
-        return MappingSetMerger.create(this.getMappings(), with.getMappings()).mergeMethodParameter(this, with, parent);
-    }
-
-    @Override
-    default MethodParameterMapping copy(final MethodMapping parent) {
-        return parent.createParameterMapping(this.getIndex(), this.getDeobfuscatedName());
-    }
-
-}
+package org.cadixdev.lorenz.merge;

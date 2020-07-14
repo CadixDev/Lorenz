@@ -31,6 +31,7 @@ import org.cadixdev.bombe.type.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Optional;
+import org.cadixdev.lorenz.merge.MappingSetMerger;
 
 /**
  * Represents a de-obfuscation mapping for methods.
@@ -175,18 +176,7 @@ public interface MethodMapping extends MemberMapping<MethodMapping, ClassMapping
 
     @Override
     default MethodMapping merge(final MethodMapping with, final ClassMapping parent) {
-        // effectively clone the mapping for the new parent
-        final MethodMapping newMapping = parent.createMethodMapping(this.getSignature())
-                .setDeobfuscatedName(with.getDeobfuscatedName());
-
-        // fill child data
-        this.getParameterMappings().forEach(param -> {
-            final MethodParameterMapping paramWith = with.getOrCreateParameterMapping(param.getIndex());
-            param.merge(paramWith, newMapping);
-        });
-
-        // A -> [B / C] -> D
-        return newMapping;
+        return MappingSetMerger.create(this.getMappings(), with.getMappings()).mergeMethod(this, with, parent);
     }
 
     @Override

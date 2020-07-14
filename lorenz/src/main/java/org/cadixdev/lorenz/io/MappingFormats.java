@@ -70,6 +70,8 @@ public final class MappingFormats {
     public static final TextMappingFormat XSRG = (TextMappingFormat) byId("xsrg");
 
     /**
+     * @param id The identifier of the value
+     * @return The value, or {@code null} if not present
      * @see Registry#byId(String)
      */
     public static MappingFormat byId(final String id) {
