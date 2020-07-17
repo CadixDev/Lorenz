@@ -28,6 +28,7 @@ package org.cadixdev.lorenz.io.proguard;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.Type;
+import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.TextMappingsReader;
 import org.cadixdev.lorenz.model.ClassMapping;
@@ -99,7 +100,8 @@ public class ProGuardReader extends TextMappingsReader {
                 }
                 // field
                 else {
-                    this.currentClass.getOrCreateFieldMapping(obf)
+                    final FieldSignature fieldSignature = new FieldSignature(obf, new PGTypeReader(returnTypeRaw).readFieldType());
+                    this.currentClass.getOrCreateFieldMapping(fieldSignature)
                             .setDeobfuscatedName(deobf);
                 }
             }
