@@ -147,8 +147,12 @@ public class MappingSetMergerImpl implements MappingSetMerger {
             return null;
         }
 
-        for (final TopLevelClassMapping mapping : mergeResult.getMappingsToMap()) {
-            this.mergeClass(left, mapping, newMapping);
+        if (mergeResult.getMappingsToMap().isEmpty()) {
+            this.mergeClass(left, null, newMapping);
+        } else {
+            for (final TopLevelClassMapping mapping : mergeResult.getMappingsToMap()) {
+                this.mergeClass(left, mapping, newMapping);
+            }
         }
 
         return newMapping;
@@ -187,8 +191,12 @@ public class MappingSetMergerImpl implements MappingSetMerger {
             return null;
         }
 
-        for (final InnerClassMapping mapping : mergeResult.getMappingsToMap()) {
-            this.mergeClass(left, mapping, newMapping);
+        if (mergeResult.getMappingsToMap().isEmpty()) {
+            this.mergeClass(left, null, newMapping);
+        } else {
+            for (final InnerClassMapping mapping : mergeResult.getMappingsToMap()) {
+                this.mergeClass(left, mapping, newMapping);
+            }
         }
 
         return newMapping;
@@ -277,8 +285,12 @@ public class MappingSetMergerImpl implements MappingSetMerger {
             return null;
         }
 
-        for (final MethodMapping mapping : mergeResult.getMappingsToMap()) {
-            this.mergeMethodInto(left, mapping, newMapping);
+        if (mergeResult.getMappingsToMap().isEmpty()) {
+            this.mergeMethodInto(left, null, newMapping);
+        } else {
+            for (final MethodMapping mapping : mergeResult.getMappingsToMap()) {
+                this.mergeMethodInto(left, mapping, newMapping);
+            }
         }
 
         return newMapping;
