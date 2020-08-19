@@ -25,7 +25,7 @@
 
 package org.cadixdev.lorenz.model;
 
-import java.util.HashSet;
+import org.cadixdev.lorenz.merge.MappingSetMerger;
 
 /**
  * Represents a de-obfuscation mapping for an inner class.
@@ -96,50 +96,7 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
 
     @Override
     default InnerClassMapping merge(final InnerClassMapping with, final ClassMapping parent) {
-        // create the container mapping
-        final InnerClassMapping newMapping = parent.getOrCreateInnerClassMapping(this.getObfuscatedName())
-                .setDeobfuscatedName(with.getDeobfuscatedName());
-
-        final HashSet<FieldMapping> fieldMappings = new HashSet<>();
-        final HashSet<MethodMapping> methodMappings = new HashSet<>();
-        final HashSet<InnerClassMapping> innerClassMappings = new HashSet<>();
-
-        // fill with child data
-        this.getFieldMappings().forEach(field -> {
-            final FieldMapping fieldWith = with.getOrCreateFieldMapping(field.getDeobfuscatedSignature());
-            fieldMappings.add(fieldWith);
-            field.merge(fieldWith, newMapping);
-        });
-        this.getMethodMappings().forEach(method -> {
-            final MethodMapping methodWith = with.getOrCreateMethodMapping(method.getDeobfuscatedSignature());
-            methodMappings.add(methodWith);
-            method.merge(methodWith, newMapping);
-        });
-        this.getInnerClassMappings().forEach(klass -> {
-            final InnerClassMapping klassWith = with.getOrCreateInnerClassMapping(klass.getDeobfuscatedName());
-            innerClassMappings.add(klassWith);
-            klass.merge(klassWith, newMapping);
-        });
-
-        // Include mappings added by with
-        with.getFieldMappings().forEach(field -> {
-            if (!fieldMappings.contains(field)) {
-                field.copy(newMapping);
-            }
-        });
-        with.getMethodMappings().forEach(method -> {
-            if (!methodMappings.contains(method))  {
-                method.copy(newMapping);
-            }
-        });
-        with.getInnerClassMappings().forEach(klass -> {
-            if (!innerClassMappings.contains(klass)) {
-                klass.copy(newMapping);
-            }
-        });
-
-        // A -> [B / C] -> D
-        return newMapping;
+        return MappingSetMerger.create(this.getMappings(), with.getMappings()).mergeInnerClass(this, with, parent);
     }
 
     @Override
@@ -150,5 +107,4 @@ public interface InnerClassMapping extends ClassMapping<InnerClassMapping, Class
         this.getInnerClassMappings().forEach(klass -> klass.copy(mapping));
         return mapping;
     }
-
 }

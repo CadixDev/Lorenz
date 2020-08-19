@@ -31,6 +31,7 @@ import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
 import org.cadixdev.lorenz.impl.MappingSetImpl;
+import org.cadixdev.lorenz.merge.MappingSetMerger;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
 import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
@@ -325,11 +326,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @since 0.5.0
      */
     default MappingSet merge(final MappingSet with, final MappingSet parent) {
-        this.getTopLevelClassMappings().forEach(klass -> {
-            final TopLevelClassMapping klassWith = with.getOrCreateTopLevelClassMapping(klass.getDeobfuscatedName());
-            klass.merge(klassWith, parent);
-        });
-        return parent;
+        return MappingSetMerger.create(this, with).merge(parent);
     }
 
     /**
