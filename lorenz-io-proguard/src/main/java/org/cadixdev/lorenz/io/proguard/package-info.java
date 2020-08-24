@@ -23,42 +23,14 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.io.proguard;
-
-import org.cadixdev.lorenz.io.MappingsReader;
-import org.cadixdev.lorenz.io.MappingsWriter;
-import org.cadixdev.lorenz.io.TextMappingFormat;
-
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Optional;
-
 /**
- * The ProGuard mapping format.
+ * The Lorenz-provided implementation of the
+ * <a link="https://www.guardsquare.com/en/products/proguard">ProGuard</a> mapping.txt
+ * format.
+ * <p>
+ * Currently we can only support reading ProGuard files, as Lorenz doesn't have a model
+ * for all the data represented by the format.
  *
- * @author Jamie Mansfield
  * @since 0.5.1
  */
-public class ProGuardFormat implements TextMappingFormat {
-
-    @Override
-    public MappingsReader createReader(final Reader reader) {
-        return new ProGuardReader(reader);
-    }
-
-    @Override
-    public MappingsWriter createWriter(final Writer writer) {
-        throw new UnsupportedOperationException("cant write proguard");
-    }
-
-    @Override
-    public Optional<String> getStandardFileExtension() {
-        return Optional.empty();
-    }
-
-    @Override
-    public String toString() {
-        return "proguard";
-    }
-
-}
+package org.cadixdev.lorenz.io.proguard;
