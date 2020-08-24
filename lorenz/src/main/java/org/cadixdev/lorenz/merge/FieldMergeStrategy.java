@@ -28,7 +28,6 @@ package org.cadixdev.lorenz.merge;
 import org.cadixdev.lorenz.MappingSet;
 
 /**
- * <p>
  * This enum represents a configuration value for determining how strictly field mappings will be merged via
  * {@link MappingSetMerger}. Use it with {@link MergeConfig} and {@link MappingSetMerger#create(MappingSet, MappingSet, MergeConfig)}.
  *
@@ -36,6 +35,7 @@ import org.cadixdev.lorenz.MappingSet;
  * @since 0.5.4
  */
 public enum FieldMergeStrategy {
+
     /**
      * Only match exactly. This either means:
      * <ul>
@@ -46,10 +46,9 @@ public enum FieldMergeStrategy {
      * </ul>
      * For more information regarding continuation and duplicate merges, see the <b>Continuations and Duplicates</b>
      * section of {@link MappingSetMergerHandler}.
-     *
-     * @since 0.5.4
      */
     STRICT,
+
     /**
      * Match the same as {@link #STRICT}, but also match more broadly:
      * <ul>
@@ -60,8 +59,7 @@ public enum FieldMergeStrategy {
      * </ul>
      * For more information regarding continuation and duplicate merges, see the <b>Continuations and Duplicates</b>
      * section of {@link MappingSetMergerHandler}.
-     *
-     * @since 0.5.4
      */
     LOOSE
+
 }

@@ -131,7 +131,6 @@ public interface MappingSetMerger {
      * @param right The {@link MappingSet} for the right side of the merge
      * @return The merger
      * @see MappingSetMerger#create(MappingSet, MappingSet, MergeConfig)
-     * @since 0.5.4
      */
     static MappingSetMerger create(final MappingSet left, final MappingSet right) {
         return MappingSetMerger.create(left, right, MergeConfig.builder().build());
@@ -146,7 +145,6 @@ public interface MappingSetMerger {
      * @param config The {@link MergeConfig} configuration for this merge session
      * @return The merger
      * @see MappingSetMerger#create(MappingSet, MappingSet)
-     * @since 0.5.4
      */
     static MappingSetMerger create(final MappingSet left, final MappingSet right, final MergeConfig config) {
         return new MappingSetMergerImpl(left, right, config);
@@ -158,7 +156,6 @@ public interface MappingSetMerger {
      *
      * @return The merged mapping set
      * @see MappingSetMerger#merge(MappingSet)
-     * @since 0.5.4
      */
     default MappingSet merge() {
         return this.merge(MappingSet.create());
@@ -172,7 +169,6 @@ public interface MappingSetMerger {
      *           parameter. The result shouldn't be a copy.
      * @param target The mapping set to insert the merged mappings into
      * @return The {@code target} parameter.
-     * @since 0.5.4
      */
     MappingSet merge(final MappingSet target);
 
@@ -187,7 +183,6 @@ public interface MappingSetMerger {
      * @param right The class mapping for the right side of the merge. May be {@code null}.
      * @param target The mapping set to insert the new merged mapping into. May not be {@code null}.
      * @return The new class mapping, or {@code null} if the mapping is to be removed.
-     * @since 0.5.4
      */
     TopLevelClassMapping mergeTopLevelClass(final TopLevelClassMapping left, final TopLevelClassMapping right, final MappingSet target);
 
@@ -202,7 +197,6 @@ public interface MappingSetMerger {
      * @param right The class mapping for the right side of the merge. May be {@code null}.
      * @param target The class mapping to insert the new merged mapping into. May not be {@code null}.
      * @return The new class mapping, or {@code null} if the mapping is to be removed.
-     * @since 0.5.4
      */
     InnerClassMapping mergeInnerClass(final InnerClassMapping left, final InnerClassMapping right, final ClassMapping<?, ?> target);
 
@@ -218,7 +212,6 @@ public interface MappingSetMerger {
      * @param right The field mapping for the right side of the merge. May be {@code null}.
      * @param target The class mapping to insert the new merged mapping into. May not be {@code null}.
      * @return The new field mapping, or {@code null} if the mapping is to be removed.
-     * @since 0.5.4
      */
     FieldMapping mergeField(final FieldMapping left, final FieldMapping right, final ClassMapping<?, ?> target);
 
@@ -234,7 +227,6 @@ public interface MappingSetMerger {
      * @param right The method mapping for the right side of the merge. May be {@code null}.
      * @param target The class mapping to insert the new merged mapping into. May not be {@code null}.
      * @return The new method mapping, or {@code null} if the mapping is to be removed.
-     * @since 0.5.4
      */
     MethodMapping mergeMethod(final MethodMapping left, final MethodMapping right, final ClassMapping<?, ?> target);
 
@@ -249,7 +241,6 @@ public interface MappingSetMerger {
      * @param right The method parameter mapping for the right side of the merge. May be {@code null}.
      * @param target The method mapping to insert the new merged mapping into. May not be {@code null}.
      * @return The new method parameter mapping, or {@code null} if the mapping is to be removed.
-     * @since 0.5.4
      */
     MethodParameterMapping mergeMethodParameter(final MethodParameterMapping left, final MethodParameterMapping right, final MethodMapping target);
 }

@@ -67,7 +67,6 @@ public class MergeResult<T> {
     /**
      * Create a new {@code MergeResult} with a result and no mappings to merge.
      * @param result The result of the merge operation, may be {@code null}.
-     * @since 0.5.4
      */
     public MergeResult(final T result) {
         this.result = result;
@@ -78,7 +77,6 @@ public class MergeResult<T> {
      * Create a new {@code MergeResult} with a result and only one mapping to merge.
      * @param result The result of the merge operation, may be {@code null}.
      * @param mappingToMerge The mapping to merge into the {@code result}, must not be {@code null}.
-     * @since 0.5.4
      */
     public MergeResult(final T result, final T mappingToMerge) {
         this.result = Objects.requireNonNull(result, "Merge action result must not be null");
@@ -90,7 +88,6 @@ public class MergeResult<T> {
      * @param result The result of the merge operation, may be {@code null}.
      * @param mappingsToMap The mappings to merge into the {@code result}, must not be {@code null}, and no entries
      *                        may be {@code null}. May be empty.
-     * @since 0.5.4
      */
     public MergeResult(final T result, final List<T> mappingsToMap) {
         this.result = Objects.requireNonNull(result, "Merge action result must not be null");
@@ -99,7 +96,6 @@ public class MergeResult<T> {
 
     /**
      * @return The returned result of the duplicate merge action, may be {@code null}.
-     * @since 0.5.4
      */
     public T getResult() {
         return this.result;
@@ -108,7 +104,6 @@ public class MergeResult<T> {
     /**
      * @return The mappings to map child entries from into the new mapping returned by {@link #getResult()}. Cannot be
      *         {@code null}.
-     * @since 0.5.4
      */
     public List<T> getMappingsToMap() {
         return this.mappingsToMap;

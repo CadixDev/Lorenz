@@ -36,6 +36,7 @@ import org.cadixdev.lorenz.MappingSet;
  * @since 0.5.4
  */
 public enum MethodMergeStrategy {
+
     /**
      * Only match exactly. This either means:
      * <ul>
@@ -46,10 +47,9 @@ public enum MethodMergeStrategy {
      * </ul>
      * For more information regarding continuation and duplicate merges, see the <b>Continuations and Duplicates</b>
      * section of {@link MappingSetMergerHandler}.
-     *
-     * @since 0.5.4
      */
     STRICT,
+
     /**
      * Match the same as {@link #STRICT}, but also match more broadly:
      * <ul>
@@ -60,8 +60,7 @@ public enum MethodMergeStrategy {
      * </ul>
      * For more information regarding continuation and duplicate merges, see the <b>Continuations and Duplicates</b>
      * section of {@link MappingSetMergerHandler}.
-     *
-     * @since 0.5.4
      */
     LOOSE
+
 }

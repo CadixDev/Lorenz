@@ -117,7 +117,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new top level class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<TopLevelClassMapping> mergeTopLevelClassMappings(
         final TopLevelClassMapping left,
@@ -144,7 +143,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new top level class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<TopLevelClassMapping> mergeDuplicateTopLevelClassMappings(
         final TopLevelClassMapping left,
@@ -165,7 +163,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new top level class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<TopLevelClassMapping> addLeftTopLevelClassMapping(final TopLevelClassMapping left, final MappingSet target, final MergeContext context) {
         return new MergeResult<>(target.createTopLevelClassMapping(left.getObfuscatedName(), left.getDeobfuscatedName()));
@@ -180,7 +177,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new top level class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<TopLevelClassMapping> addRightTopLevelClassMapping(final TopLevelClassMapping right, final MappingSet target, final MergeContext context) {
         return new MergeResult<>(target.createTopLevelClassMapping(right.getObfuscatedName(), right.getDeobfuscatedName()), right);
@@ -200,7 +196,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new inner class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<InnerClassMapping> mergeInnerClassMappings(
         final InnerClassMapping left,
@@ -227,7 +222,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new inner class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<InnerClassMapping> mergeDuplicateInnerClassMappings(
         final InnerClassMapping left,
@@ -248,7 +242,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new inner class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<InnerClassMapping> addLeftInnerClassMapping(final InnerClassMapping left, final ClassMapping<?, ?> target, final MergeContext context) {
         return new MergeResult<>(target.createInnerClassMapping(left.getObfuscatedName(), left.getDeobfuscatedName()));
@@ -263,7 +256,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new inner class mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<InnerClassMapping> addRightInnerClassMapping(final InnerClassMapping right, final ClassMapping<?, ?> target, final MergeContext context) {
         return new MergeResult<>(target.createInnerClassMapping(right.getObfuscatedName(), right.getDeobfuscatedName()), right);
@@ -311,7 +303,6 @@ public interface MappingSetMergerHandler {
      * @param target The class mapping to create the new field mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new field mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default FieldMapping mergeFieldMappings(
         final FieldMapping left,
@@ -399,7 +390,6 @@ public interface MappingSetMergerHandler {
      * @param target The class mapping to create the new field mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new field mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default FieldMapping mergeDuplicateFieldMappings(
         final FieldMapping left,
@@ -424,7 +414,6 @@ public interface MappingSetMergerHandler {
      * @param target The class mapping to create the new field mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new field mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default FieldMapping addLeftFieldMapping(final FieldMapping left, final ClassMapping<?, ?> target, final MergeContext context) {
         return target.createFieldMapping(left.getObfuscatedName(), left.getDeobfuscatedName());
@@ -437,7 +426,6 @@ public interface MappingSetMergerHandler {
      * @param target The class mapping to create the new field mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new field mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default FieldMapping addRightFieldMapping(final FieldMapping right, final ClassMapping<?, ?> target, final MergeContext context) {
         final FieldType obfuscatedType = context.getLeftReversed().deobfuscate(right.getType().orElse(null));
@@ -492,7 +480,6 @@ public interface MappingSetMergerHandler {
      * @return The new method mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
      * @see #mergeDuplicateMethodMappings(MethodMapping, MethodMapping, MethodMapping, MethodMapping, MethodMapping, ClassMapping, MergeContext)
-     * @since 0.5.4
      */
     default MergeResult<MethodMapping> mergeMethodMappings(
         final MethodMapping left,
@@ -584,7 +571,6 @@ public interface MappingSetMergerHandler {
      * @return The new method mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
      * @see #mergeMethodMappings(MethodMapping, MethodMapping, MethodMapping, ClassMapping, MergeContext)
-     * @since 0.5.4
      */
     default MergeResult<MethodMapping> mergeDuplicateMethodMappings(
         final MethodMapping left,
@@ -611,7 +597,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new method mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<MethodMapping> addLeftMethodMapping(final MethodMapping left, final ClassMapping<?, ?> target, final MergeContext context) {
         return new MergeResult<>(target.createMethodMapping(left.getSignature(), left.getDeobfuscatedName()));
@@ -626,7 +611,6 @@ public interface MappingSetMergerHandler {
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new method mapping in a merge result. Pass {@code null} to the {@link MergeResult} if the
      *         mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MergeResult<MethodMapping> addRightMethodMapping(final MethodMapping right, final ClassMapping<?, ?> target, final MergeContext context) {
         // We need to make sure the method obfuscated descriptor is mapped to the left side's obfuscated types
@@ -655,7 +639,6 @@ public interface MappingSetMergerHandler {
      * @param target The method mapping to create the new parameter mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new parameter mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MethodParameterMapping mergeParameterMappings(
         final MethodParameterMapping left,
@@ -674,7 +657,6 @@ public interface MappingSetMergerHandler {
      * @param target The method mapping to create the new parameter mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new parameter mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MethodParameterMapping addLeftParameterMapping(
         final MethodParameterMapping left,
@@ -692,7 +674,6 @@ public interface MappingSetMergerHandler {
      * @param target The method mapping to create the new parameter mapping in, never {@code null}.
      * @param context The {@link MergeContext} associated with this merge operation, never {@code null}.
      * @return The new parameter mapping. Return {@code null} if the mapping wasn't merged and should be removed.
-     * @since 0.5.4
      */
     default MethodParameterMapping addRightParameterMapping(
         final MethodParameterMapping right,

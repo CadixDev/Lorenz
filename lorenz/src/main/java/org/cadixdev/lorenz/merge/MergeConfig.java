@@ -51,7 +51,6 @@ public final class MergeConfig {
      *
      * @return The merge handler to use for the merge operation. Never {@code null}.
      * @see MappingSetMergerHandler
-     * @since 0.5.4
      */
     public MappingSetMergerHandler getHandler() {
         return this.handler;
@@ -61,7 +60,6 @@ public final class MergeConfig {
      * The merge strategy to use for merging method mappings for the merge session. Defaults to {@link MethodMergeStrategy#STRICT} when not specified.
      *
      * @return The merge strategy to use for merging method mappings. Never {@code null}.
-     * @since 0.5.4
      */
     public MethodMergeStrategy getMethodMergeStrategy() {
         return this.methodMergeStrategy;
@@ -71,7 +69,6 @@ public final class MergeConfig {
      * The merge strategy to use for merging field mappings for the merge session. Defaults to {@link FieldMergeStrategy#LOOSE} when not specified.
      *
      * @return The merge strategy to use for merging field mappings. Never {@code null}.
-     * @since 0.5.4
      */
     public FieldMergeStrategy getFieldMergeStrategy() {
         return this.fieldMergeStrategy;
@@ -81,7 +78,6 @@ public final class MergeConfig {
      * Create a new {@link Builder} to create new instances of {@link MergeConfig}.
      *
      * @return A new {@link Builder} instance, never {@code null}.
-     * @since 0.5.4
      */
     public static Builder builder() {
         return new Builder();
@@ -112,7 +108,6 @@ public final class MergeConfig {
     /**
      * This builder class creates instances for {@link MergeConfig}.
      * @see MergeConfig
-     * @since 0.5.4
      */
     public static final class Builder {
 
@@ -130,7 +125,6 @@ public final class MergeConfig {
          * @param handler The merge handler to use. Must not be {@code null}.
          * @return {@code this} instance for chaining.
          * @see MergeConfig#getHandler()
-         * @since 0.5.4
          */
         public Builder withMergeHandler(final MappingSetMergerHandler handler) {
             this.handler = Objects.requireNonNull(handler);
@@ -143,7 +137,6 @@ public final class MergeConfig {
          * @param methodMergeStrategy The method merge strategy to use. Must not be {@code null}.
          * @return {@code this} instance for chaining.
          * @see MergeConfig#getMethodMergeStrategy()
-         * @since 0.5.4
          */
         public Builder withMethodMergeStrategy(final MethodMergeStrategy methodMergeStrategy) {
             this.methodMergeStrategy = Objects.requireNonNull(methodMergeStrategy);
@@ -156,7 +149,6 @@ public final class MergeConfig {
          * @param fieldMergeStrategy The field merge strategy to use. Must not be {@code null}.
          * @return {@code this} instance for chaining.
          * @see MergeConfig#getFieldMergeStrategy()
-         * @since 0.5.4
          */
         public Builder withFieldMergeStrategy(final FieldMergeStrategy fieldMergeStrategy) {
             this.fieldMergeStrategy = Objects.requireNonNull(fieldMergeStrategy);
@@ -167,7 +159,6 @@ public final class MergeConfig {
          * Create the {@link MergeConfig} from this object.
          *
          * @return The merge config created from this builder. Never {@code null}.
-         * @since 0.5.4
          */
         public MergeConfig build() {
             return new MergeConfig(this.handler, this.methodMergeStrategy, this.fieldMergeStrategy);

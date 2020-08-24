@@ -25,8 +25,9 @@
 
 package org.cadixdev.lorenz.merge;
 
-import java.util.Objects;
 import org.cadixdev.lorenz.MappingSet;
+
+import java.util.Objects;
 
 /**
  * <p>
@@ -65,7 +66,6 @@ public class MergeContext {
      *
      * @param left The {@code left} mapping set, must not be {@code null}.
      * @param right The {@code right} mapping set, must not be {@code null}.
-     * @since 0.5.4
      */
     public MergeContext(final MappingSet left, final MappingSet right) {
         this.left = Objects.requireNonNull(left, "Left MappingSet may not be null");
@@ -74,7 +74,6 @@ public class MergeContext {
 
     /**
      * @return The {@code left} {@link MappingSet} for the merge operation, not {@code null}.
-     * @since 0.5.4
      */
     public MappingSet getLeft() {
         return this.left;
@@ -82,7 +81,6 @@ public class MergeContext {
 
     /**
      * @return The {@code right} {@link MappingSet} for the merge operation, not {@code null}.
-     * @since 0.5.4
      */
     public MappingSet getRight() {
         return this.right;
@@ -92,7 +90,6 @@ public class MergeContext {
      * @return The {@link #getRight() right} {@link MappingSet} for the merge operation, but reversed. Never
      *         {@code null}. This method computes the value on first query and caches the result, making it more
      *         efficient than calling {@link MappingSet#reverse()} yourself.
-     * @since 0.5.4
      */
     public MappingSet getLeftReversed() {
         MappingSet ctx = this.leftReversed;
@@ -116,7 +113,6 @@ public class MergeContext {
      * @return The {@link #getRight() right} {@link MappingSet} for the merge operation, but reversed. Never
      *         {@code null}. This method computes the value on first query and caches the result, making it more
      *         efficient than calling {@link MappingSet#reverse()} yourself.
-     * @since 0.5.4
      */
     public MappingSet getRightReversed() {
         MappingSet ctx = this.rightReversed;
