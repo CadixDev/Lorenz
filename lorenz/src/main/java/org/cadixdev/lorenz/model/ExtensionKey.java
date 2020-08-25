@@ -47,6 +47,8 @@ public class ExtensionKey<T> {
     }
 
     /**
+     * @param obj Object to be cast
+     * @return Object cast to {@code T}
      * @see Class#cast(Object)
      */
     public T cast(final Object obj) {

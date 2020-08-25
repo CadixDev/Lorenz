@@ -33,6 +33,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Optional;
 
+/**
+ * The ProGuard mapping format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.5.1
+ */
 public class ProGuardFormat implements TextMappingFormat {
 
     @Override

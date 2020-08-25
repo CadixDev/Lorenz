@@ -33,17 +33,34 @@ import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
 import org.cadixdev.bombe.type.VoidType;
 
+/**
+ * A {@link StringReader reader} for {@link Type types} within the ProGuard
+ * mapping format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.5.1
+ */
 public class PGTypeReader extends StringReader {
 
     public PGTypeReader(final String source) {
         super(source);
     }
 
+    /**
+     * Reads a {@link Type type} from the source.
+     *
+     * @return A type
+     */
     public Type readType() {
         if (this.match("void")) return VoidType.INSTANCE;
         return this.readFieldType();
     }
 
+    /**
+     * Reads a {@link FieldType field type} from the source.
+     *
+     * @return A field type
+     */
     public FieldType readFieldType() {
         while (this.available() && this.peek() != '[') {
             this.advance();

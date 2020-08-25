@@ -28,7 +28,9 @@ package org.cadixdev.lorenz.io.proguard;
 import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.Type;
+import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.io.MappingsReader;
 import org.cadixdev.lorenz.io.TextMappingsReader;
 import org.cadixdev.lorenz.model.ClassMapping;
 
@@ -37,20 +39,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of {@link MappingsReader} for the ProGuard format.
+ *
+ * @author Jamie Mansfield
+ * @since 0.5.1
+ */
 public class ProGuardReader extends TextMappingsReader {
 
     public ProGuardReader(final Reader reader) {
         super(reader, Processor::new);
     }
 
-    @Override
-    public MappingSet read(final MappingSet mappings) {
-        return super.read(mappings);
-    }
-
     public static class Processor extends TextMappingsReader.Processor {
 
-        private ClassMapping currentClass;
+        private ClassMapping<?, ?> currentClass;
 
         public Processor(final MappingSet mappings) {
             super(mappings);
@@ -99,7 +102,8 @@ public class ProGuardReader extends TextMappingsReader {
                 }
                 // field
                 else {
-                    this.currentClass.getOrCreateFieldMapping(obf)
+                    final FieldSignature fieldSignature = new FieldSignature(obf, new PGTypeReader(returnTypeRaw).readFieldType());
+                    this.currentClass.getOrCreateFieldMapping(fieldSignature)
                             .setDeobfuscatedName(deobf);
                 }
             }
