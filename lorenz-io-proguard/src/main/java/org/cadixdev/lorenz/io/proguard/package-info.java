@@ -25,7 +25,7 @@
 
 /**
  * The Lorenz-provided implementation of the
- * <a link="https://www.guardsquare.com/en/products/proguard">ProGuard</a> mapping.txt
+ * <a href="https://www.guardsquare.com/en/products/proguard">ProGuard</a> mapping.txt
  * format.
  * <p>
  * Currently we can only support reading ProGuard files, as Lorenz doesn't have a model
