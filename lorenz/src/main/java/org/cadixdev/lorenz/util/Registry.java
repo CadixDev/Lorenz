@@ -104,6 +104,7 @@ public class Registry<T> {
     }
 
     /**
+     * @param consumer The action to be performed for each entry
      * @see Map#forEach(BiConsumer)
      */
     public void forEach(final BiConsumer<String, T> consumer) {

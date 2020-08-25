@@ -20,7 +20,7 @@ subprojects {
 
     group = 'org.cadixdev'
     archivesBaseName = project.name.toLowerCase()
-    version = '0.5.3'
+    version = '0.5.4'
 
     repositories {
         mavenCentral()
@@ -46,6 +46,20 @@ subprojects {
 
     processResources {
         from 'LICENSE.txt'
+    }
+
+    javadoc {
+        def javadocArgsFile = project.file("${project.buildDir}/tmp/javadoc-tags.options")
+        doFirst {
+            javadocArgsFile.parentFile.mkdirs()
+            // These tags aren't supported by default, though they are standard in the JDK
+            // (and most tools, including IntelliJ, understand them by default)
+            javadocArgsFile.write("""-tag "apiNote:a:API Note:"
+-tag "implSpec:a:Implementation Requirements:"
+-tag "implNote:a:Implementation Note:"
+""")
+        }
+        options.optionFiles(javadocArgsFile)
     }
 
     task javadocJar(type: Jar, dependsOn: 'javadoc') {

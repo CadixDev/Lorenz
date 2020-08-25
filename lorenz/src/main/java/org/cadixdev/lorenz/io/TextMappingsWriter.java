@@ -64,6 +64,7 @@ public abstract class TextMappingsWriter extends MappingsWriter {
 
     @Override
     public void close() throws IOException {
+        this.writer.flush();
         this.writer.close();
     }
 
