@@ -25,7 +25,7 @@
 
 package org.cadixdev.lorenz.asm;
 
-import org.cadixdev.bombe.jar.ClassProvider;
+import org.cadixdev.bombe.provider.ClassProvider;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.bombe.type.FieldType;
