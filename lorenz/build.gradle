@@ -17,3 +17,7 @@ javadoc {
             'https://docs.oracle.com/javase/8/docs/api/'
     )
 }
+
+jar {
+    manifest.attributes("Automatic-Module-Name": "${project.group}.lorenz")
+}

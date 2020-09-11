@@ -8,3 +8,7 @@ javadoc {
             'http://docs.groovy-lang.org/2.5.8/html/gapi/'
     )
 }
+
+jar {
+    manifest.attributes("Automatic-Module-Name": "${project.group}.lorenz.dsl.groovy")
+}
