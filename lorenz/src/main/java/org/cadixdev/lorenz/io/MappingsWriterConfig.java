@@ -115,39 +115,45 @@ public class MappingsWriterConfig {
          * Sets the class mapping comparator to be used for writing mappings.
          *
          * @param classMappingComparator The class mapping comparator
+         * @return {@code this} for chaining
          */
-        public void classMappingComparator(final Comparator<ClassMapping<?, ?>> classMappingComparator) {
+        public Builder classMappingComparator(final Comparator<ClassMapping<?, ?>> classMappingComparator) {
             if (classMappingComparator == null) {
                 throw new IllegalArgumentException("classMappingComparator cannot be null!");
             }
 
             this.classMappingComparator = classMappingComparator;
+            return this;
         }
 
         /**
          * Sets the field mapping comparator to be used for writing mappings.
          *
          * @param fieldMappingComparator The field mapping comparator
+         * @return {@code this} for chaining
          */
-        public void fieldMappingComparator(final Comparator<FieldMapping> fieldMappingComparator) {
+        public Builder fieldMappingComparator(final Comparator<FieldMapping> fieldMappingComparator) {
             if (fieldMappingComparator == null) {
                 throw new IllegalArgumentException("fieldMappingComparator cannot be null!");
             }
 
             this.fieldMappingComparator = fieldMappingComparator;
+            return this;
         }
 
         /**
          * Sets the method mapping comparator to be used for writing mappings.
          *
          * @param methodMappingComparator The method mapping comparator
+         * @return {@code this} for chaining
          */
-        public void methodMappingComparator(final Comparator<MethodMapping> methodMappingComparator) {
+        public Builder methodMappingComparator(final Comparator<MethodMapping> methodMappingComparator) {
             if (methodMappingComparator == null) {
                 throw new IllegalArgumentException("methodMappingComparator cannot be null!");
             }
 
             this.methodMappingComparator = methodMappingComparator;
+            return this;
         }
 
         /**
