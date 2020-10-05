@@ -130,6 +130,23 @@ public interface MappingFormat {
     }
 
     /**
+     * Writes a mapping set to file, applying the given
+     * {@link MappingsWriterConfig writer configuration} before writing.
+     *
+     * @param mappings The mapping set to write
+     * @param path The path of the mappings file
+     * @param config The writer configuration
+     * @throws IOException Should an I/O issue occur
+     * @since 0.5.5
+     */
+    default void write(final MappingSet mappings, final Path path, final MappingsWriterConfig config) throws IOException {
+        try (final MappingsWriter writer = this.createWriter(path)) {
+            writer.setConfig(config);
+            writer.write(mappings);
+        }
+    }
+
+    /**
      * Gets the typically used file extension for the format, if available.
      *
      * @return The standard file extension

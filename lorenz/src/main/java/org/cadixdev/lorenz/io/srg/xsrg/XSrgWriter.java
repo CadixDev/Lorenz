@@ -65,7 +65,7 @@ public class XSrgWriter extends TextMappingsWriter {
         // Write class mappings
         mappings.getTopLevelClassMappings().stream()
                 .filter(ClassMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(this.getConfig().getClassMappingComparator())
                 .forEach(this::writeClassMapping);
 
         // Write everything to the print writer
@@ -93,19 +93,19 @@ public class XSrgWriter extends TextMappingsWriter {
         // Write inner class mappings
         mapping.getInnerClassMappings().stream()
                 .filter(ClassMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(this.getConfig().getClassMappingComparator())
                 .forEach(this::writeClassMapping);
 
         // Write field mappings
         mapping.getFieldMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_FIELDS)
+                .sorted(this.getConfig().getFieldMappingComparator())
                 .forEach(this::writeFieldMapping);
 
         // Write method mappings
         mapping.getMethodMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_METHODS)
+                .sorted(this.getConfig().getMethodMappingComparator())
                 .forEach(this::writeMethodMapping);
     }
 
