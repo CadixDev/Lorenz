@@ -115,11 +115,12 @@ public class MappingsWriterConfig {
          * Sets the class mapping comparator to be used for writing mappings.
          *
          * @param classMappingComparator The class mapping comparator
+         * @throws NullPointerException If {@code classMappingComparator} is {@code null}
          * @return {@code this} for chaining
          */
         public Builder classMappingComparator(final Comparator<ClassMapping<?, ?>> classMappingComparator) {
             if (classMappingComparator == null) {
-                throw new IllegalArgumentException("classMappingComparator cannot be null!");
+                throw new NullPointerException("classMappingComparator cannot be null!");
             }
 
             this.classMappingComparator = classMappingComparator;
@@ -130,11 +131,12 @@ public class MappingsWriterConfig {
          * Sets the field mapping comparator to be used for writing mappings.
          *
          * @param fieldMappingComparator The field mapping comparator
+         * @throws NullPointerException If {@code fieldMappingComparator} is {@code null}
          * @return {@code this} for chaining
          */
         public Builder fieldMappingComparator(final Comparator<FieldMapping> fieldMappingComparator) {
             if (fieldMappingComparator == null) {
-                throw new IllegalArgumentException("fieldMappingComparator cannot be null!");
+                throw new NullPointerException("fieldMappingComparator cannot be null!");
             }
 
             this.fieldMappingComparator = fieldMappingComparator;
@@ -145,11 +147,12 @@ public class MappingsWriterConfig {
          * Sets the method mapping comparator to be used for writing mappings.
          *
          * @param methodMappingComparator The method mapping comparator
+         * @throws NullPointerException If {@code methodMappingComparator} is {@code null}
          * @return {@code this} for chaining
          */
         public Builder methodMappingComparator(final Comparator<MethodMapping> methodMappingComparator) {
             if (methodMappingComparator == null) {
-                throw new IllegalArgumentException("methodMappingComparator cannot be null!");
+                throw new NullPointerException("methodMappingComparator cannot be null!");
             }
 
             this.methodMappingComparator = methodMappingComparator;

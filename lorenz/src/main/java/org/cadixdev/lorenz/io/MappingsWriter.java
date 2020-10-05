@@ -113,12 +113,12 @@ public abstract class MappingsWriter implements Closeable {
      * to fit the environment in use.
      *
      * @param config The writer configuration
-     * @throws IllegalArgumentException If {@code config} is {@code null}
+     * @throws NullPointerException If {@code config} is {@code null}
      * @since 0.5.5
      */
     public void setConfig(final MappingsWriterConfig config) {
         if (config == null) {
-            throw new IllegalArgumentException("config cannot be null!");
+            throw new NullPointerException("config cannot be null!");
         }
 
         this.config = config;
