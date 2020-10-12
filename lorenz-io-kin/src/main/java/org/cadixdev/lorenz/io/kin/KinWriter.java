@@ -127,7 +127,7 @@ public class KinWriter extends BinaryMappingsWriter {
             final Comparator<T> comparator,
             final Predicate<T> filter
     ) {
-        final List<T> mappings = new ArrayList<>();
+        final List<T> mappings = new ArrayList<>(original.size());
         for (final T mapping : original) {
             if (!filter.test(mapping)) continue;
             mappings.add(mapping);
