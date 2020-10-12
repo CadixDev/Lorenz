@@ -39,7 +39,7 @@ import java.util.function.Function;
 /**
  * Represents a writer, that is capable of writing de-obfuscation
  * mappings.
- *
+ * <p>
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
  *
@@ -53,7 +53,11 @@ public abstract class MappingsWriter implements Closeable {
 
     /**
      * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
+     *
+     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getClassMappingComparator()}
+     *             instead
      */
+    @Deprecated
     protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
             comparingLength(Mapping::getFullObfuscatedName);
 
@@ -61,7 +65,10 @@ public abstract class MappingsWriter implements Closeable {
      * A {@link Comparator} used to alphabetise a collection of {@link FieldMapping}s.
      *
      * @since 0.5.0
+     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getFieldMappingComparator()}
+     *             instead
      */
+    @Deprecated
     protected static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
             Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getType().map(FieldType::toString).orElse(""));
 
@@ -69,7 +76,10 @@ public abstract class MappingsWriter implements Closeable {
      * A {@link Comparator} used to alphabetise a collection of {@link MethodMapping}s.
      *
      * @since 0.5.0
+     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getMethodMappingComparator()}
+     *             instead
      */
+    @Deprecated
     protected static final Comparator<MethodMapping> ALPHABETISE_METHODS =
             Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getDescriptor().toString());
 
@@ -82,6 +92,36 @@ public abstract class MappingsWriter implements Closeable {
             }
             return key1.compareTo(key2);
         };
+    }
+
+    protected MappingsWriterConfig config = MappingsWriterConfig.builder().build();
+
+    /**
+     * Gets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer.
+     *
+     * @return The writer configuration
+     * @since 0.5.5
+     */
+    public MappingsWriterConfig getConfig() {
+        return this.config;
+    }
+
+    /**
+     * Sets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer - allowing the output of the writer to be fine-tuned
+     * to fit the environment in use.
+     *
+     * @param config The writer configuration
+     * @throws NullPointerException If {@code config} is {@code null}
+     * @since 0.5.5
+     */
+    public void setConfig(final MappingsWriterConfig config) {
+        if (config == null) {
+            throw new NullPointerException("config cannot be null!");
+        }
+
+        this.config = config;
     }
 
     /**

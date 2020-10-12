@@ -69,7 +69,7 @@ public class KinWriter extends BinaryMappingsWriter {
         // write classes
         final List<TopLevelClassMapping> classes = getSortedAndFilteredList(
                 mappings.getTopLevelClassMappings(),
-                ALPHABETISE_MAPPINGS::compare,
+                this.getConfig().getClassMappingComparator()::compare,
                 ClassMapping::hasMappings
         );
         this.stream.writeInt(classes.size());
@@ -85,7 +85,7 @@ public class KinWriter extends BinaryMappingsWriter {
         // write fields
         final List<FieldMapping> fields = getSortedAndFilteredList(
                 mapping.getFieldMappings(),
-                ALPHABETISE_FIELDS,
+                this.getConfig().getFieldMappingComparator(),
                 Mapping::hasDeobfuscatedName
         );
         this.stream.writeInt(fields.size());
@@ -100,7 +100,7 @@ public class KinWriter extends BinaryMappingsWriter {
         // write methods
         final List<MethodMapping> methods = getSortedAndFilteredList(
                 mapping.getMethodMappings(),
-                ALPHABETISE_METHODS,
+                this.getConfig().getMethodMappingComparator(),
                 MethodMapping::hasMappings
         );
         this.stream.writeInt(methods.size());
@@ -113,7 +113,7 @@ public class KinWriter extends BinaryMappingsWriter {
         // write inner classes
         final List<InnerClassMapping> innerClases = getSortedAndFilteredList(
                 mapping.getInnerClassMappings(),
-                ALPHABETISE_MAPPINGS::compare,
+                this.getConfig().getClassMappingComparator()::compare,
                 ClassMapping::hasMappings
         );
         this.stream.writeInt(innerClases.size());
