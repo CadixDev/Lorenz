@@ -32,12 +32,18 @@ import org.cadixdev.lorenz.io.MappingsWriter;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
+import org.cadixdev.lorenz.model.Mapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -61,8 +67,13 @@ public class KinWriter extends BinaryMappingsWriter {
         this.stream.writeInt(0);
 
         // write classes
-        this.stream.writeInt(mappings.getTopLevelClassMappings().size());
-        for (final TopLevelClassMapping klass : mappings.getTopLevelClassMappings()) {
+        final List<TopLevelClassMapping> classes = getSortedAndFilteredList(
+                mappings.getTopLevelClassMappings(),
+                ALPHABETISE_MAPPINGS::compare,
+                ClassMapping::hasMappings
+        );
+        this.stream.writeInt(classes.size());
+        for (final TopLevelClassMapping klass : classes) {
             this.writeClass(klass);
         }
     }
@@ -72,8 +83,13 @@ public class KinWriter extends BinaryMappingsWriter {
         this.stream.writeUTF(mapping.getDeobfuscatedName());
 
         // write fields
-        this.stream.writeInt(mapping.getFieldMappings().size());
-        for (final FieldMapping field : mapping.getFieldMappings()) {
+        final List<FieldMapping> fields = getSortedAndFilteredList(
+                mapping.getFieldMappings(),
+                ALPHABETISE_FIELDS,
+                Mapping::hasDeobfuscatedName
+        );
+        this.stream.writeInt(fields.size());
+        for (final FieldMapping field : fields) {
             this.stream.writeUTF(field.getObfuscatedName());
             final Optional<FieldType> type = field.getType();
             this.stream.writeBoolean(type.isPresent());
@@ -82,18 +98,42 @@ public class KinWriter extends BinaryMappingsWriter {
         }
 
         // write methods
-        this.stream.writeInt(mapping.getMethodMappings().size());
-        for (final MethodMapping method : mapping.getMethodMappings()) {
+        final List<MethodMapping> methods = getSortedAndFilteredList(
+                mapping.getMethodMappings(),
+                ALPHABETISE_METHODS,
+                MethodMapping::hasMappings
+        );
+        this.stream.writeInt(methods.size());
+        for (final MethodMapping method : methods) {
             this.stream.writeUTF(method.getObfuscatedName());
             this.stream.writeUTF(method.getObfuscatedDescriptor());
             this.stream.writeUTF(method.getDeobfuscatedName());
         }
 
         // write inner classes
-        this.stream.writeInt(mapping.getInnerClassMappings().size());
-        for (final InnerClassMapping inner : mapping.getInnerClassMappings()) {
+        final List<InnerClassMapping> innerClases = getSortedAndFilteredList(
+                mapping.getInnerClassMappings(),
+                ALPHABETISE_MAPPINGS::compare,
+                ClassMapping::hasMappings
+        );
+        this.stream.writeInt(innerClases.size());
+        for (final InnerClassMapping inner : innerClases) {
             this.writeClass(inner);
         }
+    }
+
+    private static <T> List<T> getSortedAndFilteredList(
+            final Collection<T> original,
+            final Comparator<T> comparator,
+            final Predicate<T> filter
+    ) {
+        final List<T> mappings = new ArrayList<>();
+        for (final T mapping : original) {
+            if (!filter.test(mapping)) continue;
+            mappings.add(mapping);
+        }
+        mappings.sort(comparator);
+        return mappings;
     }
 
 }
