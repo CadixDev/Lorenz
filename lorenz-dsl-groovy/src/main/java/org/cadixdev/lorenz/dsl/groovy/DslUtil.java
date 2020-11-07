@@ -23,49 +23,34 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.dsl;
+package org.cadixdev.lorenz.dsl.groovy;
 
-import org.cadixdev.lorenz.model.ExtensionKey;
-import org.cadixdev.lorenz.model.Mapping;
+import groovy.lang.Closure;
+
+import java.util.function.Function;
 
 /**
- * A DSL to simplify the manipulation of {@link Mapping}s in Groovy.
+ * Internal utility functions for the Lorenz Groovy DSL.
  *
- * @param <T> The type of the mapping
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class MappingDsl<T extends Mapping<?, ?>> {
+class DslUtil {
 
-    /**
-     * The mapping manipulated by this DSL.
-     */
-    protected final T mapping;
+    static final int RESOLVE_STRATEGY = Closure.DELEGATE_FIRST;
 
-    public MappingDsl(final T mapping) {
-        this.mapping = mapping;
+    static void setupAndCallDelegateClosure(final Object delegate, final Closure<?> script) {
+        script.setResolveStrategy(DslUtil.RESOLVE_STRATEGY);
+        script.setDelegate(delegate);
+        script.call();
     }
 
-    /**
-     * Sets the de-obfuscated name of the mapping.
-     *
-     * @param name The de-obfuscated name
-     * @see Mapping#setDeobfuscatedName(String)
-     */
-    public void setDeobf(final String name) {
-        this.mapping.setDeobfuscatedName(name);
+    static <T> T delegate(final T obj, final Function<T, Object> delegate, final Closure<?> script) {
+        setupAndCallDelegateClosure(delegate.apply(obj), script);
+        return obj;
     }
 
-    /**
-     * Adds the given extension data to the mapping.
-     *
-     * @param key The extension key
-     * @param value The value of the extension
-     * @param <K> The type of the extension data
-     * @see Mapping#set(ExtensionKey, Object)
-     */
-    public <K> void extension(final ExtensionKey<K> key, final K value) {
-        this.mapping.set(key, value);
+    private DslUtil() {
     }
 
 }

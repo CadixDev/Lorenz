@@ -23,10 +23,10 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.dsl.test
+package org.cadixdev.lorenz.dsl.groovy.test
 
 import org.cadixdev.lorenz.MappingSet
-import org.cadixdev.lorenz.dsl.MappingSetDsl
+import org.cadixdev.lorenz.dsl.groovy.MappingSetDsl
 import org.cadixdev.lorenz.model.ExtensionKey
 import org.cadixdev.lorenz.model.FieldMapping
 import org.cadixdev.lorenz.model.InnerClassMapping

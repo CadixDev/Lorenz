@@ -23,7 +23,7 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.dsl;
+package org.cadixdev.lorenz.dsl.groovy;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;

@@ -26,7 +26,7 @@
 package org.cadixdev.lorenz.test
 
 import org.cadixdev.lorenz.MappingSet
-import org.cadixdev.lorenz.dsl.MappingSetDsl
+import org.cadixdev.lorenz.dsl.groovy.MappingSetDsl
 import org.cadixdev.lorenz.model.TopLevelClassMapping
 import spock.lang.Specification
 

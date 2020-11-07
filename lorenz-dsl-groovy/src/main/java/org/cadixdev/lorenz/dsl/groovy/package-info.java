@@ -23,40 +23,21 @@
  * THE SOFTWARE.
  */
 
-package org.cadixdev.lorenz.dsl;
-
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import org.cadixdev.lorenz.model.MethodMapping;
-import org.cadixdev.lorenz.model.MethodParameterMapping;
-
 /**
- * A DSL to simplify the manipulation of {@link MethodMapping}s in Groovy.
+ * A Groovy DSL, that simplifies the creation of Lorenz mappings.
+ *
+ * <pre>
+ *     def mappings = MappingSetDsl.create {
+ *         klass('a') {
+ *             deobf = 'Demo'
+ *             extension EXTRA, 'a.class'
+ *             field('g') { deobf = 'name' }
+ *             method('h', '()Ljava/lang/String;') { deobf = 'getName' }
+ *         }
+ *     }
+ * </pre>
  *
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class MethodMappingDsl extends MappingDsl<MethodMapping> {
-
-    public MethodMappingDsl(final MethodMapping mapping) {
-        super(mapping);
-    }
-
-    /**
-     * Creates a method parameter mapping for the given index,
-     * and applies the given {@link Closure} to it.
-     *
-     * @param index The index of the parameter
-     * @param script The closure to use
-     * @return The mapping
-     * @see MethodMapping#getOrCreateParameterMapping(int)
-     */
-    public MethodParameterMapping param(
-            final int index,
-            @DelegatesTo(strategy = DslUtil.RESOLVE_STRATEGY, value = MappingDsl.class) final Closure<?> script) {
-        return DslUtil.delegate(
-                this.mapping.getOrCreateParameterMapping(index),
-                MappingDsl::new, script);
-    }
-
-}
+package org.cadixdev.lorenz.dsl.groovy;

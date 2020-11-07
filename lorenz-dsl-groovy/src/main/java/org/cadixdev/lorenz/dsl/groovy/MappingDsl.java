@@ -23,21 +23,49 @@
  * THE SOFTWARE.
  */
 
+package org.cadixdev.lorenz.dsl.groovy;
+
+import org.cadixdev.lorenz.model.ExtensionKey;
+import org.cadixdev.lorenz.model.Mapping;
+
 /**
- * A Groovy DSL, that simplifies the creation of Lorenz mappings.
+ * A DSL to simplify the manipulation of {@link Mapping}s in Groovy.
  *
- * <pre>
- *     def mappings = MappingSetDsl.create {
- *         klass('a') {
- *             deobf = 'Demo'
- *             extension EXTRA, 'a.class'
- *             field('g') { deobf = 'name' }
- *             method('h', '()Ljava/lang/String;') { deobf = 'getName' }
- *         }
- *     }
- * </pre>
- *
+ * @param <T> The type of the mapping
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-package org.cadixdev.lorenz.dsl;
+public class MappingDsl<T extends Mapping<?, ?>> {
+
+    /**
+     * The mapping manipulated by this DSL.
+     */
+    protected final T mapping;
+
+    public MappingDsl(final T mapping) {
+        this.mapping = mapping;
+    }
+
+    /**
+     * Sets the de-obfuscated name of the mapping.
+     *
+     * @param name The de-obfuscated name
+     * @see Mapping#setDeobfuscatedName(String)
+     */
+    public void setDeobf(final String name) {
+        this.mapping.setDeobfuscatedName(name);
+    }
+
+    /**
+     * Adds the given extension data to the mapping.
+     *
+     * @param key The extension key
+     * @param value The value of the extension
+     * @param <K> The type of the extension data
+     * @see Mapping#set(ExtensionKey, Object)
+     */
+    public <K> void extension(final ExtensionKey<K> key, final K value) {
+        this.mapping.set(key, value);
+    }
+
+}
