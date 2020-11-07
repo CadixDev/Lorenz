@@ -95,7 +95,7 @@ public class EnigmaWriter extends TextMappingsWriter {
     public void write(final MappingSet mappings) throws IOException {
         mappings.getTopLevelClassMappings().stream()
                 .filter(ClassMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(this.getConfig().getClassMappingComparator())
                 .forEach(klass -> this.writeClassMapping(klass, 0));
     }
 
@@ -114,19 +114,19 @@ public class EnigmaWriter extends TextMappingsWriter {
         // Write inner class mappings
         klass.getInnerClassMappings().stream()
                 .filter(ClassMapping::hasMappings)
-                .sorted(ALPHABETISE_MAPPINGS)
+                .sorted(this.getConfig().getClassMappingComparator())
                 .forEach(inner -> this.writeClassMapping(inner, indent + 1));
 
         // Write field mappings
         klass.getFieldMappings().stream()
                 .filter(Mapping::hasDeobfuscatedName)
-                .sorted(ALPHABETISE_FIELDS)
+                .sorted(this.getConfig().getFieldMappingComparator())
                 .forEach(field -> this.writeFieldMapping(field, indent + 1));
 
         // Write method mappings
         klass.getMethodMappings().stream()
                 .filter(MethodMapping::hasMappings)
-                .sorted(ALPHABETISE_METHODS)
+                .sorted(this.getConfig().getMethodMappingComparator())
                 .forEach(method -> this.writeMethodMapping(method, indent + 1));
     }
 
