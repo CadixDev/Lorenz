@@ -39,7 +39,7 @@ import java.util.function.Function;
 /**
  * Represents a writer, that is capable of writing de-obfuscation
  * mappings.
- *
+ * <p>
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
  *
@@ -51,37 +51,34 @@ import java.util.function.Function;
  */
 public abstract class MappingsWriter implements Closeable {
 
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
-     */
-    public static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
-            comparingLength(Mapping::getFullObfuscatedName);
+    protected MappingsWriterConfig config = MappingsWriterConfig.builder().build();
 
     /**
-     * A {@link Comparator} used to alphabetise a collection of {@link FieldMapping}s.
+     * Gets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer.
      *
-     * @since 0.5.0
+     * @return The writer configuration
+     * @since 0.5.5
      */
-    public static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
-            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getType().map(FieldType::toString).orElse(""));
+    public MappingsWriterConfig getConfig() {
+        return this.config;
+    }
 
     /**
-     * A {@link Comparator} used to alphabetise a collection of {@link MethodMapping}s.
+     * Sets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer - allowing the output of the writer to be fine-tuned
+     * to fit the environment in use.
      *
-     * @since 0.5.0
+     * @param config The writer configuration
+     * @throws NullPointerException If {@code config} is {@code null}
+     * @since 0.5.5
      */
-    public static final Comparator<MethodMapping> ALPHABETISE_METHODS =
-            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getDescriptor().toString());
+    public void setConfig(final MappingsWriterConfig config) {
+        if (config == null) {
+            throw new NullPointerException("config cannot be null!");
+        }
 
-    private static <T> Comparator<T> comparingLength(final Function<? super T, String> keyExtractor) {
-        return (c1, c2) -> {
-            final String key1 = keyExtractor.apply(c1);
-            final String key2 = keyExtractor.apply(c2);
-            if (key1.length() != key2.length()) {
-                return key1.length() - key2.length();
-            }
-            return key1.compareTo(key2);
-        };
+        this.config = config;
     }
 
     /**
