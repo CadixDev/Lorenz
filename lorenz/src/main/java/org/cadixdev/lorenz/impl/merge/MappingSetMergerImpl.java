@@ -69,12 +69,15 @@ public class MappingSetMergerImpl implements MappingSetMerger {
 
     private final MergeContext context;
 
+    private final int parallelism;
+
     public MappingSetMergerImpl(final MappingSet left, final MappingSet right, final MergeConfig config) {
         this.left = left;
         this.right = right;
         this.handler = config.getHandler();
         this.methodMergeStrategy = config.getMethodMergeStrategy();
         this.fieldMergeStrategy = config.getFieldMergeStrategy();
+        this.parallelism = config.getParallelism();
 
         this.context = new MergeContext(this.left, this.right);
     }
@@ -83,7 +86,13 @@ public class MappingSetMergerImpl implements MappingSetMerger {
     public MappingSet merge(final MappingSet target) {
         final HashSet<String> seenNames = new HashSet<>();
 
-        final ExecutorService executor = Executors.newWorkStealingPool();
+        final ExecutorService executor;
+        if (this.parallelism == -1) {
+            executor = Executors.newWorkStealingPool();
+        } else {
+            executor = Executors.newWorkStealingPool(this.parallelism);
+        }
+
         try {
             final CompletableFuture<Void> leftFuture = CompletableFuture.allOf(this.left.getTopLevelClassMappings().stream()
                 .peek(mapping -> {
@@ -383,9 +392,9 @@ public class MappingSetMergerImpl implements MappingSetMerger {
                     if (this.fieldMergeStrategy == FieldMergeStrategy.LOOSE) {
                         // We filter out loose matches which simply match to the same instance as those aren't actually loose
                         looseRightContinuation = right.getFieldMapping(leftMapping.getDeobfuscatedName())
-                            .filter(m -> m != strictRightContinuation).orElse(null);
+                            .filter(m -> !m.equals(strictRightContinuation)).orElse(null);
                         looseRightDuplicate = right.getFieldMapping(leftMapping.getObfuscatedName())
-                            .filter(m -> m != strictRightDuplicate).orElse(null);
+                            .filter(m -> !m.equals(strictRightDuplicate)).orElse(null);
                     } else {
                         looseRightContinuation = null;
                         looseRightDuplicate = null;
