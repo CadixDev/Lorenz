@@ -48,7 +48,8 @@ import org.cadixdev.lorenz.model.TopLevelClassMapping;
  * More complex situations are likely to occur while merging mappings, so this table will go through the different
  * possible cases and how a mapping set merger handles them in the default implementation:
  * </p>
- * <table style="border-collapse: collapse; border: 1px solid; width: 100%;" summary="Merge Situations">
+ * <table style="border-collapse: collapse; border: 1px solid; width: 100%;">
+ *     <caption>Merge Situations</caption>
  *     <tr style="border-bottom: 1px solid;">
  *         <th style="padding: 8px; width: 18%;">Left</th>
  *         <th style="padding: 8px; width: 18%;">Right</th>
