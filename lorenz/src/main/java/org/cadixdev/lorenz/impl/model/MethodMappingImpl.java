@@ -25,18 +25,18 @@
 
 package org.cadixdev.lorenz.impl.model;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
 import org.cadixdev.bombe.type.signature.MethodSignature;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
  * A basic implementation of {@link MethodMapping}.
@@ -49,7 +49,8 @@ public class MethodMappingImpl
         implements MethodMapping {
 
     private final MethodSignature signature;
-    private final MethodParameterMapping[] parameters;
+
+    private final Map<Integer, MethodParameterMapping> parameters = new ConcurrentHashMap<>();
 
     /**
      * Creates a new method mapping, from the given parameters.
@@ -58,11 +59,9 @@ public class MethodMappingImpl
      * @param signature The signature
      * @param deobfuscatedName The de-obfuscated name
      */
-    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature signature,
-            final String deobfuscatedName) {
+    public MethodMappingImpl(final ClassMapping parentClass, final MethodSignature signature, final String deobfuscatedName) {
         super(parentClass, signature.getName(), deobfuscatedName);
         this.signature = signature;
-        this.parameters = new MethodParameterMapping[signature.getDescriptor().getParamTypes().size()];
     }
 
     @Override
@@ -72,38 +71,25 @@ public class MethodMappingImpl
 
     @Override
     public Collection<MethodParameterMapping> getParameterMappings() {
-        return Collections.unmodifiableList(Arrays.stream(this.parameters)
-                .filter(Objects::nonNull).collect(Collectors.toList()));
-    }
-
-    private void checkIndex(final int index) {
-        if (index < 0 || index >= this.parameters.length) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
+        return Collections.unmodifiableCollection(this.parameters.values());
     }
 
     @Override
     public MethodParameterMapping createParameterMapping(final int index, final String deobfuscatedName) {
-        this.checkIndex(index);
-        final MethodParameterMapping mapping = this.parameters[index];
-        if (mapping != null) {
-            return mapping.setDeobfuscatedName(deobfuscatedName);
-        }
-        else {
-            return this.parameters[index] = this.getMappings().getModelFactory().createMethodParameterMapping(this, index, deobfuscatedName);
-        }
+        return this.parameters.compute(index, (i, mapping) -> {
+            if (mapping != null) return mapping.setDeobfuscatedName(deobfuscatedName);
+            return this.getMappings().getModelFactory().createMethodParameterMapping(this, i, deobfuscatedName);
+        });
     }
 
     @Override
     public Optional<MethodParameterMapping> getParameterMapping(final int index) {
-        this.checkIndex(index);
-        return Optional.ofNullable(this.parameters[index]);
+        return Optional.ofNullable(this.parameters.get(index));
     }
 
     @Override
     public boolean hasParameterMapping(final int index) {
-        this.checkIndex(index);
-        return this.parameters[index] != null;
+        return this.parameters.containsKey(index);
     }
 
     @Override
@@ -125,5 +111,4 @@ public class MethodMappingImpl
     public int hashCode() {
         return Objects.hash(super.hashCode(), this.signature);
     }
-
 }
