@@ -25,18 +25,18 @@
 
 package org.cadixdev.lorenz.impl.model;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.cadixdev.bombe.type.signature.MethodSignature;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
-import org.cadixdev.bombe.type.signature.MethodSignature;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A basic implementation of {@link MethodMapping}.
@@ -49,7 +49,6 @@ public class MethodMappingImpl
         implements MethodMapping {
 
     private final MethodSignature signature;
-
     private final Map<Integer, MethodParameterMapping> parameters = new ConcurrentHashMap<>();
 
     /**
@@ -111,4 +110,5 @@ public class MethodMappingImpl
     public int hashCode() {
         return Objects.hash(super.hashCode(), this.signature);
     }
+
 }
