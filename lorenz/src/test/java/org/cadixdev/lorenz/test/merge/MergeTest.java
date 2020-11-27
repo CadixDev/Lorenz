@@ -38,6 +38,8 @@ import org.cadixdev.lorenz.merge.MergeResult;
 import org.cadixdev.lorenz.merge.MethodMergeStrategy;
 import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -192,6 +194,26 @@ public final class MergeTest {
         ), MergeConfig.builder()
             .withFieldMergeStrategy(FieldMergeStrategy.LOOSE)
             .withMethodMergeStrategy(MethodMergeStrategy.LOOSE)
+            .build());
+    }
+
+    @RepeatedTest(value = 5, name = "parallelMergeTest with " + RepeatedTest.CURRENT_REPETITION_PLACEHOLDER + " threads")
+    public void parallelMergeTest(final RepetitionInfo info) throws IOException {
+        System.out.println(info.getCurrentRepetition());
+        testCase(buildString(
+            "A foo/bar/B",
+            "C bar/baz/D",
+            "E foo/bar/F"
+        ), buildString(
+            "foo/bar/B foo/bar/B",
+            "\ta (ILbar/baz/D;Lfoo/bar/F;J)V new_a"
+        ), buildString(
+            "A foo/bar/B",
+            "\ta (ILC;LE;J)V new_a",
+            "C bar/baz/D",
+            "E foo/bar/F"
+        ), MergeConfig.builder()
+            .withParallelism(info.getCurrentRepetition())
             .build());
     }
 

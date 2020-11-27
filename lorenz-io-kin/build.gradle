@@ -1,7 +1,0 @@
-dependencies {
-    compile project(':lorenz')
-}
-
-jar {
-    manifest.attributes("Automatic-Module-Name": "${project.group}.lorenz.io.kin")
-}

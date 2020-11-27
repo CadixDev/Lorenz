@@ -40,10 +40,17 @@ public final class MergeConfig {
     private final MethodMergeStrategy methodMergeStrategy;
     private final FieldMergeStrategy fieldMergeStrategy;
 
-    MergeConfig(final MappingSetMergerHandler handler, final MethodMergeStrategy methodMergeStrategy, final FieldMergeStrategy fieldMergeStrategy) {
+    private final int parallelism;
+
+    MergeConfig(final MappingSetMergerHandler handler, final MethodMergeStrategy methodMergeStrategy, final FieldMergeStrategy fieldMergeStrategy, final int parallelism) {
         this.handler = Objects.requireNonNull(handler, "handler must not be null");
         this.methodMergeStrategy = Objects.requireNonNull(methodMergeStrategy, "methodMergeStrategy must not be null");
         this.fieldMergeStrategy = Objects.requireNonNull(fieldMergeStrategy, "fieldMergeStrategy must not be null");
+        if (parallelism == -1 || parallelism > 0) {
+            this.parallelism = parallelism;
+        } else {
+            throw new IllegalArgumentException("Illegal parallelism value: " + parallelism);
+        }
     }
 
     /**
@@ -75,6 +82,19 @@ public final class MergeConfig {
     }
 
     /**
+     * The parallelism level to use for the {@link java.util.concurrent.Executors#newWorkStealingPool(int) work stealing pool} used for the merge
+     * session. A value of {@code -1} is the default and means
+     * {@link java.util.concurrent.Executors#newWorkStealingPool() Executors.newWorkStealingPool()} will be used instead to create the work stealing
+     * pool.
+     *
+     * @return The parallelism level to use for the work stealing pool used for the merge.
+     * @since 0.5.6
+     */
+    public int getParallelism() {
+        return this.parallelism;
+    }
+
+    /**
      * Create a new {@link Builder} to create new instances of {@link MergeConfig}.
      *
      * @return A new {@link Builder} instance, never {@code null}.
@@ -88,6 +108,8 @@ public final class MergeConfig {
         return "MergeConfig{" +
             "handler=" + this.handler +
             ", methodMergeStrategy=" + this.methodMergeStrategy +
+            ", fieldMergeStrategy=" + this.fieldMergeStrategy +
+            ", parallelism=" + this.parallelism +
             '}';
     }
 
@@ -95,18 +117,21 @@ public final class MergeConfig {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        final MergeConfig config = (MergeConfig) o;
-        return Objects.equals(this.handler, config.handler) &&
-            this.methodMergeStrategy == config.methodMergeStrategy;
+        final MergeConfig that = (MergeConfig) o;
+        return this.parallelism == that.parallelism
+            && this.handler.equals(that.handler)
+            && this.methodMergeStrategy == that.methodMergeStrategy &&
+            this.fieldMergeStrategy == that.fieldMergeStrategy;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.handler, this.methodMergeStrategy);
+        return Objects.hash(this.handler, this.methodMergeStrategy, this.fieldMergeStrategy, this.parallelism);
     }
 
     /**
      * This builder class creates instances for {@link MergeConfig}.
+     *
      * @see MergeConfig
      */
     public static final class Builder {
@@ -116,6 +141,8 @@ public final class MergeConfig {
         private MethodMergeStrategy methodMergeStrategy = MethodMergeStrategy.STRICT;
 
         private FieldMergeStrategy fieldMergeStrategy = FieldMergeStrategy.LOOSE;
+
+        private int parallelism = -1;
 
         Builder() {}
 
@@ -156,12 +183,31 @@ public final class MergeConfig {
         }
 
         /**
+         * Set the parallelism for the {@link java.util.concurrent.Executors#newWorkStealingPool(int) work stealing pool} for the merge session.
+         * Defaults to {@code -1}, which means to use {@link java.util.concurrent.Executors#newWorkStealingPool() Executors.newWorkStealingPool()}
+         * to create the work stealing pool instead. Providing any value {@code <= 0} to this method will reset it back to the default value.
+         *
+         * @param parallelism The parallelism to use for the work stealing pool for the merge session.
+         * @return {@code this} instance for chaining.
+         * @see MergeConfig#getParallelism()
+         * @since 0.5.6
+         */
+        public Builder withParallelism(final int parallelism) {
+            if (parallelism <= 0) {
+                this.parallelism = -1;
+            } else {
+                this.parallelism = parallelism;
+            }
+            return this;
+        }
+
+        /**
          * Create the {@link MergeConfig} from this object.
          *
          * @return The merge config created from this builder. Never {@code null}.
          */
         public MergeConfig build() {
-            return new MergeConfig(this.handler, this.methodMergeStrategy, this.fieldMergeStrategy);
+            return new MergeConfig(this.handler, this.methodMergeStrategy, this.fieldMergeStrategy, this.parallelism);
         }
     }
 }
