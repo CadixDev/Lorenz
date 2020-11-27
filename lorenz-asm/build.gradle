@@ -1,4 +1,0 @@
-dependencies {
-    compile project(':lorenz')
-    compile "org.cadixdev:bombe-asm:${rootProject.bombeVersion}"
-}
