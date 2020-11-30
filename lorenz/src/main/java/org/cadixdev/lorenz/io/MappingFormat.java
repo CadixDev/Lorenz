@@ -89,7 +89,7 @@ public interface MappingFormat {
      * @throws IOException Should an I/O issue occur
      */
     default MappingSet read(final Path path) throws IOException {
-        return this.read(MappingSet.create(), path);
+        return this.read(new MappingSet(), path);
     }
 
     /**
@@ -125,6 +125,23 @@ public interface MappingFormat {
      */
     default void write(final MappingSet mappings, final Path path) throws IOException {
         try (final MappingsWriter writer = this.createWriter(path)) {
+            writer.write(mappings);
+        }
+    }
+
+    /**
+     * Writes a mapping set to file, applying the given
+     * {@link MappingsWriterConfig writer configuration} before writing.
+     *
+     * @param mappings The mapping set to write
+     * @param path The path of the mappings file
+     * @param config The writer configuration
+     * @throws IOException Should an I/O issue occur
+     * @since 0.5.5
+     */
+    default void write(final MappingSet mappings, final Path path, final MappingsWriterConfig config) throws IOException {
+        try (final MappingsWriter writer = this.createWriter(path)) {
+            writer.setConfig(config);
             writer.write(mappings);
         }
     }

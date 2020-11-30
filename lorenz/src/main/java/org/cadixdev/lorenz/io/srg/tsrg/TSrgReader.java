@@ -74,7 +74,7 @@ public class TSrgReader extends TextMappingsReader {
          * Creates a mappings parser for the TSRG format.
          */
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override
@@ -82,7 +82,7 @@ public class TSrgReader extends TextMappingsReader {
             final String line = SrgConstants.removeComments(rawLine);
             if (line.isEmpty()) return;
 
-            if (line.length() < 4) {
+            if (line.length() < 3) {
                 throw new IllegalArgumentException("Faulty TSRG mapping encountered: `" + line + "`!");
             }
 

@@ -1,4 +1,0 @@
-rootProject.name = name
-include 'lorenz'
-include 'lorenz-asm'
-

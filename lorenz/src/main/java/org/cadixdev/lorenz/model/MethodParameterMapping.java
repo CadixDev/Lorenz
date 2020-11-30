@@ -25,6 +25,8 @@
 
 package org.cadixdev.lorenz.model;
 
+import org.cadixdev.lorenz.merge.MappingSetMerger;
+
 /**
  * Represents a de-obfuscation mapping for a method parameter,
  * identified by index.
@@ -53,7 +55,7 @@ public interface MethodParameterMapping extends MemberMapping<MethodParameterMap
 
     @Override
     default MethodParameterMapping merge(final MethodParameterMapping with, final MethodMapping parent) {
-        return parent.createParameterMapping(this.getIndex(), with.getDeobfuscatedName());
+        return MappingSetMerger.create(this.getMappings(), with.getMappings()).mergeMethodParameter(this, with, parent);
     }
 
     @Override

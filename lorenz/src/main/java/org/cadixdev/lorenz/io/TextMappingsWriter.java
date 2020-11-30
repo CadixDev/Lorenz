@@ -25,13 +25,10 @@
 
 package org.cadixdev.lorenz.io;
 
-import org.cadixdev.lorenz.io.enigma.EnigmaWriter;
-import org.cadixdev.lorenz.io.jam.JamWriter;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
 import org.cadixdev.lorenz.io.srg.SrgWriter;
+import org.cadixdev.lorenz.io.srg.csrg.CSrgWriter;
 import org.cadixdev.lorenz.io.srg.tsrg.TSrgWriter;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -41,8 +38,6 @@ import java.io.Writer;
  * with the implementation of mapping writers for text-based
  * mapping formats.
  *
- * @see EnigmaWriter
- * @see JamWriter
  * @see SrgWriter
  * @see CSrgWriter
  * @see TSrgWriter
@@ -63,13 +58,13 @@ public abstract class TextMappingsWriter extends MappingsWriter {
         if (writer instanceof PrintWriter) {
             this.writer = (PrintWriter) writer;
         } else {
-            BufferedWriter bufferedWriter = writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter(writer);
-            this.writer = new PrintWriter(bufferedWriter);
+            this.writer = new PrintWriter(writer);
         }
     }
 
     @Override
     public void close() throws IOException {
+        this.writer.flush();
         this.writer.close();
     }
 

@@ -3,14 +3,13 @@ Lorenz
 
 Lorenz is a library intended for creating and altering de-obfuscation mappings for Java
 programs (compiled or otherwise), this is done independent of the format being used. Lorenz
-supports a variety of mapping formats itself:
+supports a variety of mapping formats:
 
-- SRG
-- CSRG
-- TSRG
-- Enigma
-- JAM
-- Kin
+- SRG and its variants (CSRG, TSRG, and XSRG)
+- Enigma (through `lorenz-io-enigma`)
+- JAM (through `lorenz-io-jam`)
+- Kin (through `lorenz-io-kin`)
+- ProGuard (**reader only** through `lorenz-io-proguard`)
 
 ## Branches
 
@@ -29,26 +28,26 @@ implementation can be constructed through `MappingSet.create()`.
 
 Lorenz releases can be obtained through Maven Central:
 
+### Gradle
+
+```groovy
+implementation 'org.cadixdev:lorenz:0.5.6'
+```
+
 ### Maven
 
 ```xml
 <dependency>
-    <groupId>me.jamiemansfield</groupId>
+    <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.4.3</version>
+    <version>0.5.6</version>
 </dependency>
 ```
 
-### Gradle
+You may also find snapshot artifacts on [Sonatype's OSS repository].
 
-```groovy
-compile 'me.jamiemansfield:lorenz:0.4.3'
-```
-
-You may also find snapshot artifacts on [Sonatype's OSS repository], and for older
-versions on my own Maven repository (`repo.jamiemansfield.me`).
-
-**Future releases of Lorenz will be made under the `org.cadixdev` group**.
+Versions prior to `0.5.0` were made under the `me.jamiemansfield` group, and initial
+snapshot releases were made to my personal Maven  (`repo.jamiemansfield.me`).
 
 ## License
 
@@ -80,5 +79,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
+## Discuss
+
+**Found an issue with Lorenz?** [Make an issue]! We'd rather close invalid
+reports than have bugs go unreported :)
+
+We have an IRC channel on [EsperNet], `#cadix`, which is available for all
+[registered](https://esper.net/getting_started.php#registration) users to join
+and discuss Lorenz and other Cadix projects.
+
 [git-flow]: https://nvie.com/posts/a-successful-git-branching-model/
 [Sonatype's OSS repository]: https://oss.sonatype.org/content/repositories/snapshots/
+[Make an issue]: https://github.com/CadixDev/Lorenz/issues/new
+[EsperNet]: https://esper.net/

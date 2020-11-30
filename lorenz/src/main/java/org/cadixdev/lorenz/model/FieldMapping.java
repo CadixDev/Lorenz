@@ -29,6 +29,7 @@ import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.signature.FieldSignature;
 
 import java.util.Optional;
+import org.cadixdev.lorenz.merge.MappingSetMerger;
 
 /**
  * Represents a de-obfuscation mapping for fields.
@@ -92,9 +93,7 @@ public interface FieldMapping extends MemberMapping<FieldMapping, ClassMapping> 
 
     @Override
     default FieldMapping merge(final FieldMapping with, final ClassMapping parent) {
-        // A -> [B / C] -> D
-        return parent.createFieldMapping(this.getSignature())
-                .setDeobfuscatedName(with.getDeobfuscatedName());
+        return MappingSetMerger.create(this.getMappings(), with.getMappings()).mergeField(this, with, parent);
     }
 
     @Override

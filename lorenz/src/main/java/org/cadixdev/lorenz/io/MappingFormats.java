@@ -25,12 +25,9 @@
 
 package org.cadixdev.lorenz.io;
 
-import org.cadixdev.lorenz.io.enigma.EnigmaMappingFormat;
-import org.cadixdev.lorenz.io.jam.JamMappingFormat;
-import org.cadixdev.lorenz.io.kin.KinMappingFormat;
-import org.cadixdev.lorenz.io.srg.csrg.CSrgMappingFormat;
-import org.cadixdev.lorenz.io.srg.SrgMappingFormat;
-import org.cadixdev.lorenz.io.srg.tsrg.TSrgMappingFormat;
+import org.cadixdev.lorenz.util.Registry;
+
+import java.util.ServiceLoader;
 
 /**
  * A psuedo-enum of the mapping formats implemented within Lorenz.
@@ -41,39 +38,45 @@ import org.cadixdev.lorenz.io.srg.tsrg.TSrgMappingFormat;
 public final class MappingFormats {
 
     /**
+     * The registry of {@link MappingFormat}s.
+     */
+    public static final Registry<MappingFormat> REGISTRY = new Registry<>();
+
+    static {
+        // Populate the registry
+        for (final MappingFormat format : ServiceLoader.load(MappingFormat.class)) {
+            REGISTRY.register(format.toString(), format);
+        }
+    }
+
+    /**
      * The SRG mapping format.
      */
-    public static final TextMappingFormat SRG = new SrgMappingFormat();
+    public static final TextMappingFormat SRG = (TextMappingFormat) byId("srg");
 
     /**
      * The CSRG (compact SRG) mapping format.
      */
-    public static final TextMappingFormat CSRG = new CSrgMappingFormat();
+    public static final TextMappingFormat CSRG = (TextMappingFormat) byId("csrg");
 
     /**
      * The TSRG (tiny SRG) mapping format.
      */
-    public static final TextMappingFormat TSRG = new TSrgMappingFormat();
+    public static final TextMappingFormat TSRG = (TextMappingFormat) byId("tsrg");
 
     /**
-     * The Kin (/k/ashike b/in/ary) mapping format.
+     * The XSRG (SRG + field types) mapping format.
      */
-    public static final MappingFormat KIN = new KinMappingFormat();
+    public static final TextMappingFormat XSRG = (TextMappingFormat) byId("xsrg");
 
     /**
-     * The JAM (Java Associated Mappings) mapping format.
+     * @param id The identifier of the value
+     * @return The value, or {@code null} if not present
+     * @see Registry#byId(String)
      */
-    public static final TextMappingFormat JAM = new JamMappingFormat();
-
-    /**
-     * The standard Enigma mapping format.
-     */
-    public static final TextMappingFormat ENIGMA = new EnigmaMappingFormat(true);
-
-    /**
-     * The Fabric Enigma mapping format.
-     */
-    public static final TextMappingFormat FABRIC_ENIGMA = new EnigmaMappingFormat(false);
+    public static MappingFormat byId(final String id) {
+        return REGISTRY.byId(id);
+    }
 
     private MappingFormats() {
     }

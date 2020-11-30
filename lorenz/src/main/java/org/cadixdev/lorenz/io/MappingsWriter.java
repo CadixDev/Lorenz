@@ -25,19 +25,21 @@
 
 package org.cadixdev.lorenz.io;
 
+import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.Mapping;
+import org.cadixdev.lorenz.model.MethodMapping;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 /**
  * Represents a writer, that is capable of writing de-obfuscation
- * mapping.
- *
+ * mappings.
+ * <p>
  * Each mappings writer will be designed for a specific mapping
  * format, and intended to be used with try-for-resources.
  *
@@ -49,34 +51,34 @@ import java.util.stream.Collectors;
  */
 public abstract class MappingsWriter implements Closeable {
 
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
-     */
-    protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
-            (o1, o2) -> o1.getFullObfuscatedName().compareToIgnoreCase(o2.getFullObfuscatedName());
+    protected MappingsWriterConfig config = MappingsWriterConfig.builder().build();
 
     /**
-     * Indents the given String at each newline, with 4 spaces.
+     * Gets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer.
      *
-     * @param str The String to indent
-     * @return The indented String
+     * @return The writer configuration
+     * @since 0.5.5
      */
-    protected static String indentSpaces(final String str) {
-        return Arrays.stream(str.split("\n"))
-                .map(line -> "    " + line + "\n")
-                .collect(Collectors.joining());
+    public MappingsWriterConfig getConfig() {
+        return this.config;
     }
 
     /**
-     * Indents the given String at each newline, with a tab.
+     * Sets the active {@link MappingsWriterConfig writer configuration} for
+     * this mappings writer - allowing the output of the writer to be fine-tuned
+     * to fit the environment in use.
      *
-     * @param str The String to indent
-     * @return The indented String
+     * @param config The writer configuration
+     * @throws NullPointerException If {@code config} is {@code null}
+     * @since 0.5.5
      */
-    protected static String indentTab(final String str) {
-        return Arrays.stream(str.split("\n"))
-                .map(line -> "\t" + line + "\n")
-                .collect(Collectors.joining());
+    public void setConfig(final MappingsWriterConfig config) {
+        if (config == null) {
+            throw new NullPointerException("config cannot be null!");
+        }
+
+        this.config = config;
     }
 
     /**
@@ -86,4 +88,5 @@ public abstract class MappingsWriter implements Closeable {
      * @throws IOException Should an IO issue occur
      */
     public abstract void write(final MappingSet mappings) throws IOException;
+
 }

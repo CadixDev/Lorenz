@@ -25,8 +25,6 @@
 
 package org.cadixdev.lorenz.io;
 
-import org.cadixdev.lorenz.io.kin.KinWriter;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,8 +33,6 @@ import java.io.OutputStream;
  * An implementation of {@link MappingsWriter} designed to aid
  * with the implementation of binary de-obfuscation mapping
  * formats.
- *
- * @see KinWriter
  *
  * @author Jamie Mansfield
  * @since 0.4.0

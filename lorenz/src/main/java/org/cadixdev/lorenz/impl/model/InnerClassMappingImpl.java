@@ -67,6 +67,12 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
         return stripAsciiDigits(this.getDeobfuscatedName());
     }
 
+    @Override
+    public boolean hasDeobfuscatedName() {
+        // If a parent class has a deobfuscated name, then we do too, since we inherit it
+        return this.getParent().hasDeobfuscatedName() || super.hasDeobfuscatedName();
+    }
+
     private static String stripAsciiDigits(final String name) {
         for (int pos = 0; pos < name.length(); pos++) {
             if (!isAsciiDigit(name.charAt(pos))) {
@@ -106,7 +112,7 @@ public class InnerClassMappingImpl extends AbstractClassMappingImpl<InnerClassMa
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.parentClass);
+        return Objects.hash(super.hashCode(), this.parentClass.getFullObfuscatedName(), this.parentClass.getFullDeobfuscatedName());
     }
 
 }
