@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -152,5 +154,21 @@ public interface MappingFormat {
      * @return The standard file extension
      */
     Optional<String> getStandardFileExtension();
+
+    /**
+     * Gets file extensions that may be used by the mapping format.
+     * <p>
+     * Single formats need not implement this method, as it will by
+     * default return the standard file extension - or an empty set.
+     *
+     * @return An immutable collection of file extensions
+     * @since 0.6.0
+     */
+    default Collection<String> getFileExtensions() {
+        final String standardExtension = this.getStandardFileExtension().orElse(null);
+        return standardExtension == null ?
+                Collections.emptySet() :
+                Collections.singleton(standardExtension);
+    }
 
 }
