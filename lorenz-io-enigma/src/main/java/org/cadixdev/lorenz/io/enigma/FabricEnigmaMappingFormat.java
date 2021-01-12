@@ -26,25 +26,25 @@
 package org.cadixdev.lorenz.io.enigma;
 
 /**
- * The standard Enigma mapping format.
+ * The Fabric Enigma mapping format.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.6.0
  */
-public class EnigmaMappingFormat extends AbstractEnigmaMappingFormat {
+public class FabricEnigmaMappingFormat extends AbstractEnigmaMappingFormat {
 
-    public EnigmaMappingFormat() {
-        super(true);
+    public FabricEnigmaMappingFormat() {
+        super(false);
     }
 
     @Override
     public String getIdentifier() {
-        return "enigma";
+        return "fabric-engima";
     }
 
     @Override
     public String getName() {
-        return "Enigma";
+        return "Enigma (Fabric)";
     }
 
 }

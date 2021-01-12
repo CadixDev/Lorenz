@@ -52,43 +52,11 @@ import java.util.Optional;
  */
 public class EnigmaWriter extends TextMappingsWriter {
 
-    private static String handleNonePrefix(final String descriptor) {
-        if (!descriptor.contains("/")) {
-            return "none/" + descriptor;
-        }
-        return descriptor;
-    }
+    private final boolean handleNone;
 
-    private static FieldType handleNonePrefix(final FieldType type) {
-        if (type instanceof ArrayType) {
-            final ArrayType arr = (ArrayType) type;
-            return new ArrayType(arr.getDimCount(), handleNonePrefix(arr.getComponent()));
-        }
-        if (type instanceof ObjectType) {
-            final ObjectType obj = (ObjectType) type;
-            return new ObjectType(handleNonePrefix(obj.getClassName()));
-        }
-        return type;
-    }
-
-    private static Type handleNonePrefix(final Type type) {
-        if (type instanceof FieldType) {
-            return handleNonePrefix((FieldType) type);
-        }
-        return type;
-    }
-
-    private static String handleNonePrefix(final MethodDescriptor descriptor) {
-        final StringBuilder typeBuilder = new StringBuilder();
-        typeBuilder.append("(");
-        descriptor.getParamTypes().forEach(type -> typeBuilder.append(handleNonePrefix(type)));
-        typeBuilder.append(")");
-        typeBuilder.append(handleNonePrefix(descriptor.getReturnType()));
-        return typeBuilder.toString();
-    }
-
-    public EnigmaWriter(final Writer writer) {
+    public EnigmaWriter(final Writer writer, final boolean handleNone) {
         super(writer);
+        this.handleNone = handleNone;
     }
 
     @Override
@@ -100,11 +68,11 @@ public class EnigmaWriter extends TextMappingsWriter {
     }
 
     private void writeClassMapping(final ClassMapping<?, ?> klass, final int indent) {
-        final String obfName = handleNonePrefix(klass.getFullObfuscatedName());
+        final String obfName = this.handleNonePrefix(klass.getFullObfuscatedName());
         if (klass.hasDeobfuscatedName()) {
             final String deobfName = klass instanceof InnerClassMapping ?
                     klass.getDeobfuscatedName() :
-                    handleNonePrefix(klass.getDeobfuscatedName());
+                    this.handleNonePrefix(klass.getDeobfuscatedName());
             this.printIndentedLine(indent, "CLASS " + obfName + " " + deobfName);
         }
         else {
@@ -149,13 +117,13 @@ public class EnigmaWriter extends TextMappingsWriter {
             this.printIndentedLine(indent, String.format("METHOD %s %s %s",
                     method.getObfuscatedName(),
                     method.getDeobfuscatedName(),
-                    handleNonePrefix(method.getDescriptor())
+                    this.handleNonePrefix(method.getDescriptor())
             ));
         }
         else {
             this.printIndentedLine(indent, String.format("METHOD %s %s",
                     method.getObfuscatedName(),
-                    handleNonePrefix(method.getDescriptor())
+                    this.handleNonePrefix(method.getDescriptor())
             ));
         }
         for (final MethodParameterMapping param : method.getParameterMappings()) {
@@ -171,6 +139,49 @@ public class EnigmaWriter extends TextMappingsWriter {
             this.writer.print('\t');
         }
         this.writer.println(line);
+    }
+
+    private String handleNonePrefix(final String descriptor) {
+        if (!this.handleNone) return descriptor;
+
+        if (!descriptor.contains("/")) {
+            return "none/" + descriptor;
+        }
+        return descriptor;
+    }
+
+    private FieldType handleNonePrefix(final FieldType type) {
+        if (!this.handleNone) return type;
+
+        if (type instanceof ArrayType) {
+            final ArrayType arr = (ArrayType) type;
+            return new ArrayType(arr.getDimCount(), this.handleNonePrefix(arr.getComponent()));
+        }
+        if (type instanceof ObjectType) {
+            final ObjectType obj = (ObjectType) type;
+            return new ObjectType(this.handleNonePrefix(obj.getClassName()));
+        }
+        return type;
+    }
+
+    private Type handleNonePrefix(final Type type) {
+        if (!this.handleNone) return type;
+
+        if (type instanceof FieldType) {
+            return this.handleNonePrefix((FieldType) type);
+        }
+        return type;
+    }
+
+    private String handleNonePrefix(final MethodDescriptor descriptor) {
+        if (!this.handleNone) return descriptor.toString();
+
+        final StringBuilder typeBuilder = new StringBuilder();
+        typeBuilder.append("(");
+        descriptor.getParamTypes().forEach(type -> typeBuilder.append(this.handleNonePrefix(type)));
+        typeBuilder.append(")");
+        typeBuilder.append(this.handleNonePrefix(descriptor.getReturnType()));
+        return typeBuilder.toString();
     }
 
 }

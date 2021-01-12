@@ -25,26 +25,52 @@
 
 package org.cadixdev.lorenz.io.enigma;
 
+import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingFormat;
+
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
 /**
- * The standard Enigma mapping format.
+ * The Enigma mapping format.
  *
  * @author Jamie Mansfield
- * @since 0.4.0
+ * @since 0.6.0
  */
-public class EnigmaMappingFormat extends AbstractEnigmaMappingFormat {
+public abstract class AbstractEnigmaMappingFormat implements TextMappingFormat {
 
-    public EnigmaMappingFormat() {
-        super(true);
+    private final boolean handleNone;
+
+    public AbstractEnigmaMappingFormat(final boolean handleNone) {
+        this.handleNone = handleNone;
     }
 
     @Override
-    public String getIdentifier() {
-        return "enigma";
+    public MappingsReader createReader(final Reader reader) {
+        return new EnigmaReader(reader, this.handleNone);
     }
 
     @Override
-    public String getName() {
-        return "Enigma";
+    public MappingsWriter createWriter(final Writer writer) {
+        return new EnigmaWriter(writer, this.handleNone);
+    }
+
+    @Override
+    public Optional<String> getStandardFileExtension() {
+        return Optional.of(EnigmaConstants.FileExtensions.MAPPING);
+    }
+
+    @Override
+    public Collection<String> getFileExtensions() {
+        return Collections.unmodifiableCollection(Arrays.asList(
+                EnigmaConstants.FileExtensions.MAPPING,
+                EnigmaConstants.FileExtensions.ENIGMA
+        ));
     }
 
 }
