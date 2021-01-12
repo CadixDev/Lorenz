@@ -45,6 +45,24 @@ import java.util.Optional;
 public interface MappingFormat {
 
     /**
+     * Gets the internal identifier for this mapping format.
+     * <p>
+     * This will be used as the registration identifier for the format registry.
+     *
+     * @return The identifier
+     * @since 0.6.0
+     */
+    String getIdentifier();
+
+    /**
+     * Gets the name of this mapping format.
+     *
+     * @return The name
+     * @since 0.6.0
+     */
+    String getName();
+
+    /**
      * Creates a {@link MappingsReader} from the given {@link InputStream}
      * for the mapping format.
      *

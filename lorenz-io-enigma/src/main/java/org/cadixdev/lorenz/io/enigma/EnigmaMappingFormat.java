@@ -45,6 +45,16 @@ import java.util.Optional;
 public class EnigmaMappingFormat implements TextMappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "enigma";
+    }
+
+    @Override
+    public String getName() {
+        return "Enigma";
+    }
+
+    @Override
     public MappingsReader createReader(final Reader reader) {
         return new EnigmaReader(reader);
     }
@@ -65,11 +75,6 @@ public class EnigmaMappingFormat implements TextMappingFormat {
                 EnigmaConstants.FileExtensions.MAPPING,
                 EnigmaConstants.FileExtensions.ENIGMA
         ));
-    }
-
-    @Override
-    public String toString() {
-        return "enigma";
     }
 
 }

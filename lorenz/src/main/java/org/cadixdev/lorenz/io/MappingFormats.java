@@ -45,7 +45,7 @@ public final class MappingFormats {
     static {
         // Populate the registry
         for (final MappingFormat format : ServiceLoader.load(MappingFormat.class)) {
-            REGISTRY.register(format.toString(), format);
+            REGISTRY.register(format.getIdentifier(), format);
         }
     }
 

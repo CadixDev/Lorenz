@@ -43,6 +43,16 @@ import java.util.Optional;
 public class TSrgMappingFormat implements TextMappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "tsrg";
+    }
+
+    @Override
+    public String getName() {
+        return "TSRG";
+    }
+
+    @Override
     public MappingsReader createReader(final Reader reader) {
         return new TSrgReader(reader);
     }
@@ -55,11 +65,6 @@ public class TSrgMappingFormat implements TextMappingFormat {
     @Override
     public Optional<String> getStandardFileExtension() {
         return Optional.of(SrgConstants.TSrg.STANDARD_EXTENSION);
-    }
-
-    @Override
-    public String toString() {
-        return "tsrg";
     }
 
 }

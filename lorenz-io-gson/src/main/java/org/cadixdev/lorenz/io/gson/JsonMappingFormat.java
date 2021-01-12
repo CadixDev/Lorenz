@@ -42,6 +42,16 @@ import java.util.Optional;
 public class JsonMappingFormat implements TextMappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "gson";
+    }
+
+    @Override
+    public String getName() {
+        return "Lorenz JSON";
+    }
+
+    @Override
     public MappingsReader createReader(final Reader reader) {
         return new JsonReader(reader);
     }
@@ -54,11 +64,6 @@ public class JsonMappingFormat implements TextMappingFormat {
     @Override
     public Optional<String> getStandardFileExtension() {
         return Optional.of(JsonConstants.STANDARD_EXTENSION);
-    }
-
-    @Override
-    public String toString() {
-        return "gson";
     }
 
 }

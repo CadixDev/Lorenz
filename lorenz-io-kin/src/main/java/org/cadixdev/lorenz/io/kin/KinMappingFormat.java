@@ -43,6 +43,16 @@ import java.util.Optional;
 public class KinMappingFormat implements MappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "kin";
+    }
+
+    @Override
+    public String getName() {
+        return "Kin";
+    }
+
+    @Override
     public MappingsReader createReader(final InputStream stream) throws IOException {
         return new KinReader(stream);
     }
@@ -55,11 +65,6 @@ public class KinMappingFormat implements MappingFormat {
     @Override
     public Optional<String> getStandardFileExtension() {
         return Optional.of(KinConstants.STANDARD_EXTENSION);
-    }
-
-    @Override
-    public String toString() {
-        return "kin";
     }
 
 }
