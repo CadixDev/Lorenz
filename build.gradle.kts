@@ -22,6 +22,7 @@ allprojects {
 
 subprojects {
     apply<JavaLibraryPlugin>()
+    apply<GroovyPlugin>()
     apply<MavenPublishPlugin>()
     apply<Licenser>()
 
