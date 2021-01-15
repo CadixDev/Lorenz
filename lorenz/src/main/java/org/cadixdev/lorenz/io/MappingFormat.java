@@ -189,4 +189,26 @@ public interface MappingFormat {
                 Collections.singleton(standardExtension);
     }
 
+    /**
+     * Determines whether the mapping format supports reading mapping
+     * files.
+     *
+     * @return {@code true} if the formats does; {@code false} otherwise
+     * @since 0.6.0
+     */
+    default boolean supportsReading() {
+        return true;
+    }
+
+    /**
+     * Determines whether the mapping format supports writing mapping
+     * files.
+     *
+     * @return {@code true} if the formats does; {@code false} otherwise
+     * @since 0.6.0
+     */
+    default boolean supportsWriting() {
+        return true;
+    }
+
 }

@@ -66,4 +66,9 @@ public class ProGuardFormat implements TextMappingFormat {
         return Optional.empty();
     }
 
+    @Override
+    public boolean supportsWriting() {
+        return false;
+    }
+
 }
