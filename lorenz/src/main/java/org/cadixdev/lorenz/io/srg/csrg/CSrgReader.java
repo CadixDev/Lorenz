@@ -87,14 +87,22 @@ public class CSrgReader extends TextMappingsReader {
             final String[] split = SPACE.split(line);
             final int len = split.length;
 
-            // Process class mappings
+            // Process class/package mappings
             if (len == CLASS_MAPPING_ELEMENT_COUNT) {
                 final String obfuscatedName = split[0];
                 final String deobfuscatedName = split[1];
 
-                // Get mapping, and set de-obfuscated name
-                this.mappings.getOrCreateClassMapping(obfuscatedName)
-                        .setDeobfuscatedName(deobfuscatedName);
+                // Package mappings
+                if (obfuscatedName.endsWith("/")) {
+                    // Lorenz doesn't currently support package mappings, though they are an SRG feature.
+                    // For now, Lorenz will just silently ignore those mappings.
+                }
+                // Class mappings
+                else {
+                    // Get mapping, and set de-obfuscated name
+                    this.mappings.getOrCreateClassMapping(obfuscatedName)
+                            .setDeobfuscatedName(deobfuscatedName);
+                }
             }
             // Process field mapping
             else if (len == FIELD_MAPPING_ELEMENT_COUNT) {

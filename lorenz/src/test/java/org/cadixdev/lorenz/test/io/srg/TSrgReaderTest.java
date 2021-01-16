@@ -25,6 +25,7 @@
 
 package org.cadixdev.lorenz.test.io.srg;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.cadixdev.lorenz.io.MappingFormats;
@@ -37,6 +38,16 @@ public class TSrgReaderTest extends AbstractSrgReaderTest {
 
     public TSrgReaderTest() throws Exception {
         super(MappingFormats.TSRG, "/test.tsrg");
+    }
+
+    @Test
+    public void ignoresPackages() throws IOException {
+        // This test ensures that package mappings won't erroneously be read as
+        // class mappings. No exceptions should be thrown either.
+        final TSrgReader.Processor parser = new TSrgReader.Processor();
+        parser.accept("abc/ uk/jamierocks/Example");
+
+        assertEquals(0, parser.getMappings().getTopLevelClassMappings().size());
     }
 
     @Test
