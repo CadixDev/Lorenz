@@ -27,6 +27,7 @@ package org.cadixdev.lorenz.dsl.groovy;
 
 import org.cadixdev.lorenz.model.ExtensionKey;
 import org.cadixdev.lorenz.model.Mapping;
+import org.cadixdev.lorenz.util.MappingChangedListener;
 
 /**
  * A DSL to simplify the manipulation of {@link Mapping}s in Groovy.
@@ -35,7 +36,7 @@ import org.cadixdev.lorenz.model.Mapping;
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class MappingDsl<T extends Mapping<?, ?>> {
+public class MappingDsl<T extends Mapping<T, P>, P> {
 
     /**
      * The mapping manipulated by this DSL.
@@ -66,6 +67,16 @@ public class MappingDsl<T extends Mapping<?, ?>> {
      */
     public <K> void extension(final ExtensionKey<K> key, final K value) {
         this.mapping.set(key, value);
+    }
+
+    /**
+     * Adds the given listener to the mapping.
+     *
+     * @param listener The mapping listener
+     * @see Mapping#addListener(MappingChangedListener)
+     */
+    public void listener(final MappingChangedListener<T, P> listener) {
+        this.mapping.addListener(listener);
     }
 
 }

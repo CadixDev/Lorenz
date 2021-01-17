@@ -27,6 +27,7 @@ package org.cadixdev.lorenz.dsl.groovy;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
 import org.cadixdev.lorenz.model.MethodParameterMapping;
 
@@ -36,7 +37,7 @@ import org.cadixdev.lorenz.model.MethodParameterMapping;
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class MethodMappingDsl extends MappingDsl<MethodMapping> {
+public class MethodMappingDsl extends MappingDsl<MethodMapping, ClassMapping> {
 
     public MethodMappingDsl(final MethodMapping mapping) {
         super(mapping);

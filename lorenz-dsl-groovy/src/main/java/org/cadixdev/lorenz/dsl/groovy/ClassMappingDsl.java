@@ -43,7 +43,7 @@ import org.cadixdev.lorenz.model.MethodMapping;
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public class ClassMappingDsl<T extends ClassMapping<?, ?>> extends MappingDsl<T> {
+public class ClassMappingDsl<T extends ClassMapping<T, P>, P> extends MappingDsl<T, P> {
 
     public ClassMappingDsl(final T mapping) {
         super(mapping);
