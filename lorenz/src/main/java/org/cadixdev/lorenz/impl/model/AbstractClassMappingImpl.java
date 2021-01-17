@@ -27,6 +27,7 @@ package org.cadixdev.lorenz.impl.model;
 
 import org.cadixdev.bombe.analysis.InheritanceProvider;
 import org.cadixdev.bombe.analysis.InheritanceType;
+import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.signature.FieldSignature;
 import org.cadixdev.bombe.type.signature.MethodSignature;
@@ -40,6 +41,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -246,8 +248,10 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
                         final MethodDescriptor mappingDescriptor = mappingSignature.getDescriptor();
 
                         // The method MUST have the same parameters
-                        // TODO: handle generic params
-                        if (!Objects.equals(methodDescriptor.getParamTypes(), mappingDescriptor.getParamTypes())) continue;
+                        if (!(Objects.equals(methodDescriptor.getParamTypes(), mappingDescriptor.getParamTypes()) ||
+                                testParamsAssignability(methodDescriptor.getParamTypes(), mappingDescriptor.getParamTypes(), provider))) {
+                            continue;
+                        }
 
                         if (mappingDescriptor.getReturnType().isAssignableFrom(methodDescriptor.getReturnType(), provider)) {
                             this.methods.putIfAbsent(methodSignature, mapping);
@@ -258,6 +262,26 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
         }
 
         this.complete = true;
+    }
+
+    private static boolean testParamsAssignability(
+            final List<FieldType> method, final List<FieldType> mapping,
+            final InheritanceProvider provider
+    ) {
+        if (method.size() != mapping.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < method.size(); i++) {
+            final FieldType a = method.get(i);
+            final FieldType b = mapping.get(i);
+
+            if (!b.isAssignableFrom(a, provider)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
