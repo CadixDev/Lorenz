@@ -3,6 +3,7 @@ import org.cadixdev.gradle.licenser.LicenseExtension
 
 plugins {
     `java-library`
+    jacoco
     id("org.cadixdev.licenser") version "0.5.0" apply false
 }
 
@@ -23,6 +24,7 @@ allprojects {
 subprojects {
     apply<JavaLibraryPlugin>()
     apply<GroovyPlugin>()
+    apply<JacocoPlugin>()
     apply<MavenPublishPlugin>()
     apply<Licenser>()
 
@@ -66,6 +68,14 @@ subprojects {
 
     tasks.test {
         useJUnitPlatform()
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.isEnabled = false
+            csv.isEnabled = false
+            html.destination = file("${buildDir}/jacocoHtml")
+        }
     }
 
     tasks.processResources {

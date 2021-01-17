@@ -30,6 +30,24 @@ import spock.lang.Specification
 
 class MappingCopySpec extends Specification {
 
+    def 'copies mappings'() {
+        given:
+        def originalMappings = new MappingSet().with {
+            it.getOrCreateTopLevelClassMapping('ab')
+                    .setDeobfuscatedName('Demo')
+            return it
+        }
+
+        when:
+        def mappings = originalMappings.copy()
+
+        then:
+        mappings.getTopLevelClassMappings().size() == 1
+        def classMapping = mappings.getClassMapping('ab')
+        classMapping.isPresent()
+        classMapping.get().deobfuscatedName == 'Demo'
+    }
+
     def 'copies top level mapping'() {
         given:
         def originalClass = new MappingSet().getOrCreateTopLevelClassMapping('ab')
@@ -75,6 +93,24 @@ class MappingCopySpec extends Specification {
         def copiedMethod = klassMapping.getMethodMapping('hhyg', '()V')
         copiedMethod.isPresent()
         copiedMethod.get().deobfuscatedName == 'main'
+    }
+
+    def 'copies param mapping'() {
+        given:
+        def originalParam = new MappingSet().getOrCreateTopLevelClassMapping('ab')
+                .getOrCreateMethodMapping('jj', '(Ljava/lang/String;)V')
+                .getOrCreateParameterMapping(0)
+                .setDeobfuscatedName('name')
+        def methodMapping = new MappingSet().getOrCreateTopLevelClassMapping('ab')
+                .getOrCreateMethodMapping('jj', '(Ljava/lang/String;)V')
+
+        when:
+        originalParam.copy(methodMapping)
+
+        then:
+        def copiedParam = methodMapping.getParameterMapping(0)
+        copiedParam.isPresent()
+        copiedParam.get().deobfuscatedName == 'name'
     }
 
     def 'copies inner mapping'() {

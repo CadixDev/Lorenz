@@ -26,24 +26,19 @@
 package org.cadixdev.lorenz.test
 
 import org.cadixdev.lorenz.MappingSet
-import org.cadixdev.lorenz.dsl.groovy.MappingSetDsl
-import org.cadixdev.lorenz.model.TopLevelClassMapping
 import spock.lang.Specification
 
 class MappingObserveSpec extends Specification {
 
     def "can observe changes"() {
         given:
-        final MappingSet mappings = MappingSetDsl.create {
-            klass('a') {
-                listener { TopLevelClassMapping mapping, String newName ->
-                    throw new IllegalArgumentException("beep boop")
-                }
-            }
+        def classMapping = new MappingSet().getOrCreateTopLevelClassMapping('a')
+        classMapping.addListener { mapping, newName ->
+            throw new IllegalArgumentException("beep boop")
         }
 
         when:
-        mappings.getOrCreateClassMapping('a').setDeobfuscatedName('Demo')
+        classMapping.setDeobfuscatedName('Demo')
 
         then:
         thrown(IllegalArgumentException)
