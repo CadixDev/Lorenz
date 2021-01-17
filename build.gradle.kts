@@ -34,13 +34,12 @@ subprojects {
     }
 
     dependencies {
-        // Standard junit
+        // Standard JUnit
         testImplementation(platform("org.junit:junit-bom:5.7.0"))
         testImplementation("org.junit.jupiter:junit-jupiter-api")
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
 
         // Spock
-        testImplementation("org.junit.vintage:junit-vintage-engine")
         testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
         testImplementation("org.spockframework:spock-core:$spockVersion")
     }
