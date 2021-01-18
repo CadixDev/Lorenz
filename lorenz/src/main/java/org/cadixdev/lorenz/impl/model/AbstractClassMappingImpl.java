@@ -35,6 +35,7 @@ import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.FieldMapping;
 import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.MethodMapping;
+import org.cadixdev.lorenz.model.MethodParameterMapping;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -227,13 +228,17 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
 
             for (final FieldMapping mapping : parentMappings.getFieldMappings()) {
                 if (parent.canInherit(info, mapping.getSignature())) {
-                    this.fields.putIfAbsent(mapping.getSignature(), mapping);
+                    // in a basic case, where the signatures are an exact match, we can
+                    // copy the mapping to this class
+                    mapping.copy(this);
                 }
             }
 
             for (final MethodMapping mapping : parentMappings.getMethodMappings()) {
                 if (parent.canInherit(info, mapping.getSignature())) {
-                    this.methods.putIfAbsent(mapping.getSignature(), mapping);
+                    // in a basic case, where the signatures are an exact match, we can
+                    // copy the mapping to this class
+                    mapping.copy(this);
                 }
 
                 // Check if there are any methods here that override the return type of a parent
@@ -250,7 +255,13 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
                         if (!Objects.equals(methodDescriptor.getParamTypes(), mappingDescriptor.getParamTypes())) continue;
 
                         if (mappingDescriptor.getReturnType().isAssignableFrom(methodDescriptor.getReturnType(), provider)) {
-                            this.methods.putIfAbsent(methodSignature, mapping);
+                            // in a more complex case, where the signatures don't match, we need
+                            // to create a new mapping
+                            final MethodMapping newMapping = this.getOrCreateMethodMapping(methodSignature);
+                            newMapping.setDeobfuscatedName(mapping.getDeobfuscatedName());
+                            for (final MethodParameterMapping param : mapping.getParameterMappings()) {
+                                param.copy(newMapping);
+                            }
                         }
                     }
                 }
