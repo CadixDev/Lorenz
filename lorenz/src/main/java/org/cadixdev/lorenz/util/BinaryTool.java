@@ -39,6 +39,7 @@ public final class BinaryTool {
      * For example, calling {@code from("a$b$c"}} would produce
      * {@code ["a", "b", "c"]}.
      *
+     * @param binaryName The binary name
      * @return The name hierarchy
      */
     public static String[] from(final String binaryName) {
