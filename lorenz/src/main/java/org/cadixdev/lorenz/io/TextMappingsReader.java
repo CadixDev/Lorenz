@@ -107,6 +107,16 @@ public abstract class TextMappingsReader extends MappingsReader {
             this.mappings = mappings;
         }
 
+        /**
+         * Gets the mapping set being read into by the processor.
+         *
+         * @return The mappings
+         * @since 0.5.7
+         */
+        public MappingSet getMappings() {
+            return this.mappings;
+        }
+
     }
 
 }
