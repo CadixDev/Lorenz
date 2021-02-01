@@ -226,6 +226,12 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
             parentMappings.complete(provider, parent);
 
             for (final FieldMapping mapping : parentMappings.getFieldMappings()) {
+                // If the class has its own field that satisfies the parent's signature,
+                // then we shouldn't inherit the mapping
+                if (this.computeFieldMapping(mapping.getSignature()).isPresent()) {
+                    continue;
+                }
+
                 if (parent.canInherit(info, mapping.getSignature())) {
                     this.fields.putIfAbsent(mapping.getSignature(), mapping);
                 }

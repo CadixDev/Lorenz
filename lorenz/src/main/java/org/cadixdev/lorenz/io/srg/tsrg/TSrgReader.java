@@ -90,14 +90,22 @@ public class TSrgReader extends TextMappingsReader {
             final String[] split = SPACE.split(line);
             final int len = split.length;
 
-            // Process class mappings
+            // Process class/package mappings
             if (!split[0].startsWith("\t") && len == CLASS_MAPPING_ELEMENT_COUNT) {
                 final String obfuscatedName = split[0];
                 final String deobfuscatedName = split[1];
 
-                // Get mapping, and set de-obfuscated name
-                this.currentClass = this.mappings.getOrCreateClassMapping(obfuscatedName);
-                this.currentClass.setDeobfuscatedName(deobfuscatedName);
+                // Package mappings
+                if (obfuscatedName.endsWith("/")) {
+                    // Lorenz doesn't currently support package mappings, though they are an SRG feature.
+                    // For now, Lorenz will just silently ignore those mappings.
+                }
+                // Class mappings
+                else {
+                    // Get mapping, and set de-obfuscated name
+                    this.currentClass = this.mappings.getOrCreateClassMapping(obfuscatedName);
+                    this.currentClass.setDeobfuscatedName(deobfuscatedName);
+                }
             }
             else if (split[0].startsWith("\t") && this.currentClass != null) {
                 final String obfuscatedName = split[0].replace("\t", "");

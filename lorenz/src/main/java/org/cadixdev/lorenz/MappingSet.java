@@ -36,6 +36,7 @@ import org.cadixdev.lorenz.model.ClassMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
 import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
+import org.cadixdev.lorenz.util.BinaryTool;
 import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Collection;
@@ -308,9 +309,27 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
         }
         else if (type instanceof ObjectType) {
             final ObjectType obj = (ObjectType) type;
-            return this.getClassMapping(obj.getClassName())
-                    .map(m -> new ObjectType(m.getFullDeobfuscatedName()))
-                    .orElse(obj);
+
+            final String[] name = BinaryTool.from(obj.getClassName());
+
+            ClassMapping<?, ?> currentClass = this.getClassMapping(name[0]).orElse(null);
+            if (currentClass == null) {
+                return type;
+            }
+
+            for (int i = 1; i < name.length; i++) {
+                final ClassMapping<?, ?> thisClass = currentClass.getInnerClassMapping(name[i]).orElse(null);
+                if (thisClass == null) {
+                    final String[] result = new String[name.length - i + 1];
+                    result[0] = currentClass.getFullDeobfuscatedName();
+                    System.arraycopy(name, i, result, 1, name.length - i);
+
+                    return new ObjectType(BinaryTool.to(result));
+                }
+                currentClass = thisClass;
+            }
+
+            return new ObjectType(currentClass.getFullDeobfuscatedName());
         }
         return type;
     }

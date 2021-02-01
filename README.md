@@ -31,7 +31,7 @@ Lorenz releases can be obtained through Maven Central:
 ### Gradle
 
 ```groovy
-implementation 'org.cadixdev:lorenz:0.5.6'
+implementation 'org.cadixdev:lorenz:0.5.7'
 ```
 
 ### Maven
@@ -40,7 +40,7 @@ implementation 'org.cadixdev:lorenz:0.5.6'
 <dependency>
     <groupId>org.cadixdev</groupId>
     <artifactId>lorenz</artifactId>
-    <version>0.5.6</version>
+    <version>0.5.7</version>
 </dependency>
 ```
 
