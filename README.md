@@ -8,7 +8,6 @@ supports a variety of mapping formats:
 - SRG and its variants (CSRG, TSRG, and XSRG)
 - Enigma (through `lorenz-io-enigma`)
 - JAM (through `lorenz-io-jam`)
-- Kin (through `lorenz-io-kin`)
 - ProGuard (**reader only** through `lorenz-io-proguard`)
 
 ## Branches
