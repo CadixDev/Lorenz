@@ -25,17 +25,24 @@
 
 package org.cadixdev.lorenz.io.enigma;
 
+import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.io.TextMappingFormat;
+
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
 /**
  * The standard Enigma mapping format.
  *
  * @author Jamie Mansfield
  * @since 0.4.0
  */
-public class EnigmaMappingFormat extends AbstractEnigmaMappingFormat {
-
-    public EnigmaMappingFormat() {
-        super(true);
-    }
+public class EnigmaMappingFormat implements TextMappingFormat {
 
     @Override
     public String getIdentifier() {
@@ -45,6 +52,29 @@ public class EnigmaMappingFormat extends AbstractEnigmaMappingFormat {
     @Override
     public String getName() {
         return "Enigma";
+    }
+
+    @Override
+    public MappingsReader createReader(final Reader reader) {
+        return new EnigmaReader(reader);
+    }
+
+    @Override
+    public MappingsWriter createWriter(final Writer writer) {
+        return new EnigmaWriter(writer);
+    }
+
+    @Override
+    public Optional<String> getStandardFileExtension() {
+        return Optional.of(EnigmaConstants.FileExtensions.MAPPING);
+    }
+
+    @Override
+    public Collection<String> getFileExtensions() {
+        return Collections.unmodifiableCollection(Arrays.asList(
+                EnigmaConstants.FileExtensions.MAPPING,
+                EnigmaConstants.FileExtensions.ENIGMA
+        ));
     }
 
 }

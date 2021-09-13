@@ -50,8 +50,8 @@ import java.util.stream.Collectors;
  */
 public class EnigmaReader extends TextMappingsReader {
 
-    public EnigmaReader(final Reader reader, final boolean handleNone) {
-        super(reader, mappings -> new Processor(mappings, handleNone));
+    public EnigmaReader(final Reader reader) {
+        super(reader, Processor::new);
     }
 
     public static class Processor extends TextMappingsReader.Processor {
@@ -78,15 +78,13 @@ public class EnigmaReader extends TextMappingsReader {
         }
 
         private final Deque<Mapping<?, ?>> stack = new ArrayDeque<>();
-        private final boolean handleNone;
 
-        public Processor(final MappingSet mappings, final boolean handleNone) {
+        public Processor(final MappingSet mappings) {
             super(mappings);
-            this.handleNone = handleNone;
         }
 
-        public Processor(final boolean handleNone) {
-            this(new MappingSet(), handleNone);
+        public Processor() {
+            this(new MappingSet());
         }
 
         @Override
@@ -109,31 +107,31 @@ public class EnigmaReader extends TextMappingsReader {
             // Establish the type of mapping
             final String key = split[0];
             if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
-                final String obfName = this.handleNonePrefix(split[1]);
+                final String obfName = this.convertClassName(split[1]);
                 this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
             }
             else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
-                final String obfName = this.handleNonePrefix(split[1]);
-                final String deobfName = this.handleNonePrefix(split[2]);
+                final String obfName = this.convertClassName(split[1]);
+                final String deobfName = this.convertClassName(split[2]);
                 this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
                         .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
-                final String type = this.handleNonePrefix(FieldType.of(split[3])).toString();
+                final String type = this.convertFieldType(FieldType.of(split[3])).toString();
                 this.peekClass().getOrCreateFieldMapping(obfName, type)
                         .setDeobfuscatedName(deobfName);
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = split[1];
-                final String descriptor = this.handleNonePrefix(MethodDescriptor.of(split[2])).toString();
+                final String descriptor = this.convertDescriptor(MethodDescriptor.of(split[2])).toString();
                 this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor));
             }
             else if (key.equals(METHOD_MAPPING_KEY) && len == METHOD_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = split[1];
                 final String deobfName = split[2];
-                final String descriptor = this.handleNonePrefix(MethodDescriptor.of(split[3])).toString();
+                final String descriptor = this.convertDescriptor(MethodDescriptor.of(split[3])).toString();
                 this.stack.push(this.peekClass().getOrCreateMethodMapping(obfName, descriptor)
                         .setDeobfuscatedName(deobfName));
             }
@@ -155,46 +153,38 @@ public class EnigmaReader extends TextMappingsReader {
             return (MethodMapping) this.stack.peek();
         }
 
-        private String handleNonePrefix(final String descriptor) {
-            if (!this.handleNone) return descriptor;
-
+        protected String convertClassName(final String descriptor) {
             if (descriptor.startsWith("none/")) {
                 return descriptor.substring("none/".length());
             }
             return descriptor;
         }
 
-        private Type handleNonePrefix(final Type type) {
-            if (!this.handleNone) return type;
-
+        protected Type convertType(final Type type) {
             if (type instanceof FieldType) {
-                return this.handleNonePrefix((FieldType) type);
+                return this.convertFieldType((FieldType) type);
             }
             return type;
         }
 
-        private FieldType handleNonePrefix(final FieldType type) {
-            if (!this.handleNone) return type;
-
+        protected FieldType convertFieldType(final FieldType type) {
             if (type instanceof ArrayType) {
                 final ArrayType arr = (ArrayType) type;
-                return new ArrayType(arr.getDimCount(), this.handleNonePrefix(arr.getComponent()));
+                return new ArrayType(arr.getDimCount(), this.convertFieldType(arr.getComponent()));
             }
             if (type instanceof ObjectType) {
                 final ObjectType obj = (ObjectType) type;
-                return new ObjectType(this.handleNonePrefix(obj.getClassName()));
+                return new ObjectType(this.convertClassName(obj.getClassName()));
             }
             return type;
         }
 
-        private MethodDescriptor handleNonePrefix(final MethodDescriptor descriptor) {
-            if (!this.handleNone) return descriptor;
-
+        protected MethodDescriptor convertDescriptor(final MethodDescriptor descriptor) {
             return new MethodDescriptor(
                     descriptor.getParamTypes().stream()
-                            .map(this::handleNonePrefix)
+                            .map(this::convertFieldType)
                             .collect(Collectors.toList()),
-                    this.handleNonePrefix(descriptor.getReturnType())
+                    this.convertType(descriptor.getReturnType())
             );
         }
 

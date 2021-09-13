@@ -25,52 +25,52 @@
 
 package org.cadixdev.lorenz.io.enigma;
 
-import org.cadixdev.lorenz.io.MappingsReader;
+import org.cadixdev.bombe.type.FieldType;
+import org.cadixdev.bombe.type.MethodDescriptor;
+import org.cadixdev.bombe.type.Type;
 import org.cadixdev.lorenz.io.MappingsWriter;
-import org.cadixdev.lorenz.io.TextMappingFormat;
 
-import java.io.Reader;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
 
 /**
- * The Enigma mapping format.
+ * A {@link MappingsWriter mappings writer} for Fabric's fork of the Enigma
+ * format.
  *
  * @author Jamie Mansfield
  * @since 0.6.0
  */
-public abstract class AbstractEnigmaMappingFormat implements TextMappingFormat {
+public class FabricEnigmaWriter extends EnigmaWriter {
 
-    private final boolean handleNone;
-
-    public AbstractEnigmaMappingFormat(final boolean handleNone) {
-        this.handleNone = handleNone;
+    public FabricEnigmaWriter(final Writer writer) {
+        super(writer);
     }
 
     @Override
-    public MappingsReader createReader(final Reader reader) {
-        return new EnigmaReader(reader, this.handleNone);
+    protected String convertClassName(final String descriptor) {
+        // Fabric's fork of the Enigma format doesn't add a 'none/' prefix
+        // to un-packaged classes.
+        return descriptor;
     }
 
     @Override
-    public MappingsWriter createWriter(final Writer writer) {
-        return new EnigmaWriter(writer, this.handleNone);
+    protected Type convertType(final Type type) {
+        // Fabric's fork of the Enigma format doesn't add a 'none/' prefix
+        // to un-packaged classes.
+        return type;
     }
 
     @Override
-    public Optional<String> getStandardFileExtension() {
-        return Optional.of(EnigmaConstants.FileExtensions.MAPPING);
+    protected FieldType convertFieldType(final FieldType type) {
+        // Fabric's fork of the Enigma format doesn't add a 'none/' prefix
+        // to un-packaged classes.
+        return type;
     }
 
     @Override
-    public Collection<String> getFileExtensions() {
-        return Collections.unmodifiableCollection(Arrays.asList(
-                EnigmaConstants.FileExtensions.MAPPING,
-                EnigmaConstants.FileExtensions.ENIGMA
-        ));
+    protected String convertDescriptor(final MethodDescriptor descriptor) {
+        // Fabric's fork of the Enigma format doesn't add a 'none/' prefix
+        // to un-packaged classes.
+        return descriptor.toString();
     }
 
 }
