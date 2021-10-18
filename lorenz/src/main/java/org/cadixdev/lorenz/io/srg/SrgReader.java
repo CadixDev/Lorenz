@@ -135,7 +135,7 @@ public class SrgReader extends TextMappingsReader {
                 // For now, Lorenz will just silently ignore those mappings.
             }
             else {
-                throw new IllegalArgumentException("Found unrecognised key: `" + key + "`!");
+                throw new IllegalArgumentException("Failed to process line: `" + line + "`!");
             }
         }
 
