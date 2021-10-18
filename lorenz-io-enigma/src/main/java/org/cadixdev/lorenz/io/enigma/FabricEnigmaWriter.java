@@ -29,6 +29,7 @@ import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.Type;
 import org.cadixdev.lorenz.io.MappingsWriter;
+import org.cadixdev.lorenz.model.ClassMapping;
 
 import java.io.Writer;
 
@@ -43,6 +44,21 @@ public class FabricEnigmaWriter extends EnigmaWriter {
 
     public FabricEnigmaWriter(final Writer writer) {
         super(writer);
+    }
+
+    @Override
+    protected void printClassMapping(final ClassMapping<?, ?> klass, final int indent) {
+        // Fabric's fork of the Enigma format doesn't use full de-obfuscated
+        // names when printing classes (practically this affects inner classes).
+        final String obfName = klass.getObfuscatedName();
+
+        if (klass.hasDeobfuscatedName()) {
+            final String deobfName = klass.getDeobfuscatedName();
+            this.printIndentedLine(indent, "CLASS " + obfName + " " + deobfName);
+        }
+        else {
+            this.printIndentedLine(indent, "CLASS " + obfName);
+        }
     }
 
     @Override
