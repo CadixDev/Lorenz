@@ -31,6 +31,8 @@ import org.cadixdev.bombe.type.Type;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingsReader;
 import org.cadixdev.lorenz.io.TextMappingsReader;
+import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.Mapping;
 
 import java.io.Reader;
 
@@ -55,6 +57,21 @@ public class FabricEnigmaReader extends TextMappingsReader {
 
         public Processor() {
             super();
+        }
+
+        @Override
+        protected ClassMapping<?, ?> readClassMapping(final String obfName) {
+            // Fabric's fork of the Enigma format doesn't use full de-obfuscated
+            // names when printing classes (practically this affects inner classes).
+            final Mapping<?, ?> mapping = this.stack.peek();
+            if (mapping == null) {
+                return this.mappings.getOrCreateTopLevelClassMapping(obfName);
+            }
+            if (!(mapping instanceof ClassMapping)) {
+                throw new UnsupportedOperationException("Not a class on the stack!");
+            }
+
+            return ((ClassMapping<?, ?>) mapping).getOrCreateInnerClassMapping(obfName);
         }
 
         @Override

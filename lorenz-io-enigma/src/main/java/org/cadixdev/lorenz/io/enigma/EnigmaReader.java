@@ -77,7 +77,7 @@ public class EnigmaReader extends TextMappingsReader {
             return indentLevel;
         }
 
-        private final Deque<Mapping<?, ?>> stack = new ArrayDeque<>();
+        protected final Deque<Mapping<?, ?>> stack = new ArrayDeque<>();
 
         public Processor(final MappingSet mappings) {
             super(mappings);
@@ -108,12 +108,12 @@ public class EnigmaReader extends TextMappingsReader {
             final String key = split[0];
             if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITHOUT_DEOBF_COUNT) {
                 final String obfName = this.convertClassName(split[1]);
-                this.stack.push(this.mappings.getOrCreateClassMapping(obfName));
+                this.stack.push(this.readClassMapping(obfName));
             }
             else if (key.equals(CLASS_MAPPING_KEY) && len == CLASS_MAPPING_ELEMENT_WITH_DEOBF_COUNT) {
                 final String obfName = this.convertClassName(split[1]);
                 final String deobfName = this.convertClassName(split[2]);
-                this.stack.push(this.mappings.getOrCreateClassMapping(obfName)
+                this.stack.push(this.readClassMapping(obfName)
                         .setDeobfuscatedName(deobfName));
             }
             else if (key.equals(FIELD_MAPPING_KEY) && len == FIELD_MAPPING_ELEMENT_COUNT) {
@@ -151,6 +151,10 @@ public class EnigmaReader extends TextMappingsReader {
         protected MethodMapping peekMethod() {
             if (!(this.stack.peek() instanceof MethodMapping)) throw new UnsupportedOperationException("Not a method on the stack!");
             return (MethodMapping) this.stack.peek();
+        }
+
+        protected ClassMapping<?, ?> readClassMapping(final String obfName) {
+            return this.mappings.getOrCreateClassMapping(obfName);
         }
 
         protected String convertClassName(final String descriptor) {
