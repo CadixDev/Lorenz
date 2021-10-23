@@ -310,7 +310,7 @@ public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<
      */
     public Type deobfuscate(final Type type) {
         if (type instanceof FieldType) {
-            return this.deobfuscate(this.deobfuscate((FieldType) type));
+            return this.deobfuscate((FieldType) type);
         }
         return type;
     }
