@@ -161,6 +161,9 @@ public final class MappingSetTest {
         a.getOrCreateInnerClassMapping("a")
                 .setDeobfuscatedName("Inner");
 
+        final TopLevelClassMapping demo = mappings.getOrCreateTopLevelClassMapping("Demo")
+                .setDeobfuscatedName("DoubleDeobf");
+
         return mappings;
     }
 

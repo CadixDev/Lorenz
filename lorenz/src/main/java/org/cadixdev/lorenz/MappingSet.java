@@ -244,7 +244,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      */
     default Type deobfuscate(final Type type) {
         if (type instanceof FieldType) {
-            return this.deobfuscate(this.deobfuscate((FieldType) type));
+            return this.deobfuscate((FieldType) type);
         }
         return type;
     }
