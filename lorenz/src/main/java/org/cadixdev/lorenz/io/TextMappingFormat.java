@@ -37,7 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A representation of a de-obfuscation mapping format serialized as text.
+ * A representation of a de-obfuscation mapping format serialised as text.
  *
  * @author Minecrell
  * @since 0.4.0
