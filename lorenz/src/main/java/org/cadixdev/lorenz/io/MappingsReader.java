@@ -50,7 +50,7 @@ public abstract class MappingsReader implements Closeable {
      * @throws IOException Should an I/O issue occur
      */
     public MappingSet read() throws IOException {
-        return this.read(MappingSet.create());
+        return this.read(new MappingSet());
     }
 
     /**

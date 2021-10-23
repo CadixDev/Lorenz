@@ -8,7 +8,6 @@ supports a variety of mapping formats:
 - SRG and its variants (CSRG, TSRG, and XSRG)
 - Enigma (through `lorenz-io-enigma`)
 - JAM (through `lorenz-io-jam`)
-- Kin (through `lorenz-io-kin`)
 - ProGuard (**reader only** through `lorenz-io-proguard`)
 
 ## Branches
@@ -79,5 +78,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
+## Discuss
+
+**Found an issue with Lorenz?** [Make an issue]! We'd rather close invalid
+reports than have bugs go unreported :)
+
+We have an IRC channel on [EsperNet], `#cadix`, which is available for all
+[registered](https://esper.net/getting_started.php#registration) users to join
+and discuss Lorenz and other Cadix projects.
+
 [git-flow]: https://nvie.com/posts/a-successful-git-branching-model/
 [Sonatype's OSS repository]: https://oss.sonatype.org/content/repositories/snapshots/
+[Make an issue]: https://github.com/CadixDev/Lorenz/issues/new
+[EsperNet]: https://esper.net/

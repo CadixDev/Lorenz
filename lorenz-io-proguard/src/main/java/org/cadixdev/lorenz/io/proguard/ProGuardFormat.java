@@ -42,6 +42,16 @@ import java.util.Optional;
 public class ProGuardFormat implements TextMappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "proguard";
+    }
+
+    @Override
+    public String getName() {
+        return "ProGuard";
+    }
+
+    @Override
     public MappingsReader createReader(final Reader reader) {
         return new ProGuardReader(reader);
     }
@@ -57,8 +67,8 @@ public class ProGuardFormat implements TextMappingFormat {
     }
 
     @Override
-    public String toString() {
-        return "proguard";
+    public boolean supportsWriting() {
+        return false;
     }
 
 }

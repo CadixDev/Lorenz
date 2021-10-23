@@ -60,7 +60,7 @@ public abstract class TextMappingsReader extends MappingsReader {
      * @param reader The reader
      * @param processor The line processor to use for reading the lines
      */
-    protected TextMappingsReader(Reader reader, final Function<MappingSet, Processor> processor) {
+    protected TextMappingsReader(final Reader reader, final Function<MappingSet, Processor> processor) {
         this.reader = reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
         this.processor = processor;
     }

@@ -3,6 +3,7 @@ import org.cadixdev.gradle.licenser.LicenseExtension
 
 plugins {
     `java-library`
+    jacoco
     id("org.cadixdev.licenser") version "0.5.0" apply false
 }
 
@@ -10,16 +11,20 @@ val projectName: String by project
 val projectUrl: String by project
 val projectInceptionYear: String by project
 val bombeVersion: String by project
+val groovyVersion: String by project
+val spockVersion: String by project
 
 val isSnapshot = version.toString().endsWith("-SNAPSHOT")
 
 allprojects {
     group = "org.cadixdev"
-    version = "0.5.8"
+    version = "0.6.0-SNAPSHOT"
 }
 
 subprojects {
     apply<JavaLibraryPlugin>()
+    apply<GroovyPlugin>()
+    apply<JacocoPlugin>()
     apply<MavenPublishPlugin>()
     apply<Licenser>()
 
@@ -31,9 +36,14 @@ subprojects {
     }
 
     dependencies {
+        // Standard JUnit
         testImplementation(platform("org.junit:junit-bom:5.7.0"))
         testImplementation("org.junit.jupiter:junit-jupiter-api")
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
+
+        // Spock
+        testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion")
+        testImplementation("org.spockframework:spock-core:$spockVersion")
     }
 
     java {
@@ -58,6 +68,14 @@ subprojects {
 
     tasks.test {
         useJUnitPlatform()
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.isEnabled = false
+            csv.isEnabled = false
+            html.destination = file("${buildDir}/jacocoHtml")
+        }
     }
 
     tasks.processResources {

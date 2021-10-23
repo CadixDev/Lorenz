@@ -63,7 +63,7 @@ public class JamReader extends TextMappingsReader {
          * Creates a mappings parser for the JAM format.
          */
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override

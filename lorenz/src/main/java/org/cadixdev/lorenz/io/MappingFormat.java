@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -41,6 +43,24 @@ import java.util.Optional;
  * @since 0.4.0
  */
 public interface MappingFormat {
+
+    /**
+     * Gets the internal identifier for this mapping format.
+     * <p>
+     * This will be used as the registration identifier for the format registry.
+     *
+     * @return The identifier
+     * @since 0.6.0
+     */
+    String getIdentifier();
+
+    /**
+     * Gets the name of this mapping format.
+     *
+     * @return The name
+     * @since 0.6.0
+     */
+    String getName();
 
     /**
      * Creates a {@link MappingsReader} from the given {@link InputStream}
@@ -89,7 +109,7 @@ public interface MappingFormat {
      * @throws IOException Should an I/O issue occur
      */
     default MappingSet read(final Path path) throws IOException {
-        return this.read(MappingSet.create(), path);
+        return this.read(new MappingSet(), path);
     }
 
     /**
@@ -152,5 +172,43 @@ public interface MappingFormat {
      * @return The standard file extension
      */
     Optional<String> getStandardFileExtension();
+
+    /**
+     * Gets file extensions that may be used by the mapping format.
+     * <p>
+     * Single formats need not implement this method, as it will by
+     * default return the standard file extension - or an empty set.
+     *
+     * @return An immutable collection of file extensions
+     * @since 0.6.0
+     */
+    default Collection<String> getFileExtensions() {
+        final String standardExtension = this.getStandardFileExtension().orElse(null);
+        return standardExtension == null ?
+                Collections.emptySet() :
+                Collections.singleton(standardExtension);
+    }
+
+    /**
+     * Determines whether the mapping format supports reading mapping
+     * files.
+     *
+     * @return {@code true} if the formats does; {@code false} otherwise
+     * @since 0.6.0
+     */
+    default boolean supportsReading() {
+        return true;
+    }
+
+    /**
+     * Determines whether the mapping format supports writing mapping
+     * files.
+     *
+     * @return {@code true} if the formats does; {@code false} otherwise
+     * @since 0.6.0
+     */
+    default boolean supportsWriting() {
+        return true;
+    }
 
 }

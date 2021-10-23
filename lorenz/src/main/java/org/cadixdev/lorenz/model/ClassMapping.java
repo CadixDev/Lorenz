@@ -45,7 +45,7 @@ import java.util.Optional;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, InheritanceCompletable {
+public interface ClassMapping<M extends ClassMapping<M, P>, P> extends Mapping<M, P>, InheritanceCompletable {
 
     /**
      * {@inheritDoc}
@@ -276,6 +276,29 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     }
 
     /**
+     * Remove all field mappings where the obfuscated field signature of
+     * the mapping matches the given signature.
+     *
+     * @param signature The signature of the field mapping to remove.
+     */
+    void removeFieldMapping(final FieldSignature signature);
+
+    /**
+     * Remove the given {@link FieldMapping} from this class mapping.
+     *
+     * @param mapping The field mapping to remove.
+     */
+    void removeFieldMapping(final FieldMapping mapping);
+
+    /**
+     * Remove all field mappings where the obfuscated name of the mapping
+     * matches the given signature.
+     *
+     * @param obfuscatedName The name of the field mapping to remove.
+     */
+    void removeFieldMapping(final String obfuscatedName);
+
+    /**
      * Gets an immutable collection of all of the method mappings
      * of the class mapping.
      *
@@ -400,6 +423,21 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
     boolean hasMethodMapping(final MethodSignature signature);
 
     /**
+     * Remove all method mappings where the obfuscated signature of the
+     * mapping matches the given signature.
+     *
+     * @param signature The method signature to remove.
+     */
+    void removeMethodMapping(final MethodSignature signature);
+
+    /**
+     * Remove the given {@link MethodMapping} from this class mapping.
+     *
+     * @param mapping The method mapping to remove.
+     */
+    void removeMethodMapping(final MethodMapping mapping);
+
+    /**
      * Gets an immutable collection of all of the inner class
      * mappings of the class mapping.
      *
@@ -460,6 +498,21 @@ public interface ClassMapping<M extends ClassMapping, P> extends Mapping<M, P>, 
      *         {@code false} otherwise
      */
     boolean hasInnerClassMapping(final String obfuscatedName);
+
+    /**
+     * Remove all inner class mappings where the obfuscated name of the
+     * mapping matches the given name.
+     *
+     * @param obfuscatedName The inner class name to remove.
+     */
+    void removeInnerClassMapping(final String obfuscatedName);
+
+    /**
+     * Remove the given inner {@link ClassMapping} from this class mapping.
+     *
+     * @param mapping The inner class mapping to remove.
+     */
+    void removeInnerClassMapping(final ClassMapping<?, ?> mapping);
 
     /**
      * Establishes whether the class mapping has a de-obfuscation mapping, or

@@ -74,7 +74,7 @@ public class TSrgReader extends TextMappingsReader {
          * Creates a mappings parser for the TSRG format.
          */
         public Processor() {
-            this(MappingSet.create());
+            this(new MappingSet());
         }
 
         @Override

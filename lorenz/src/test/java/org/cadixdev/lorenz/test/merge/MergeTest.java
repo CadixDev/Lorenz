@@ -25,9 +25,8 @@
 
 package org.cadixdev.lorenz.test.merge;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.io.MappingFormats;
 import org.cadixdev.lorenz.merge.FieldMergeStrategy;
@@ -43,7 +42,9 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 public final class MergeTest {
 

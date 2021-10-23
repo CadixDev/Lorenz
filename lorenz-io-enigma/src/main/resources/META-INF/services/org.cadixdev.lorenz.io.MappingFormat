@@ -24,3 +24,4 @@
 #
 
 org.cadixdev.lorenz.io.enigma.EnigmaMappingFormat
+org.cadixdev.lorenz.io.enigma.FabricEnigmaMappingFormat

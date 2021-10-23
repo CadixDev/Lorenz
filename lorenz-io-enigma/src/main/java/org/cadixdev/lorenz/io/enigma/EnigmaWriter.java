@@ -52,41 +52,6 @@ import java.util.Optional;
  */
 public class EnigmaWriter extends TextMappingsWriter {
 
-    private static String handleNonePrefix(final String descriptor) {
-        if (!descriptor.contains("/")) {
-            return "none/" + descriptor;
-        }
-        return descriptor;
-    }
-
-    private static FieldType handleNonePrefix(final FieldType type) {
-        if (type instanceof ArrayType) {
-            final ArrayType arr = (ArrayType) type;
-            return new ArrayType(arr.getDimCount(), handleNonePrefix(arr.getComponent()));
-        }
-        if (type instanceof ObjectType) {
-            final ObjectType obj = (ObjectType) type;
-            return new ObjectType(handleNonePrefix(obj.getClassName()));
-        }
-        return type;
-    }
-
-    private static Type handleNonePrefix(final Type type) {
-        if (type instanceof FieldType) {
-            return handleNonePrefix((FieldType) type);
-        }
-        return type;
-    }
-
-    private static String handleNonePrefix(final MethodDescriptor descriptor) {
-        final StringBuilder typeBuilder = new StringBuilder();
-        typeBuilder.append("(");
-        descriptor.getParamTypes().forEach(type -> typeBuilder.append(handleNonePrefix(type)));
-        typeBuilder.append(")");
-        typeBuilder.append(handleNonePrefix(descriptor.getReturnType()));
-        return typeBuilder.toString();
-    }
-
     public EnigmaWriter(final Writer writer) {
         super(writer);
     }
@@ -100,16 +65,7 @@ public class EnigmaWriter extends TextMappingsWriter {
     }
 
     private void writeClassMapping(final ClassMapping<?, ?> klass, final int indent) {
-        final String obfName = handleNonePrefix(klass.getFullObfuscatedName());
-        if (klass.hasDeobfuscatedName()) {
-            final String deobfName = klass instanceof InnerClassMapping ?
-                    klass.getDeobfuscatedName() :
-                    handleNonePrefix(klass.getDeobfuscatedName());
-            this.printIndentedLine(indent, "CLASS " + obfName + " " + deobfName);
-        }
-        else {
-            this.printIndentedLine(indent, "CLASS " + obfName);
-        }
+        this.printClassMapping(klass, indent);
 
         // Write inner class mappings
         klass.getInnerClassMappings().stream()
@@ -137,7 +93,7 @@ public class EnigmaWriter extends TextMappingsWriter {
             this.printIndentedLine(indent, String.format("FIELD %s %s %s",
                     field.getObfuscatedName(),
                     field.getDeobfuscatedName(),
-                    handleNonePrefix(type)
+                    convertFieldType(type)
             ));
         });
         // TODO: throw an exception if the type is unknown / WriterResult container
@@ -149,15 +105,16 @@ public class EnigmaWriter extends TextMappingsWriter {
             this.printIndentedLine(indent, String.format("METHOD %s %s %s",
                     method.getObfuscatedName(),
                     method.getDeobfuscatedName(),
-                    handleNonePrefix(method.getDescriptor())
+                    this.convertDescriptor(method.getDescriptor())
             ));
         }
         else {
             this.printIndentedLine(indent, String.format("METHOD %s %s",
                     method.getObfuscatedName(),
-                    handleNonePrefix(method.getDescriptor())
+                    this.convertDescriptor(method.getDescriptor())
             ));
         }
+
         for (final MethodParameterMapping param : method.getParameterMappings()) {
             this.printIndentedLine(indent + 1, String.format("ARG %s %s",
                     param.getIndex(),
@@ -166,11 +123,59 @@ public class EnigmaWriter extends TextMappingsWriter {
         }
     }
 
-    private void printIndentedLine(final int indent, final String line) {
+    protected void printClassMapping(final ClassMapping<?, ?> klass, final int indent) {
+        final String obfName = this.convertClassName(klass.getFullObfuscatedName());
+        if (klass.hasDeobfuscatedName()) {
+            final String deobfName = klass instanceof InnerClassMapping ?
+                    klass.getDeobfuscatedName() :
+                    this.convertClassName(klass.getDeobfuscatedName());
+            this.printIndentedLine(indent, "CLASS " + obfName + " " + deobfName);
+        }
+        else {
+            this.printIndentedLine(indent, "CLASS " + obfName);
+        }
+    }
+
+    protected void printIndentedLine(final int indent, final String line) {
         for (int i = 0; i < indent; i++) {
             this.writer.print('\t');
         }
         this.writer.println(line);
+    }
+
+    protected String convertClassName(final String descriptor) {
+        if (!descriptor.contains("/")) {
+            return "none/" + descriptor;
+        }
+        return descriptor;
+    }
+
+    protected Type convertType(final Type type) {
+        if (type instanceof FieldType) {
+            return this.convertFieldType((FieldType) type);
+        }
+        return type;
+    }
+
+    protected FieldType convertFieldType(final FieldType type) {
+        if (type instanceof ArrayType) {
+            final ArrayType arr = (ArrayType) type;
+            return new ArrayType(arr.getDimCount(), this.convertFieldType(arr.getComponent()));
+        }
+        if (type instanceof ObjectType) {
+            final ObjectType obj = (ObjectType) type;
+            return new ObjectType(this.convertClassName(obj.getClassName()));
+        }
+        return type;
+    }
+
+    protected String convertDescriptor(final MethodDescriptor descriptor) {
+        final StringBuilder typeBuilder = new StringBuilder();
+        typeBuilder.append("(");
+        descriptor.getParamTypes().forEach(type -> typeBuilder.append(this.convertFieldType(type)));
+        typeBuilder.append(")");
+        typeBuilder.append(this.convertType(descriptor.getReturnType()));
+        return typeBuilder.toString();
     }
 
 }

@@ -31,15 +31,28 @@ import org.cadixdev.lorenz.io.TextMappingFormat;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
- * The Enigma mapping format.
+ * The standard Enigma mapping format.
  *
  * @author Jamie Mansfield
  * @since 0.4.0
  */
 public class EnigmaMappingFormat implements TextMappingFormat {
+
+    @Override
+    public String getIdentifier() {
+        return "enigma";
+    }
+
+    @Override
+    public String getName() {
+        return "Enigma";
+    }
 
     @Override
     public MappingsReader createReader(final Reader reader) {
@@ -53,12 +66,15 @@ public class EnigmaMappingFormat implements TextMappingFormat {
 
     @Override
     public Optional<String> getStandardFileExtension() {
-        return Optional.of(EnigmaConstants.STANDARD_EXTENSION);
+        return Optional.of(EnigmaConstants.FileExtensions.MAPPING);
     }
 
     @Override
-    public String toString() {
-        return "enigma";
+    public Collection<String> getFileExtensions() {
+        return Collections.unmodifiableCollection(Arrays.asList(
+                EnigmaConstants.FileExtensions.MAPPING,
+                EnigmaConstants.FileExtensions.ENIGMA
+        ));
     }
 
 }

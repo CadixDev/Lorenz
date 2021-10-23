@@ -42,11 +42,6 @@ public final class EnigmaConstants {
     private static final Pattern HASH_COMMENT = Pattern.compile("#.*");
 
     /**
-     * The standard file extension used with the Enigma format.
-     */
-    public static final String STANDARD_EXTENSION = "enigma";
-
-    /**
      * Removes present comments, from the given {@link String} line.
      *
      * @param line The line
@@ -57,6 +52,35 @@ public final class EnigmaConstants {
     }
 
     private EnigmaConstants() {
+    }
+
+    /**
+     * A collection of file extensions frequently used by
+     * consumers of the Enigma format.
+     *
+     * @author Jamie Mansfield
+     * @since 0.6.0
+     */
+    public static final class FileExtensions {
+
+        /**
+         * The <code>"mapping"</code> file extension, as used by both
+         * cuchaz's mapping project and Fabric's Yarn mappings.
+         */
+        public static final String MAPPING = "mapping";
+
+        /**
+         * The <code>"enigma"</code> file extension.
+         * <p>
+         * This exists for largely historical reasons, as it was erroneously
+         * used as the standard file extension for Enigma by Lorenz prior to
+         * Lorenz 0.6.
+         */
+        public static final String ENIGMA = "enigma";
+
+        private FileExtensions() {
+        }
+
     }
 
 }

@@ -28,8 +28,11 @@ package org.cadixdev.lorenz.impl.model;
 import org.cadixdev.lorenz.MappingSet;
 import org.cadixdev.lorenz.model.ExtensionKey;
 import org.cadixdev.lorenz.model.Mapping;
+import org.cadixdev.lorenz.util.MappingChangedListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,12 +47,13 @@ import java.util.StringJoiner;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mapping<M, P> {
+public abstract class AbstractMappingImpl<M extends Mapping<M, P>, P> implements Mapping<M, P> {
 
     private final MappingSet mappings;
     private final Map<ExtensionKey<?>, Object> data = new HashMap<>();
     private final String obfuscatedName;
     private String deobfuscatedName;
+    private final List<MappingChangedListener<M, P>> listeners = new ArrayList<>();
 
     /**
      * Creates a new de-obfuscation mapping, based on the given obfuscated name
@@ -77,8 +81,22 @@ public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mappi
 
     @Override
     public M setDeobfuscatedName(final String deobfuscatedName) {
+        for (final MappingChangedListener<M, P> listener : this.listeners) {
+            listener.handle((M) this, deobfuscatedName);
+        }
         this.deobfuscatedName = deobfuscatedName;
         return (M) this;
+    }
+
+    @Override
+    public M addListener(final MappingChangedListener<M, P> listener) {
+        this.listeners.add(listener);
+        return (M) this;
+    }
+
+    @Override
+    public void removeListener(final MappingChangedListener<M, P> listener) {
+        this.listeners.remove(listener);
     }
 
     @Override
@@ -97,8 +115,9 @@ public abstract class AbstractMappingImpl<M extends Mapping, P> implements Mappi
     }
 
     @Override
-    public <T> void set(final ExtensionKey<T> key, final T value) {
+    public <T> M set(final ExtensionKey<T> key, final T value) {
         this.data.put(key, value);
+        return (M) this;
     }
 
     protected StringJoiner buildToString() {

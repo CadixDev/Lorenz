@@ -30,17 +30,22 @@ import org.cadixdev.bombe.type.FieldType;
 import org.cadixdev.bombe.type.MethodDescriptor;
 import org.cadixdev.bombe.type.ObjectType;
 import org.cadixdev.bombe.type.Type;
-import org.cadixdev.lorenz.impl.MappingSetImpl;
+import org.cadixdev.lorenz.impl.MappingSetModelFactoryImpl;
 import org.cadixdev.lorenz.merge.MappingSetMerger;
 import org.cadixdev.lorenz.model.ClassMapping;
+import org.cadixdev.lorenz.model.InnerClassMapping;
 import org.cadixdev.lorenz.model.TopLevelClassMapping;
-import org.cadixdev.lorenz.model.jar.CascadingFieldTypeProvider;
+import org.cadixdev.lorenz.model.jar.CompositeFieldTypeProvider;
 import org.cadixdev.lorenz.model.jar.FieldTypeProvider;
 import org.cadixdev.lorenz.util.BinaryTool;
 import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -50,16 +55,18 @@ import java.util.stream.Collectors;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface MappingSet extends Reversible<MappingSet, MappingSet> {
+public class MappingSet implements Reversible<MappingSet, MappingSet>, Iterable<TopLevelClassMapping> {
 
     /**
      * Creates a mapping set, using the default Lorenz model implementation.
      *
      * @return The mapping set
      * @since 0.2.0
+     * @deprecated Use {@link MappingSet#MappingSet()} instead
      */
-    static MappingSet create() {
-        return new MappingSetImpl();
+    @Deprecated
+    public static MappingSet create() {
+        return new MappingSet();
     }
 
     /**
@@ -68,9 +75,31 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param modelFactory The model factory to use
      * @return The mapping set
      * @since 0.3.0
+     * @deprecated Use {@link MappingSet#MappingSet(MappingSetModelFactory)} instead
      */
-    static MappingSet create(final MappingSetModelFactory modelFactory) {
-        return new MappingSetImpl(modelFactory);
+    @Deprecated
+    public static MappingSet create(final MappingSetModelFactory modelFactory) {
+        return new MappingSet(modelFactory);
+    }
+
+    private final MappingSetModelFactory modelFactory;
+    private final Map<String, TopLevelClassMapping> topLevelClasses = new ConcurrentHashMap<>();
+    private final CompositeFieldTypeProvider fieldTypeProvider = new CompositeFieldTypeProvider();
+
+    /**
+     * Creates a mapping set using the default {@link MappingSetModelFactory}.
+     */
+    public MappingSet() {
+        this(MappingSetModelFactoryImpl.INSTANCE);
+    }
+
+    /**
+     * Creates a mapping set using the provided {@link MappingSetModelFactory}.
+     *
+     * @param modelFactory The model factory to use
+     */
+    public MappingSet(final MappingSetModelFactory modelFactory) {
+        this.modelFactory = modelFactory;
     }
 
     /**
@@ -79,7 +108,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      *
      * @return The model factory
      */
-    MappingSetModelFactory getModelFactory();
+    public MappingSetModelFactory getModelFactory() {
+        return this.modelFactory;
+    }
 
     /**
      * Gets an immutable collection of all of the top-level class
@@ -87,7 +118,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      *
      * @return The top-level class mappings
      */
-    Collection<TopLevelClassMapping> getTopLevelClassMappings();
+    public Collection<TopLevelClassMapping> getTopLevelClassMappings() {
+        return Collections.unmodifiableCollection(this.topLevelClasses.values());
+    }
 
     /**
      * Creates a top-level class mapping with the given obfuscated and de-obfuscated
@@ -97,7 +130,12 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param deobfuscatedName The de-obfuscated name of the top-level class
      * @return The top-level class mapping, to allow for chaining
      */
-    TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName);
+    public TopLevelClassMapping createTopLevelClassMapping(final String obfuscatedName, final String deobfuscatedName) {
+        return this.topLevelClasses.compute(obfuscatedName.replace('.', '/'), (name, existingMapping) -> {
+            if (existingMapping != null) return existingMapping.setDeobfuscatedName(deobfuscatedName);
+            return this.getModelFactory().createTopLevelClassMapping(this, name, deobfuscatedName);
+        });
+    }
 
     /**
      * Gets the top-level class mapping of the given obfuscated name of the
@@ -106,7 +144,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param obfuscatedName The obfuscated name of the top-level class mapping
      * @return The top-level class mapping, wrapped in an {@link Optional}
      */
-    Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName);
+    public Optional<TopLevelClassMapping> getTopLevelClassMapping(final String obfuscatedName) {
+        return Optional.ofNullable(this.topLevelClasses.get(obfuscatedName.replace('.', '/')));
+    }
 
     /**
      * Gets, or creates should it not exist, a top-level class mapping of the
@@ -115,7 +155,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param obfuscatedName The obfuscated name of the top-level class mapping
      * @return The top-level class mapping
      */
-    default TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
+    public TopLevelClassMapping getOrCreateTopLevelClassMapping(final String obfuscatedName) {
         return this.getTopLevelClassMapping(obfuscatedName)
                 .orElseGet(() -> this.createTopLevelClassMapping(obfuscatedName, obfuscatedName));
     }
@@ -130,7 +170,9 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      *         given obfuscated name exist in the mapping set;
      *         {@code false} otherwise
      */
-    boolean hasTopLevelClassMapping(final String obfuscatedName);
+    public boolean hasTopLevelClassMapping(final String obfuscatedName) {
+        return this.topLevelClasses.containsKey(obfuscatedName.replace('.', '/'));
+    }
 
     /**
      * Gets the class mapping of the given obfuscated name.
@@ -138,7 +180,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    default Optional<? extends ClassMapping<?, ?>> getClassMapping(final String obfuscatedName) {
+    public Optional<? extends ClassMapping<?, ?>> getClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
 
@@ -150,6 +192,28 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
         return this.getClassMapping(parentClassName)
                 // Get and return the inner class
                 .flatMap(parentClassMapping -> parentClassMapping.getInnerClassMapping(innerClassName));
+    }
+
+    /**
+     * Remove the class mapping for the given obfuscated name.
+     *
+     * @param obfuscatedName The class name to remove.
+     */
+    public void removeClassMapping(final String obfuscatedName) {
+        this.getClassMapping(obfuscatedName).ifPresent(this::removeClassMapping);
+    }
+
+    /**
+     * Remove the given {@link ClassMapping}.
+     *
+     * @param mapping The mapping to remove.
+     */
+    public void removeClassMapping(final ClassMapping<?, ?> mapping) {
+        if (mapping instanceof InnerClassMapping) {
+            ((InnerClassMapping) mapping).getParent().removeInnerClassMapping(mapping);
+        } else {
+            this.topLevelClasses.values().remove(mapping);
+        }
     }
 
     /**
@@ -165,7 +229,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param obfuscatedName The obfuscated name
      * @return The class mapping, wrapped in an {@link Optional}
      */
-    default Optional<? extends ClassMapping<?, ?>> computeClassMapping(final String obfuscatedName) {
+    public Optional<? extends ClassMapping<?, ?>> computeClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getTopLevelClassMapping(obfuscatedName);
 
@@ -186,7 +250,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @param obfuscatedName The obfuscated name of the class mapping
      * @return The class mapping
      */
-    default ClassMapping<?, ?> getOrCreateClassMapping(final String obfuscatedName) {
+    public ClassMapping<?, ?> getOrCreateClassMapping(final String obfuscatedName) {
         final int lastIndex = obfuscatedName.lastIndexOf('$');
         if (lastIndex == -1) return this.getOrCreateTopLevelClassMapping(obfuscatedName);
 
@@ -207,17 +271,19 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The field type provider
      * @since 0.4.0
      */
-    CascadingFieldTypeProvider getFieldTypeProvider();
+    public CompositeFieldTypeProvider getFieldTypeProvider() {
+        return this.fieldTypeProvider;
+    }
 
     /**
      * Adds the given {@link FieldTypeProvider} to this set of mappings.
      *
      * @param fieldTypeProvider The field type provider
      * @return {@code this}, for chaining
-     * @see CascadingFieldTypeProvider#add(FieldTypeProvider)
+     * @see CompositeFieldTypeProvider#add(FieldTypeProvider)
      * @since 0.4.0
      */
-    default MappingSet addFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
+    public MappingSet addFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
         this.getFieldTypeProvider().add(fieldTypeProvider);
         return this;
     }
@@ -227,10 +293,10 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      *
      * @param fieldTypeProvider The field type provider
      * @return {@code this}, for chaining
-     * @see CascadingFieldTypeProvider#remove(FieldTypeProvider)
+     * @see CompositeFieldTypeProvider#remove(FieldTypeProvider)
      * @since 0.4.0
      */
-    default MappingSet removeFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
+    public MappingSet removeFieldTypeProvider(final FieldTypeProvider fieldTypeProvider) {
         this.getFieldTypeProvider().remove(fieldTypeProvider);
         return this;
     }
@@ -242,7 +308,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The de-obfuscated type
      * @since 0.5.0
      */
-    default Type deobfuscate(final Type type) {
+    public Type deobfuscate(final Type type) {
         if (type instanceof FieldType) {
             return this.deobfuscate((FieldType) type);
         }
@@ -256,7 +322,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The de-obfuscated type
      * @since 0.5.0
      */
-    default FieldType deobfuscate(final FieldType type) {
+    public FieldType deobfuscate(final FieldType type) {
         if (type instanceof ArrayType) {
             final ArrayType arr = (ArrayType) type;
             final FieldType component = this.deobfuscate(arr.getComponent());
@@ -298,7 +364,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The de-obfuscated descriptor
      * @since 0.5.0
      */
-    default MethodDescriptor deobfuscate(final MethodDescriptor descriptor) {
+    public MethodDescriptor deobfuscate(final MethodDescriptor descriptor) {
         return new MethodDescriptor(
                 descriptor.getParamTypes().stream()
                         .map(this::deobfuscate)
@@ -313,12 +379,12 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The reversed set
      * @since 0.5.0
      */
-    default MappingSet reverse() {
-        return this.reverse(MappingSet.create());
+    public MappingSet reverse() {
+        return this.reverse(this.createMappingSet());
     }
 
     @Override
-    default MappingSet reverse(final MappingSet parent) {
+    public MappingSet reverse(final MappingSet parent) {
         this.getTopLevelClassMappings().forEach(klass -> klass.reverse(parent));
         return parent;
     }
@@ -331,8 +397,8 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The merged set
      * @since 0.5.0
      */
-    default MappingSet merge(final MappingSet with) {
-        return this.merge(with, MappingSet.create());
+    public MappingSet merge(final MappingSet with) {
+        return this.merge(with, this.createMappingSet());
     }
 
     /**
@@ -344,7 +410,7 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The merged set
      * @since 0.5.0
      */
-    default MappingSet merge(final MappingSet with, final MappingSet parent) {
+    public MappingSet merge(final MappingSet with, final MappingSet parent) {
         return MappingSetMerger.create(this, with).merge(parent);
     }
 
@@ -354,10 +420,19 @@ public interface MappingSet extends Reversible<MappingSet, MappingSet> {
      * @return The cloned set
      * @since 0.5.0
      */
-    default MappingSet copy() {
-        final MappingSet mappings = MappingSet.create();
+    public MappingSet copy() {
+        final MappingSet mappings = this.createMappingSet();
         this.getTopLevelClassMappings().forEach(klass -> klass.copy(mappings));
         return mappings;
+    }
+
+    @Override
+    public Iterator<TopLevelClassMapping> iterator() {
+        return this.topLevelClasses.values().iterator();
+    }
+
+    protected MappingSet createMappingSet() {
+        return new MappingSet(this.modelFactory);
     }
 
 }

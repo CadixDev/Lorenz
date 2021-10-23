@@ -56,7 +56,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Jamie Mansfield
  * @since 0.2.0
  */
-public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
+public abstract class AbstractClassMappingImpl<M extends ClassMapping<M, P>, P>
         extends AbstractMappingImpl<M, P>
         implements ClassMapping<M, P> {
 
@@ -134,6 +134,26 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
     }
 
     @Override
+    public void removeFieldMapping(final FieldSignature signature) {
+        final FieldMapping mapping = this.fields.remove(signature);
+        if (mapping != null) {
+            this.fieldsByName.values().remove(mapping);
+        }
+    }
+
+    @Override
+    public void removeFieldMapping(final FieldMapping mapping) {
+        this.fields.values().remove(mapping);
+        this.fieldsByName.values().remove(mapping);
+    }
+
+    @Override
+    public void removeFieldMapping(final String obfuscatedName) {
+        this.fields.keySet().removeIf(sig -> sig.getName().equals(obfuscatedName));
+        this.fieldsByName.remove(obfuscatedName);
+    }
+
+    @Override
     public Collection<MethodMapping> getMethodMappings() {
         return Collections.unmodifiableCollection(this.methods.values());
     }
@@ -157,6 +177,16 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
     }
 
     @Override
+    public void removeMethodMapping(final MethodSignature signature) {
+        this.methods.remove(signature);
+    }
+
+    @Override
+    public void removeMethodMapping(final MethodMapping mapping) {
+        this.methods.values().remove(mapping);
+    }
+
+    @Override
     public Collection<InnerClassMapping> getInnerClassMappings() {
         return Collections.unmodifiableCollection(this.innerClasses.values());
     }
@@ -177,6 +207,16 @@ public abstract class AbstractClassMappingImpl<M extends ClassMapping, P>
     @Override
     public boolean hasInnerClassMapping(final String obfuscatedName) {
         return this.innerClasses.containsKey(obfuscatedName);
+    }
+
+    @Override
+    public void removeInnerClassMapping(String obfuscatedName) {
+        this.innerClasses.remove(obfuscatedName);
+    }
+
+    @Override
+    public void removeInnerClassMapping(final ClassMapping<?, ?> mapping) {
+        this.innerClasses.values().remove(mapping);
     }
 
     @Override

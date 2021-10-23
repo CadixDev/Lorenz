@@ -42,6 +42,16 @@ import java.util.Optional;
 public class JamMappingFormat implements TextMappingFormat {
 
     @Override
+    public String getIdentifier() {
+        return "jam";
+    }
+
+    @Override
+    public String getName() {
+        return "JAM";
+    }
+
+    @Override
     public MappingsReader createReader(final Reader reader) {
         return new JamReader(reader);
     }
@@ -54,11 +64,6 @@ public class JamMappingFormat implements TextMappingFormat {
     @Override
     public Optional<String> getStandardFileExtension() {
         return Optional.of(JamConstants.STANDARD_EXTENSION);
-    }
-
-    @Override
-    public String toString() {
-        return "jam";
     }
 
 }

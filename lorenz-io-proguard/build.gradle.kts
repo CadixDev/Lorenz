@@ -4,5 +4,8 @@ plugins {
 
 dependencies {
     api(project(":lorenz"))
-    api("me.jamiemansfield:string:0.1.0")
+}
+
+tasks.jar.configure {
+    manifest.attributes(mapOf("Automatic-Module-Name" to "${project.group}.lorenz.io.proguard"))
 }

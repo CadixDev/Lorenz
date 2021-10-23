@@ -51,49 +51,6 @@ import java.util.function.Function;
  */
 public abstract class MappingsWriter implements Closeable {
 
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link Mapping}s.
-     *
-     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getClassMappingComparator()}
-     *             instead
-     */
-    @Deprecated
-    protected static final Comparator<Mapping> ALPHABETISE_MAPPINGS =
-            comparingLength(Mapping::getFullObfuscatedName);
-
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link FieldMapping}s.
-     *
-     * @since 0.5.0
-     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getFieldMappingComparator()}
-     *             instead
-     */
-    @Deprecated
-    protected static final Comparator<FieldMapping> ALPHABETISE_FIELDS =
-            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getType().map(FieldType::toString).orElse(""));
-
-    /**
-     * A {@link Comparator} used to alphabetise a collection of {@link MethodMapping}s.
-     *
-     * @since 0.5.0
-     * @deprecated 0.5.5 Use {@link #getConfig()} {@link MappingsWriterConfig#getMethodMappingComparator()}
-     *             instead
-     */
-    @Deprecated
-    protected static final Comparator<MethodMapping> ALPHABETISE_METHODS =
-            Comparator.comparing(mapping -> mapping.getFullObfuscatedName() + mapping.getDescriptor().toString());
-
-    private static <T> Comparator<T> comparingLength(final Function<? super T, String> keyExtractor) {
-        return (c1, c2) -> {
-            final String key1 = keyExtractor.apply(c1);
-            final String key2 = keyExtractor.apply(c2);
-            if (key1.length() != key2.length()) {
-                return key1.length() - key2.length();
-            }
-            return key1.compareTo(key2);
-        };
-    }
-
     protected MappingsWriterConfig config = MappingsWriterConfig.builder().build();
 
     /**

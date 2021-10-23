@@ -26,6 +26,7 @@
 package org.cadixdev.lorenz.model;
 
 import org.cadixdev.lorenz.MappingSet;
+import org.cadixdev.lorenz.util.MappingChangedListener;
 import org.cadixdev.lorenz.util.Reversible;
 
 import java.util.Optional;
@@ -41,7 +42,7 @@ import java.util.function.Supplier;
  * @author Jamie Mansfield
  * @since 0.1.0
  */
-public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
+public interface Mapping<M extends Mapping<M, P>, P> extends Reversible<M, P> {
 
     /**
      * Gets the obfuscated name of the member being represented.
@@ -65,6 +66,29 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      * @return {@code this} for chaining
      */
     M setDeobfuscatedName(final String deobfuscatedName);
+
+    /**
+     * Registers a {@link MappingChangedListener mapping changed listener},
+     * that is called whenever the de-obfuscated name of the mapping is
+     * changed.
+     * <p>
+     * Listeners will be called <strong>before</strong> the name change is
+     * applied, so calling the mapping will return the original name.
+     *
+     * @param listener The listener
+     * @return {@code this} for chaining
+     * @since 0.6.0
+     */
+    M addListener(final MappingChangedListener<M, P> listener);
+
+    /**
+     * De-registers a {@link MappingChangedListener mapping changed listener},
+     * from the mapping.
+     *
+     * @param listener The listener to remove
+     * @since 0.6.0
+     */
+    void removeListener(final MappingChangedListener<M, P> listener);
 
     /**
      * Gets the unqualified ("simple") obfuscated name of the member.
@@ -166,8 +190,9 @@ public interface Mapping<M extends Mapping, P> extends Reversible<M, P> {
      * @param key The extension data key
      * @param value The extension data value
      * @param <T> The type of the extension data
-     * @since 0.5.0
+     * @return {@code this} for chaining
+     * @since 0.6.0
      */
-    <T> void set(final ExtensionKey<T> key, final T value);
+    <T> M set(final ExtensionKey<T> key, final T value);
 
 }

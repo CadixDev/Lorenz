@@ -5,7 +5,8 @@ jdk:
 - oraclejdk8
 
 script: ./gradlew build
-after_success: '[[ "$TRAVIS_BRANCH" = "develop" ]] && ./gradlew uploadArchives'
+after_success:
+  - '[[ "$TRAVIS_PULL_REQUEST" = "false" && "$TRAVIS_BRANCH" = "develop" ]] && ./gradlew uploadArchives'
 
 # Ugh.
 notifications:
